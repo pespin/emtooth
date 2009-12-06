@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 void gui_create(DeviceList* DL) {
 
-   Evas_Object *win, *bg, *vbox, *fr, *lb, *device_list, *hbox, *hbox1, *refresh_button;
+   Evas_Object *win, *bg, *vbox, *fr, *lb, *device_list, *hbox, *hbox1, *bt;
 
    win = elm_win_add(NULL, "main_win", ELM_WIN_BASIC);
    elm_win_title_set(win, "emtooth");
@@ -59,7 +59,7 @@ void gui_create(DeviceList* DL) {
 
 	// add a label
 	lb = elm_label_add(win);
-	elm_label_label_set(lb, "Devices");
+	elm_label_label_set(lb, "RemoteDevices");
 	elm_frame_content_set(fr, lb);
 	evas_object_show(lb);  
 	
@@ -81,32 +81,38 @@ void gui_create(DeviceList* DL) {
 	elm_box_pack_end(vbox, hbox1);
 	evas_object_show(hbox1);
 
-	//add add_album button to hbox1
-	refresh_button = elm_button_add(win);
-	elm_button_label_set(refresh_button, "Refresh");
-	evas_object_size_hint_weight_set(refresh_button, 1.0, 1.0);
-	evas_object_size_hint_align_set(refresh_button, -1.0, -1.0);
-	elm_box_pack_end(hbox1, refresh_button);
-	evas_object_show(refresh_button);
+	//add buttons to hbox1
+	bt = elm_button_add(win);
+	elm_button_label_set(bt, "Refresh");
+	evas_object_size_hint_weight_set(bt, 1.0, 1.0);
+	evas_object_size_hint_align_set(bt, -1.0, -1.0);
+	elm_box_pack_end(hbox1, bt);
+	evas_object_show(bt);
+	evas_object_smart_callback_add(bt, "clicked", cb_device_list_refresh, DL);
 
-	DL->li = device_list;
+	bt = elm_button_add(win);
+	elm_button_label_set(bt, "Settings");
+	evas_object_size_hint_weight_set(bt, 1.0, 1.0);
+	evas_object_size_hint_align_set(bt, -1.0, -1.0);
+	elm_box_pack_end(hbox1, bt);
+	evas_object_show(bt);
+	evas_object_smart_callback_add(bt, "clicked", cb_settings_dialog, DL);
 
-	evas_object_smart_callback_add(refresh_button, "clicked", cb_device_list_refresh, DL);	
+
+	DL->li = device_list;	
 
    gui_device_list_populate(DL);
-   
-   
-
+  
    evas_object_show(win);
 	
 }
 
 
-void gui_device_list_remove(DeviceList* DL, const char* label) {
+void gui_device_list_remove(DeviceList* DL, RemoteDevice* device) {
 	
-	fprintf(stderr, "Removing device %s from list...\n", label);
+	fprintf(stderr, "Removing RemoteDevice %s from list...\n", device->addr);
 	
-	DL->devices = eina_list_remove(DL->devices, label);
+	DL->devices = eina_list_remove(DL->devices, device);
 	
 	/* TODO: just remove one item instead of rewriting all the list */
 	gui_device_list_clear(DL->li);
@@ -115,21 +121,21 @@ void gui_device_list_remove(DeviceList* DL, const char* label) {
 }
 
 
-void gui_device_list_append(DeviceList* DL, const char* label) {
+void gui_device_list_append(DeviceList* DL, RemoteDevice* device) {
 
-	fprintf(stderr, "Adding device %s to list...\n", label);
+	fprintf(stderr, "Adding RemoteDevice %s to list...\n", device->addr);
 	
-	//Add last device to eina list.
-	DL->devices = eina_list_append(DL->devices, label);
+	//Add last RemoteDevice to eina list.
+	DL->devices = eina_list_append(DL->devices, device);
 	
 	//last data:
-	//char* label = eina_list_data_get(eina_list_last(DL->devices));
+	//char* label = eina_list_data_get(eina_list_last(DL->RemoteDevices));
 	
 	Evas_Object *ic;
 	ic = elm_icon_add(DL->li);
 	elm_icon_standard_set(ic, "arrow_left");
     elm_icon_scale_set(ic, 0, 1);
-    elm_list_item_append(DL->li, label, ic, NULL,  NULL, label);
+    elm_list_item_append(DL->li, device->addr, ic, NULL,  NULL, device);
 	evas_object_show(ic);
 	
 	elm_list_go(DL->li);
@@ -138,16 +144,16 @@ void gui_device_list_append(DeviceList* DL, const char* label) {
 
 void gui_device_list_populate(DeviceList* DL) {
 	
-	fprintf(stderr, "Populating list with devices already catched...\n");
+	fprintf(stderr, "Populating list with RemoteDevices already catched...\n");
 	Evas_Object *ic;
-	char* device;
+	RemoteDevice* device;
 	Eina_List* cur;
 	
 	EINA_LIST_FOREACH(DL->devices, cur, device) {
 		ic = elm_icon_add(DL->li);
         elm_icon_standard_set(ic, "arrow_left");
         elm_icon_scale_set(ic, 0, 1);
-		elm_list_item_append(DL->li, device, ic, NULL,  NULL, device);
+		elm_list_item_append(DL->li, device->addr, ic, NULL,  NULL, device);
 		evas_object_show(ic);
 	}
 
@@ -158,18 +164,79 @@ void gui_device_list_populate(DeviceList* DL) {
 
 void gui_device_list_clear(Evas_Object *li) {
 
-fprintf(stderr, "Clearing list of devices...\n");
+fprintf(stderr, "Clearing list of RemoteDevices...\n");
 	const Eina_List *items;
 	
-	while ((items = elm_list_items_get(li)))
-     {
-        //also free the path string attached to the data value of the item
-        char *path = (char *)elm_list_item_data_get(items->data);
-        if (path) free(path);
-        //delete the item
+	while ((items = elm_list_items_get(li))) {
         elm_list_item_del(items->data);
      }
 	
 	//is this necessary?
 	elm_list_go(li);
+}
+
+
+void gui_settings_dialog_create() {
+
+   Evas_Object *win, *bg, *vbox, *fr, *lb, *hbox, *hbox1, *bt;
+
+   win = elm_win_add(NULL, "settings_dialog", ELM_WIN_BASIC);
+   elm_win_title_set(win, "emtooth - Settings");
+   evas_object_smart_callback_add(win, "delete,request", cb_close_win, win);
+
+   bg = elm_bg_add(win);
+   evas_object_size_hint_weight_set(bg, 1.0, 1.0);
+   elm_win_resize_object_add(win, bg);
+   evas_object_show(bg);
+   
+   	evas_object_resize(win, 480, 600);	
+   
+   	//add vbox 4
+	vbox = elm_box_add(win);
+	elm_win_resize_object_add(win, vbox);
+	evas_object_size_hint_weight_set(vbox, 1.0, 1.0);
+	evas_object_show(vbox);
+
+	// add button hbox
+	hbox = elm_box_add(win);
+	
+	elm_box_horizontal_set(hbox, 1);
+	evas_object_size_hint_weight_set(hbox, 1.0, 0.0);
+	evas_object_size_hint_align_set(hbox, -1.0, 0.0);
+	elm_box_pack_end(vbox, hbox);
+	evas_object_show(hbox);
+
+	// add a frame
+	fr = elm_frame_add(win);
+	elm_object_style_set(fr, "outdent_top");
+	evas_object_size_hint_weight_set(fr, 0.0, 0.0);
+	evas_object_size_hint_align_set(fr, 0.0, -1.0);
+	elm_box_pack_end(hbox, fr);
+	evas_object_show(fr);
+
+	// add a label
+	lb = elm_label_add(win);
+	elm_label_label_set(lb, "SETTTTTIIINGS");
+	elm_frame_content_set(fr, lb);
+	evas_object_show(lb);  
+
+	// add button hbox1
+	hbox1 = elm_box_add(win);
+	elm_box_horizontal_set(hbox1, 1);
+	evas_object_size_hint_weight_set(hbox1, 1.0, 0.0);
+	evas_object_size_hint_align_set(hbox1, -1.0, 0.0);
+	elm_box_pack_end(vbox, hbox1);
+	evas_object_show(hbox1);
+
+	//add buttons to hbox1
+	bt = elm_button_add(win);
+	elm_button_label_set(bt, "Close");
+	evas_object_size_hint_weight_set(bt, 1.0, 1.0);
+	evas_object_size_hint_align_set(bt, -1.0, -1.0);
+	elm_box_pack_end(hbox1, bt);
+	evas_object_show(bt);
+	evas_object_smart_callback_add(bt, "clicked", cb_close_win, win);
+  
+   evas_object_show(win);
+	
 }

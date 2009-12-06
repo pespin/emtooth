@@ -25,8 +25,36 @@ typedef struct _DeviceList {
 	Evas_Object* li;
 } DeviceList;
 
+typedef struct _RemoteDevice {
+	char* addr;
+	char* name;
+	int enabled;
+} RemoteDevice;
+
+/*
+typedef struct _LocalDevice {
+	char* addr;
+	char* name;
+	int enabled;
+} LocalDevice;
+
+{   'Address': '00:22:43:F2:FA:91',
+    'Class': 4849932,
+    'RemoteDevices': [],
+    'Discoverable': False,
+    'DiscoverableTimeout': 0,
+    'Discovering': True,
+    'Name': 'BCM2046B1 Bluetooth RemoteDevice',
+    'Pairable': True,
+    'PairableTimeout': 0,
+    'Powered': True}
+
+*/
 
 void cb_safe_exit(void *data, Evas_Object *obj, void *event_info);
+void cb_close_win(void *data, Evas_Object *obj, void *event_info);
 
 void cb_device_list_refresh(void *data, Evas_Object *obj, void *event_info);
 void cb_device_list_selected(void *data, Evas_Object *obj, void *event_info);
+
+void cb_settings_dialog(void *data, Evas_Object *obj, void *event_info);

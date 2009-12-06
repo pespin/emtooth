@@ -19,113 +19,54 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <E_DBus.h>
 #include "gui.h"
-#include "cb_dbus.h"
+#include "dbus.h"
 
-void dbus_init_session(void* data) {
+void dbus_init_session(DeviceList* data) {
 	
+	/* First we get device dbus interface */
+	conn = e_dbus_bus_get(DBUS_BUS_SYSTEM); 
 	
-	E_DBus_Connection* conn;
-    conn = e_dbus_bus_get(DBUS_BUS_SYSTEM); 
-      
-    e_dbus_signal_handler_add(
-	conn,
-	"org.bluez", //const char *sender 
-	"/org/bluez/1486/hci0", // const char *path 
-	"org.bluez.Adapter", // const char *interface
-	"DeviceFound",
-	cb_device_found, //E_DBus_Signal_Cb cb_signal
-	data);
-	
-	/*
-	    e_dbus_signal_handler_add(
-	conn,
-	"org.bluez", //const char *sender 
-	"/org/bluez/1486/hci0", // const char *path 
-	"org.bluez.Adapter", // const char *interface
-	"DeviceCreated",
-	cb_device_found, //E_DBus_Signal_Cb cb_signal
-	data);
-	*/
-	
-		    e_dbus_signal_handler_add(
-	conn,
-	"org.bluez", //const char *sender 
-	"/org/bluez/1486/hci0", // const char *path 
-	"org.bluez.Adapter", // const char *interface
-	"DeviceDisappeared",
-	cb_device_disappeared, //E_DBus_Signal_Cb cb_signal
-	data);
-
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
 		"org.bluez",
-		"/org/bluez/1486/hci0",
+		"/",
+		"org.bluez.Manager",
+		"DefaultAdapter");
+	e_dbus_message_send(conn, msg, cb_get_dbus_path, -1, data);
+	dbus_message_unref(msg);
+		
+}
+
+void dbus_start_discovery(DeviceList* data) {
+	
+/* now connect to signals and send StartDiscovery message */
+
+    e_dbus_signal_handler_add(conn,
+	"org.bluez",
+	BLUEZPATH,
+	"org.bluez.Adapter",
+	"DeviceFound",
+	cb_device_found,
+	data);
+	
+	e_dbus_signal_handler_add(conn,
+	"org.bluez", 
+	BLUEZPATH,
+	"org.bluez.Adapter",
+	"DeviceDisappeared",
+	cb_device_disappeared,
+	data);
+
+	
+	DBusMessage *msg;
+	msg = dbus_message_new_method_call(
+		"org.bluez",
+		BLUEZPATH,
 		"org.bluez.Adapter",
 		"StartDiscovery");
 	
 	e_dbus_message_send(conn, msg, cb_start_discovery, -1, NULL);
 	dbus_message_unref(msg);
 
-   //e_dbus_connection_close(conn); 	
+   //e_dbus_connection_close(conn); 
 }
-
-
-
-
-
-
-
-
-
-
-/*
- 	
-	
-	
-	/*	
-     dbus_g_proxy_add_signal(obj, "RemoteDeviceFound", G_TYPE_STRING, G_TYPE_UINT, G_TYPE_INT, G_TYPE_INVALID);
-        dbus_g_proxy_connect_signal(obj, "RemoteDeviceFound", G_CALLBACK(remote_device_found), bus, NULL);
-
-dbus_g_proxy_new_for_name(bus, "org.bluez", "/org/bluez/hci0", "org.bluez.Adapter");
-
-		dbus_g_proxy_new_for_name           (DBusGConnection *connection,
-                                                         const char *name,
-                                                         const char *path,
-                                                         const char *interface);
-
-		
-		
-	e_dbus_signal_handler_add(
-	conn,
-	"org.bluez", //const char *sender 
-	"/org/bluez/1486/hci0", // const char *path 
-	"org.bluez.Adapter", // const char *interface
-	const char *member,
-	E_DBus_Signal_Cb cb_signal,
-	void *data);
-   	
-	
-    
-   
-   E_DBus_Object* obj;
-   obj = e_dbus_object_add(conn, "/org/bluez/1486/hci0", NULL);
-   
-
-   E_DBus_Interface* iface;
-   iface = e_dbus_interface_new("/org/bluez/1486/hci0");
-   
-   e_dbus_object_interface_attach(obj, iface);
- 
-   Eina_List* li = e_dbus_object_interfaces_get(obj);
-   
-   Eina_List* cur;
-   char* row;
-   EINA_LIST_FOREACH(li, cur, row) {
-	 
-	 fprintf(stderr, "%s\n", row);
-	   
-	}
-	
-	
-	   */
-   
