@@ -21,9 +21,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 void gui_create();
 
-void gui_device_list_remove(DeviceList* DL, const char* label);
+void gui_device_list_remove(DeviceList* DL, RemoteDevice* device);
 
-void gui_device_list_append(DeviceList* DL, const char* label);
+void gui_device_list_append(DeviceList* DL, RemoteDevice* device);
 
 void gui_device_list_populate(DeviceList* DL);
 

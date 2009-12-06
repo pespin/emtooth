@@ -26,7 +26,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 EAPI int
 elm_main(int argc, char **argv)
 {  
-	
+	/*
+	BLUEZID = get_bluez_pid();
+	if(BLUEZID==0) {
+		fprintf(stderr, "Could not get bluez dbus daemon pid");
+		return EXIT_FAILURE;
+	}
+	BLUEZPATH = malloc(50);
+	memset(BLUEZPATH, 0, sizeof(BLUEZPATH));
+	sprintf(BLUEZPATH, "/org/bluez/%i/hci0", BLUEZID);
+	fprintf(stderr, "Using path '%s' to connect to bluez dbus daemon...", BLUEZPATH);
+	*/
 	
 	DeviceList DL;
 	DL.devices =  NULL;

@@ -23,6 +23,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 void cb_safe_exit(void *data, Evas_Object *obj, void *event_info) {
    elm_exit();
 }
+void cb_close_win(void *data, Evas_Object *obj, void *event_info) {
+	evas_object_del(data);	
+}
 
 
 void cb_device_list_refresh(void *data, Evas_Object *obj, void *event_info) {
@@ -38,9 +41,14 @@ void cb_device_list_selected(void *data, Evas_Object *obj, void *event_info) {
    
 	Elm_List_Item  *item = elm_list_selected_item_get(DL->li);
 	if(!item) return;
-	char* device = elm_list_item_data_get(item);
-	fprintf(stderr, "Device %s selected!\n", device);
+	RemoteDevice* device = elm_list_item_data_get(item);
+	fprintf(stderr, "Device %s selected!\n", device->addr);
    /* TODO: here we call a function inside gui.c to create a win with 
     * info/functions on the selected device */
 }
 
+
+void cb_settings_dialog(void *data, Evas_Object *obj, void *event_info) {
+
+		gui_settings_dialog_create();
+}
