@@ -17,31 +17,30 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-#include <pthread.h>
 #include <Elementary.h>
-#include <E_DBus.h>
 #include "gui.h"
-#include "dbus.h"
 
-EAPI int
-elm_main(int argc, char **argv)
-{  
-	
-	
-	DeviceList DL;
-	DL.devices =  NULL;
-	DL.li = NULL;
-	
-	int ret;
-	pthread_t t_id;
-	//start the dbus thread
-	ret = pthread_create(&t_id, NULL, (void *)dbus_init_session, &DL);
-   
-   gui_create(&DL);
-  
-   elm_run();
-   elm_shutdown();
-   return 0;
+void cb_safe_exit(void *data, Evas_Object *obj, void *event_info) {
+   elm_exit();
 }
-ELM_MAIN()
+
+
+void cb_device_list_refresh(void *data, Evas_Object *obj, void *event_info) {
+   fprintf(stderr, "Refresh button pressed.\n");
+   DeviceList* DL = (DeviceList*) data;
+   gui_device_list_clear(DL->li);
+   gui_device_list_populate(DL);
+}
+
+
+void cb_device_list_selected(void *data, Evas_Object *obj, void *event_info) {
+   DeviceList* DL = (DeviceList*) data;
+   
+	Elm_List_Item  *item = elm_list_selected_item_get(DL->li);
+	if(!item) return;
+	char* device = elm_list_item_data_get(item);
+	fprintf(stderr, "Device %s selected!\n", device);
+   /* TODO: here we call a function inside gui.c to create a win with 
+    * info/functions on the selected device */
+}
 

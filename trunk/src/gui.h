@@ -17,4 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-#include "callbacks.h"
+#include "cb_gui.h"
+
+void gui_create();
+
+void gui_device_list_remove(DeviceList* DL, const char* label);
+
+void gui_device_list_append(DeviceList* DL, const char* label);
+
+void gui_device_list_populate(DeviceList* DL);
+
+void gui_device_list_clear(Evas_Object *li);

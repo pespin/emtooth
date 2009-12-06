@@ -595,6 +595,12 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+EDBUS_LIBS
+EDBUS_CFLAGS
+DBUS_LIBS
+DBUS_CFLAGS
+EINA_LIBS
+EINA_CFLAGS
 ELEMENTARY_LIBS
 ELEMENTARY_CFLAGS
 PKG_CONFIG
@@ -694,7 +700,13 @@ CPPFLAGS
 CPP
 PKG_CONFIG
 ELEMENTARY_CFLAGS
-ELEMENTARY_LIBS'
+ELEMENTARY_LIBS
+EINA_CFLAGS
+EINA_LIBS
+DBUS_CFLAGS
+DBUS_LIBS
+EDBUS_CFLAGS
+EDBUS_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1327,6 +1339,13 @@ Some influential environment variables:
               C compiler flags for ELEMENTARY, overriding pkg-config
   ELEMENTARY_LIBS
               linker flags for ELEMENTARY, overriding pkg-config
+  EINA_CFLAGS C compiler flags for EINA, overriding pkg-config
+  EINA_LIBS   linker flags for EINA, overriding pkg-config
+  DBUS_CFLAGS C compiler flags for DBUS, overriding pkg-config
+  DBUS_LIBS   linker flags for DBUS, overriding pkg-config
+  EDBUS_CFLAGS
+              C compiler flags for EDBUS, overriding pkg-config
+  EDBUS_LIBS  linker flags for EDBUS, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -5830,6 +5849,277 @@ else
 $as_echo "yes" >&6; }
 	:
 fi
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for EINA" >&5
+$as_echo_n "checking for EINA... " >&6; }
+
+if test -n "$PKG_CONFIG"; then
+    if test -n "$EINA_CFLAGS"; then
+        pkg_cv_EINA_CFLAGS="$EINA_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"eina-0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "eina-0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_EINA_CFLAGS=`$PKG_CONFIG --cflags "eina-0" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+if test -n "$PKG_CONFIG"; then
+    if test -n "$EINA_LIBS"; then
+        pkg_cv_EINA_LIBS="$EINA_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"eina-0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "eina-0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_EINA_LIBS=`$PKG_CONFIG --libs "eina-0" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        EINA_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "eina-0"`
+        else
+	        EINA_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "eina-0"`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$EINA_PKG_ERRORS" >&5
+
+	as_fn_error "Package requirements (eina-0) were not met:
+
+$EINA_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables EINA_CFLAGS
+and EINA_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" "$LINENO" 5
+elif test $pkg_failed = untried; then
+	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables EINA_CFLAGS
+and EINA_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." "$LINENO" 5; }
+else
+	EINA_CFLAGS=$pkg_cv_EINA_CFLAGS
+	EINA_LIBS=$pkg_cv_EINA_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	:
+fi
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for DBUS" >&5
+$as_echo_n "checking for DBUS... " >&6; }
+
+if test -n "$PKG_CONFIG"; then
+    if test -n "$DBUS_CFLAGS"; then
+        pkg_cv_DBUS_CFLAGS="$DBUS_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"dbus-1\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "dbus-1") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_DBUS_CFLAGS=`$PKG_CONFIG --cflags "dbus-1" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+if test -n "$PKG_CONFIG"; then
+    if test -n "$DBUS_LIBS"; then
+        pkg_cv_DBUS_LIBS="$DBUS_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"dbus-1\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "dbus-1") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_DBUS_LIBS=`$PKG_CONFIG --libs "dbus-1" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        DBUS_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "dbus-1"`
+        else
+	        DBUS_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "dbus-1"`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$DBUS_PKG_ERRORS" >&5
+
+	as_fn_error "Package requirements (dbus-1) were not met:
+
+$DBUS_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables DBUS_CFLAGS
+and DBUS_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" "$LINENO" 5
+elif test $pkg_failed = untried; then
+	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables DBUS_CFLAGS
+and DBUS_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." "$LINENO" 5; }
+else
+	DBUS_CFLAGS=$pkg_cv_DBUS_CFLAGS
+	DBUS_LIBS=$pkg_cv_DBUS_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	:
+fi
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for EDBUS" >&5
+$as_echo_n "checking for EDBUS... " >&6; }
+
+if test -n "$PKG_CONFIG"; then
+    if test -n "$EDBUS_CFLAGS"; then
+        pkg_cv_EDBUS_CFLAGS="$EDBUS_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"edbus\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "edbus") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_EDBUS_CFLAGS=`$PKG_CONFIG --cflags "edbus" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+if test -n "$PKG_CONFIG"; then
+    if test -n "$EDBUS_LIBS"; then
+        pkg_cv_EDBUS_LIBS="$EDBUS_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"edbus\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "edbus") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_EDBUS_LIBS=`$PKG_CONFIG --libs "edbus" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        EDBUS_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "edbus"`
+        else
+	        EDBUS_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "edbus"`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$EDBUS_PKG_ERRORS" >&5
+
+	as_fn_error "Package requirements (edbus) were not met:
+
+$EDBUS_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables EDBUS_CFLAGS
+and EDBUS_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" "$LINENO" 5
+elif test $pkg_failed = untried; then
+	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables EDBUS_CFLAGS
+and EDBUS_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." "$LINENO" 5; }
+else
+	EDBUS_CFLAGS=$pkg_cv_EDBUS_CFLAGS
+	EDBUS_LIBS=$pkg_cv_EDBUS_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	:
+fi
+
 
 ac_config_files="$ac_config_files Makefile"
 

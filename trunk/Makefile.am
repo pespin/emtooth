@@ -7,8 +7,12 @@ bin_PROGRAMS      = emtooth
 
 emtooth_SOURCES = \
 	src/main.c \
-	src/callbacks.c \
-	src/callbacks.h \
+	src/cb_dbus.c \
+	src/cb_dbus.h \
+	src/cb_gui.c \
+	src/cb_gui.h \
+	src/dbus.c \
+	src/dbus.h \
 	src/gui.c \
 	src/gui.h
 emtooth_LDADD = @ELEMENTARY_LIBS@
