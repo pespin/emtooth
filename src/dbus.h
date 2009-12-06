@@ -17,8 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-#include <Elementary.h>
+#include <E_DBus.h>
 
-void app_exit(void *data, Evas_Object *obj, void *event_info) {
-   elm_exit();
-}
+void dbus_init_session(void* data);
