@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 void dbus_init_session(DeviceList* data) {
 	
 	/* First we get device dbus interface */
-	conn = e_dbus_bus_get(DBUS_BUS_SYSTEM); 
+	DBUSCONN = e_dbus_bus_get(DBUS_BUS_SYSTEM); 
 	
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
@@ -32,16 +32,29 @@ void dbus_init_session(DeviceList* data) {
 		"/",
 		"org.bluez.Manager",
 		"DefaultAdapter");
-	e_dbus_message_send(conn, msg, cb_get_dbus_path, -1, data);
+	e_dbus_message_send(DBUSCONN, msg, cb_get_dbus_path, -1, data);
 	dbus_message_unref(msg);
 		
+}
+
+void dbus_update_local_device_info(DeviceList* data) {
+	
+	DBusMessage *msg;
+	msg = dbus_message_new_method_call(
+		"org.bluez",
+		BLUEZPATH,
+		"org.bluez.Adapter",
+		"GetProperties");
+	e_dbus_message_send(DBUSCONN, msg, cb_update_local_device_info, -1, data);
+	dbus_message_unref(msg);
+	
 }
 
 void dbus_start_discovery(DeviceList* data) {
 	
 /* now connect to signals and send StartDiscovery message */
 
-    e_dbus_signal_handler_add(conn,
+    e_dbus_signal_handler_add(DBUSCONN,
 	"org.bluez",
 	BLUEZPATH,
 	"org.bluez.Adapter",
@@ -49,7 +62,7 @@ void dbus_start_discovery(DeviceList* data) {
 	cb_device_found,
 	data);
 	
-	e_dbus_signal_handler_add(conn,
+	e_dbus_signal_handler_add(DBUSCONN,
 	"org.bluez", 
 	BLUEZPATH,
 	"org.bluez.Adapter",
@@ -65,7 +78,7 @@ void dbus_start_discovery(DeviceList* data) {
 		"org.bluez.Adapter",
 		"StartDiscovery");
 	
-	e_dbus_message_send(conn, msg, cb_start_discovery, -1, NULL);
+	e_dbus_message_send(DBUSCONN, msg, cb_start_discovery, -1, NULL);
 	dbus_message_unref(msg);
 
    //e_dbus_connection_close(conn); 

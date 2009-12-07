@@ -22,4 +22,6 @@ Foundation, Inc., 51 Franklin Stre et, Fifth Floor, Boston, MA  02110-1301, USA.
 
 void dbus_init_session(DeviceList* data);
 
+void dbus_update_local_device_info(DeviceList* data);
+
 void dbus_start_discovery(DeviceList* data);
