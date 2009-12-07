@@ -16,14 +16,38 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-
 #include <Elementary.h>
-#include "defines.h"
+#include <E_DBus.h>
 
-void cb_safe_exit(void *data, Evas_Object *obj, void *event_info);
-void cb_close_win(void *data, Evas_Object *obj, void *event_info);
+typedef int bool;
 
-void cb_device_list_refresh(void *data, Evas_Object *obj, void *event_info);
-void cb_device_list_selected(void *data, Evas_Object *obj, void *event_info);
+typedef struct _DeviceList {
+	Eina_List* devices;
+	Evas_Object* li;
+} DeviceList;
 
-void cb_settings_dialog(void *data, Evas_Object *obj, void *event_info);
+typedef struct _RemoteDevice {
+	char* addr;
+	char* name;
+	int enabled;
+} RemoteDevice;
+
+
+typedef struct _LocalDevice {
+	char* addr;
+	int class;
+	bool discoverable;
+	int discoverable_timeout;
+	bool discovering;
+	char* name;
+	bool pairable;
+	int pairable_timeout;
+	bool powered;
+} LocalDevice;
+
+
+
+char* BLUEZPATH;
+E_DBus_Connection* DBUSCONN;
+
+LocalDevice* ADAPTER;

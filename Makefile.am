@@ -7,6 +7,7 @@ bin_PROGRAMS      = emtooth
 
 emtooth_SOURCES = \
 	src/main.c \
+	src/defines.h \
 	src/cb_dbus.c \
 	src/cb_dbus.h \
 	src/cb_gui.c \

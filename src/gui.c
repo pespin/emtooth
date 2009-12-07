@@ -128,9 +128,6 @@ void gui_device_list_append(DeviceList* DL, RemoteDevice* device) {
 	//Add last RemoteDevice to eina list.
 	DL->devices = eina_list_append(DL->devices, device);
 	
-	//last data:
-	//char* label = eina_list_data_get(eina_list_last(DL->RemoteDevices));
-	
 	Evas_Object *ic;
 	ic = elm_icon_add(DL->li);
 	elm_icon_standard_set(ic, "arrow_left");
@@ -178,11 +175,14 @@ fprintf(stderr, "Clearing list of RemoteDevices...\n");
 
 void gui_settings_dialog_create() {
 
-   Evas_Object *win, *bg, *vbox, *fr, *lb, *hbox, *hbox1, *bt;
+	char buf[255];
+
+   Evas_Object *win, *bg, *vbox, *vbox_in, *vbox_fr, *fr, *lb, *hbox, *bt, *entry, *tg;
 
    win = elm_win_add(NULL, "settings_dialog", ELM_WIN_BASIC);
    elm_win_title_set(win, "emtooth - Settings");
-   evas_object_smart_callback_add(win, "delete,request", cb_close_win, win);
+   elm_win_autodel_set(win, TRUE);
+   //evas_object_smart_callback_add(win, "delete,request", cb_close_win, win);
 
    bg = elm_bg_add(win);
    evas_object_size_hint_weight_set(bg, 1.0, 1.0);
@@ -191,7 +191,7 @@ void gui_settings_dialog_create() {
    
    	evas_object_resize(win, 480, 600);	
    
-   	//add vbox 4
+   	//add vbox
 	vbox = elm_box_add(win);
 	elm_win_resize_object_add(win, vbox);
 	evas_object_size_hint_weight_set(vbox, 1.0, 1.0);
@@ -199,7 +199,6 @@ void gui_settings_dialog_create() {
 
 	// add button hbox
 	hbox = elm_box_add(win);
-	
 	elm_box_horizontal_set(hbox, 1);
 	evas_object_size_hint_weight_set(hbox, 1.0, 0.0);
 	evas_object_size_hint_align_set(hbox, -1.0, 0.0);
@@ -210,30 +209,128 @@ void gui_settings_dialog_create() {
 	fr = elm_frame_add(win);
 	elm_object_style_set(fr, "outdent_top");
 	evas_object_size_hint_weight_set(fr, 0.0, 0.0);
-	evas_object_size_hint_align_set(fr, 0.0, -1.0);
+	evas_object_size_hint_align_set(fr, 0.0, 1.0);
 	elm_box_pack_end(hbox, fr);
 	evas_object_show(fr);
 
-	// add a label
+	//ADDRESS
+	sprintf(buf, "<b>Address:</b> %s", ADAPTER->addr);
+	//fprintf(stderr, "\n\n\nGUI-ADDR:%s;\n\n\n", ADAPTER->addr); 
 	lb = elm_label_add(win);
-	elm_label_label_set(lb, "SETTTTTIIINGS");
-	elm_frame_content_set(fr, lb);
-	evas_object_show(lb);  
+	elm_label_label_set(lb, buf);
+	elm_box_pack_end(hbox, lb);
+	evas_object_show(lb);
+	
+	//HERE STARTS ALL THE OPTIONS LIST:
+	
+	vbox_in = elm_box_add(win);
+	elm_win_resize_object_add(win, vbox_in);
+	evas_object_size_hint_align_set(vbox_in, -1.0, 0.0);
+	evas_object_size_hint_weight_set(vbox_in, 1.0, 1.0);
+	elm_box_pack_end(vbox, vbox_in);
+	evas_object_show(vbox_in);
 
-	// add button hbox1
-	hbox1 = elm_box_add(win);
-	elm_box_horizontal_set(hbox1, 1);
-	evas_object_size_hint_weight_set(hbox1, 1.0, 0.0);
-	evas_object_size_hint_align_set(hbox1, -1.0, 0.0);
-	elm_box_pack_end(vbox, hbox1);
-	evas_object_show(hbox1);
+	// NAME:
+	// add a frame
+	fr = elm_frame_add(win);
+	elm_object_style_set(fr, "default");
+	evas_object_size_hint_weight_set(fr, 1.0, 0.0);
+	evas_object_size_hint_align_set(fr, -1.0, -1.0);
+	elm_box_pack_end(vbox_in, fr);
+	evas_object_show(fr);
+	
+	hbox = elm_box_add(win);
+	elm_box_horizontal_set(hbox, 1);
+	evas_object_size_hint_weight_set(hbox, 1.0, 0.0);
+	evas_object_size_hint_align_set(hbox, -1.0, 0.0);
+	elm_frame_content_set(fr, hbox);
+	evas_object_show(hbox);
 
-	//add buttons to hbox1
+	lb = elm_label_add(win);
+	elm_label_label_set(lb, "<b>Name:</b> ");
+	elm_box_pack_end(hbox, lb);
+	evas_object_show(lb);
+	
+	entry = elm_entry_add(win);
+	elm_entry_single_line_set(entry, TRUE);
+	elm_entry_entry_set(entry, ADAPTER->name);
+	elm_box_pack_end(hbox, entry);
+	evas_object_show(entry);
+	/* TODO: callback that saves modified name on unfocus */
+	
+	// DISCOVERABLE TOGGLE + TIMEOUT:
+	// add a frame
+	fr = elm_frame_add(win);
+	elm_object_style_set(fr, "default");
+	evas_object_size_hint_weight_set(fr, 1.0, 0.0);
+	evas_object_size_hint_align_set(fr, -1.0, -1.0);
+	elm_box_pack_end(vbox_in, fr);
+	evas_object_show(fr);
+	
+	vbox_fr = elm_box_add(win);
+	elm_win_resize_object_add(win, vbox_fr);
+	evas_object_size_hint_align_set(vbox_fr, -1.0, 0.0);
+	evas_object_size_hint_weight_set(vbox_fr, 1.0, 1.0);
+	elm_frame_content_set(fr, vbox_fr);
+	evas_object_show(vbox_in);
+	
+	hbox = elm_box_add(win);
+	elm_box_horizontal_set(hbox, 1);
+	evas_object_size_hint_weight_set(hbox, 1.0, 0.0);
+	evas_object_size_hint_align_set(hbox, -1.0, 0.0);
+	elm_box_pack_end(vbox_fr, hbox);
+	evas_object_show(hbox);
+	
+	lb = elm_label_add(win);
+	elm_label_label_set(lb, "<b>Discoverable:</b>");
+	elm_box_pack_end(hbox, lb);
+	evas_object_show(lb);
+	
+	tg = elm_toggle_add(win);
+	//elm_toggle_label_set(tg, "<b>Discoverable:</b>");
+	elm_toggle_states_labels_set(tg, "On", "Off");
+	elm_box_pack_end(hbox, tg);
+	evas_object_show(tg);
+	/* TODO: add callback on change status */
+	
+	//endl
+	
+	hbox = elm_box_add(win);
+	elm_box_horizontal_set(hbox, 1);
+	evas_object_size_hint_weight_set(hbox, 1.0, 0.0);
+	evas_object_size_hint_align_set(hbox, -1.0, 0.0);
+	elm_box_pack_end(vbox_fr, hbox);
+	evas_object_show(hbox);
+	
+	lb = elm_label_add(win);
+	elm_label_label_set(lb, "<b>Discoverable timeout:</b>");
+	elm_box_pack_end(hbox, lb);
+	evas_object_show(lb);
+	
+	entry = elm_entry_add(win);
+	elm_entry_single_line_set(entry, TRUE);
+	sprintf(buf, "%d", ADAPTER->discoverable_timeout);
+	elm_entry_entry_set(entry, buf);
+	elm_box_pack_end(hbox, entry);
+	evas_object_show(entry);
+	/* TODO: callback that saves modified name on unfocus */
+	
+	
+	//BOTTOM:
+	// add button hbox
+	hbox = elm_box_add(win);
+	elm_box_horizontal_set(hbox, 1);
+	evas_object_size_hint_weight_set(hbox, 1.0, 0.0);
+	evas_object_size_hint_align_set(hbox, -1.0, 0.0);
+	elm_box_pack_end(vbox, hbox);
+	evas_object_show(hbox);
+
+	//add buttons to hbox
 	bt = elm_button_add(win);
 	elm_button_label_set(bt, "Close");
 	evas_object_size_hint_weight_set(bt, 1.0, 1.0);
 	evas_object_size_hint_align_set(bt, -1.0, -1.0);
-	elm_box_pack_end(hbox1, bt);
+	elm_box_pack_end(hbox, bt);
 	evas_object_show(bt);
 	evas_object_smart_callback_add(bt, "clicked", cb_close_win, win);
   

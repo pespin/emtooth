@@ -42,15 +42,94 @@ void cb_get_dbus_path(void *data, DBusMessage *replymsg, DBusError *error) {
 	BLUEZPATH = path;
 	fprintf(stderr, "Using path '%s' to connect to bluez dbus daemon...\n", BLUEZPATH);
 	
-	//start signals on that interface:
+	//get local device info and start signals on that interface:
+	dbus_update_local_device_info();
 	dbus_start_discovery(data);
 }
 
 
 
+void cb_update_local_device_info (void *data, DBusMessage *replymsg, DBusError *error) {
+		
+	fprintf(stderr, "Updating local device info...\n");	
+		
+	DBusMessageIter array_iter, dict_iter, key_iter, value_iter;
+	int tmp = 0;
+
+	//open dict:
+	dbus_message_iter_init(replymsg, &array_iter);
+	dbus_message_iter_recurse(&array_iter, &dict_iter);
+	
+	//foreach pair...:
+	while (dbus_message_iter_get_arg_type (&dict_iter) != DBUS_TYPE_INVALID) {
+		const char *key = NULL;
+        
+        //get key:
+        dbus_message_iter_recurse(&dict_iter, &key_iter);
+        dbus_message_iter_get_basic(&key_iter, &key);
+        
+        //set value_iter to point to next value:
+        dbus_message_iter_next (&key_iter);
+        dbus_message_iter_recurse (&key_iter, &value_iter);
+
+        //Depending on key, save value where it should go:
+		if(!strcmp(key,"Address")) {
+			dbus_message_iter_get_basic(&value_iter, &ADAPTER->addr);
+			ADAPTER->addr = strdup(ADAPTER->addr); //make a copy
+			//fprintf(stderr, "\n\n\nADDR:%s;\n\n\n", ADAPTER->addr);
+					
+		} else if(!strcmp(key,"Class")) {
+			dbus_message_iter_get_basic(&value_iter, &tmp);
+			ADAPTER->class = tmp;
+			
+		} else if(!strcmp(key,"Discoverable")) {
+			dbus_message_iter_get_basic(&value_iter, &tmp);
+			ADAPTER->discoverable = tmp;
+			
+		} else if(!strcmp(key,"DiscoverableTimeout")) {
+			dbus_message_iter_get_basic(&value_iter, &tmp);
+			ADAPTER->discoverable_timeout = tmp;
+			
+		} else if(!strcmp(key,"Discovering")) {
+			dbus_message_iter_get_basic(&value_iter, &tmp);
+			ADAPTER->discovering = tmp;
+			
+		} else if(!strcmp(key,"Name")) {
+			dbus_message_iter_get_basic(&value_iter, &ADAPTER->name);
+			ADAPTER->name = strdup(ADAPTER->name);
+			
+		} else if(!strcmp(key,"Pairable")) {
+			dbus_message_iter_get_basic(&value_iter, &tmp);
+			ADAPTER->pairable = tmp;
+			
+		} else if(!strcmp(key,"PairableTimeout")) {
+			dbus_message_iter_get_basic(&value_iter, &tmp);
+			ADAPTER->pairable_timeout = tmp;
+			
+		} else if(!strcmp(key,"Powered")) {
+			dbus_message_iter_get_basic(&value_iter, &tmp);
+			ADAPTER->powered = tmp;
+		}
+		
+		dbus_message_iter_next (&dict_iter);
+	}
+
+	if (dbus_error_is_set(error)) {
+		printf("Error: %s - %s\n", error->name, error->message);
+	}
+	
+	//fprintf(stderr, "ADDR:%s; name:%s, discoverable:%d; discoverable_timeout:%d;", 
+	//ADAPTER->addr, ADAPTER->name, ADAPTER->discoverable, ADAPTER->discoverable_timeout);
+
+}
+
+
 void cb_start_discovery(void *data, DBusMessage *replymsg, DBusError *error) {
 	if (dbus_error_is_set(error)) {
 		printf("Error: %s - %s\n", error->name, error->message);
+	} else {
+	//set LocalDevice->discovering to True manually... lot faster :)
+	ADAPTER->discovering = TRUE;	
 	}
 }
 

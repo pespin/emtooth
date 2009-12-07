@@ -19,11 +19,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <E_DBus.h>
 
-char* BLUEZPATH;
-E_DBus_Connection* conn;
-
 
 void cb_get_dbus_path(void *data, DBusMessage *replymsg, DBusError *error);
+
+void cb_update_local_device_info (void *data, DBusMessage *replymsg, DBusError *error);
 
 void cb_start_discovery(void *data, DBusMessage *replymsg, DBusError *error);
 
