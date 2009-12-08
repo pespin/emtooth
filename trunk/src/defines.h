@@ -34,10 +34,18 @@ typedef struct _DeviceListCb {
 } DeviceListCb;
 
 typedef struct _RemoteDevice {
+	char* path;
 	char* addr;
 	char* name;
-	int enabled;
+	int class;
+	bool connected;
+	char* icon;
+	char* alias;
+	bool paired;
+	bool trusted;
 } RemoteDevice;
+
+
 
 
 typedef struct _LocalDevice {
