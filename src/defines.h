@@ -26,6 +26,12 @@ typedef struct _DeviceList {
 	Evas_Object* li;
 } DeviceList;
 
+typedef struct _DeviceListCb {
+	DeviceList* DL;
+	Evas_Object* obj;
+	Evas_Object* parent;
+} DeviceListCb;
+
 typedef struct _RemoteDevice {
 	char* addr;
 	char* name;
@@ -46,8 +52,16 @@ typedef struct _LocalDevice {
 } LocalDevice;
 
 
+typedef struct _DbusConn {
+	char* path;
+	E_DBus_Connection* conn;
+	E_DBus_Signal_Handler* DeviceFound;
+	E_DBus_Signal_Handler* DeviceDissapeared;
+} DbusConn;
 
-char* BLUEZPATH;
-E_DBus_Connection* DBUSCONN;
+
+//char* BLUEZPATH;
+//E_DBus_Connection* DBUSCONN;
 
 LocalDevice* ADAPTER;
+DbusConn* DBUSCONN;

@@ -28,11 +28,28 @@ void cb_close_win(void *data, Evas_Object *obj, void *event_info) {
 }
 
 
-void cb_device_list_refresh(void *data, Evas_Object *obj, void *event_info) {
-   fprintf(stderr, "Refresh button pressed.\n");
-   DeviceList* DL = (DeviceList*) data;
-   gui_device_list_clear(DL->li);
-   gui_device_list_populate(DL);
+void cb_discovery_start_clicked(void *data, Evas_Object *obj, void *event_info) {
+	fprintf(stderr, "Start Discovery button pressed.\n");
+	DeviceListCb* Cb = (DeviceListCb*) data;
+   
+	evas_object_hide(obj);
+	elm_box_unpack(Cb->parent, obj);
+	elm_box_pack_start(Cb->parent, Cb->obj);
+	evas_object_show(Cb->obj);
+	dbus_discovery_start(Cb->DL);
+}
+
+
+void cb_discovery_stop_clicked(void *data, Evas_Object *obj, void *event_info) {
+   fprintf(stderr, "Stop Discovery button pressed.\n");
+   DeviceListCb* Cb = (DeviceListCb*) data;
+   
+	evas_object_hide(obj);
+	elm_box_unpack(Cb->parent, obj);
+
+	elm_box_pack_start(Cb->parent, Cb->obj);
+	evas_object_show(Cb->obj);
+	dbus_discovery_stop(Cb->DL);
 }
 
 
