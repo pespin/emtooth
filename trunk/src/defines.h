@@ -24,6 +24,7 @@ typedef int bool;
 typedef struct _DeviceList {
 	Eina_List* devices;
 	Evas_Object* li;
+	Evas_Object* header;
 } DeviceList;
 
 typedef struct _DeviceListCb {
@@ -60,8 +61,10 @@ typedef struct _DbusConn {
 } DbusConn;
 
 
-//char* BLUEZPATH;
-//E_DBus_Connection* DBUSCONN;
+
+/* GLOBAL VARIABLES */
 
 LocalDevice* ADAPTER;
 DbusConn* DBUSCONN;
+
+
