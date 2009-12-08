@@ -21,8 +21,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 void cb_dbus_init_session(void *data, DBusMessage *replymsg, DBusError *error);
+void cb_create_remote_device_path(void *data, DBusMessage *replymsg, DBusError *error);
+void cb_get_remote_device_path(void *data, DBusMessage *replymsg, DBusError *error);
 
-void cb_update_local_device_info (void *data, DBusMessage *replymsg, DBusError *error);
+void cb_get_local_device_info (void *data, DBusMessage *replymsg, DBusError *error);
+void cb_get_remote_device_info (void *data, DBusMessage *replymsg, DBusError *error);
 
 void cb_discovery_start_msg(void *data, DBusMessage *replymsg, DBusError *error);
 void cb_discovery_stop_msg(void *data, DBusMessage *replymsg, DBusError *error);

@@ -37,7 +37,47 @@ void dbus_init_session(DeviceList* DL) {
 		
 }
 
-void dbus_update_local_device_info(DeviceList* DL) {
+
+void dbus_get_remote_device_path(RemoteDevice* device) {
+
+	DBusMessage *msg;
+	msg = dbus_message_new_method_call(
+		"org.bluez",
+		DBUSCONN->path,
+		"org.bluez.Adapter",
+		"FindDevice");
+			
+	dbus_message_append_args (msg,
+		DBUS_TYPE_STRING, &device->addr,
+		DBUS_TYPE_INVALID);
+
+	e_dbus_message_send(DBUSCONN->conn, msg, cb_get_remote_device_path, -1, device);
+	dbus_message_unref(msg);
+	
+}
+
+
+void dbus_create_remote_device_path(RemoteDevice* device) {
+
+	DBusMessage *msg;
+	msg = dbus_message_new_method_call(
+		"org.bluez",
+		DBUSCONN->path,
+		"org.bluez.Adapter",
+		"CreateDevice");
+			
+	dbus_message_append_args (msg,
+		DBUS_TYPE_STRING, &device->addr,
+		DBUS_TYPE_INVALID);
+
+	e_dbus_message_send(DBUSCONN->conn, msg, cb_create_remote_device_path, -1, device);
+	dbus_message_unref(msg);
+	
+}
+
+
+
+void dbus_get_local_device_info() {
 
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
@@ -45,10 +85,26 @@ void dbus_update_local_device_info(DeviceList* DL) {
 		DBUSCONN->path,
 		"org.bluez.Adapter",
 		"GetProperties");
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_update_local_device_info, -1, DL);
+	e_dbus_message_send(DBUSCONN->conn, msg, cb_get_local_device_info, -1, NULL);
 	dbus_message_unref(msg);
 	
 }
+
+
+void dbus_get_remote_device_info(RemoteDevice* device) {
+
+	DBusMessage *msg;
+	msg = dbus_message_new_method_call(
+		"org.bluez",
+		device->path,
+		"org.bluez.Device",
+		"GetProperties");
+	e_dbus_message_send(DBUSCONN->conn, msg, cb_get_remote_device_info, -1, device);
+	dbus_message_unref(msg);
+	
+}
+
+
 
 void dbus_discovery_start(DeviceList* DL) {
 
