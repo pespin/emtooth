@@ -34,21 +34,31 @@ void cb_discovery_start_clicked(void *data, Evas_Object *obj, void *event_info) 
    
 	evas_object_hide(obj);
 	elm_box_unpack(Cb->parent, obj);
+	
 	elm_box_pack_start(Cb->parent, Cb->obj);
 	evas_object_show(Cb->obj);
+	
+	elm_label_label_set(Cb->DL->header, "Discovering Devices...");
+	
 	dbus_discovery_start(Cb->DL);
 }
 
 
 void cb_discovery_stop_clicked(void *data, Evas_Object *obj, void *event_info) {
    fprintf(stderr, "Stop Discovery button pressed.\n");
+   
    DeviceListCb* Cb = (DeviceListCb*) data;
+   char buf[255];
    
 	evas_object_hide(obj);
 	elm_box_unpack(Cb->parent, obj);
 
 	elm_box_pack_start(Cb->parent, Cb->obj);
 	evas_object_show(Cb->obj);
+	
+	sprintf(buf, "%d Devices Found:", eina_list_count(Cb->DL->devices));
+	elm_label_label_set(Cb->DL->header, buf);
+	
 	dbus_discovery_stop(Cb->DL);
 }
 

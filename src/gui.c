@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 void gui_create(DeviceList* DL) {
 
-   Evas_Object *win, *bg, *vbox, *fr, *lb, *device_list, *hbox, *hbox1, *bt, *bt_start, *bt_stop;
+   Evas_Object *win, *bg, *vbox, *fr, *header, *device_list, *hbox, *hbox1, *bt, *bt_start, *bt_stop;
 
 	//DeviceList + evas object used in button callbacks
 	DeviceListCb* Cb;
@@ -61,10 +61,10 @@ void gui_create(DeviceList* DL) {
 	evas_object_show(fr);
 
 	// add a label
-	lb = elm_label_add(win);
-	elm_label_label_set(lb, "RemoteDevices");
-	elm_frame_content_set(fr, lb);
-	evas_object_show(lb);  
+	header = elm_label_add(win);
+	elm_label_label_set(header, "Discovering Devices...");
+	elm_frame_content_set(fr, header);
+	evas_object_show(header);  
 	
 	device_list = elm_list_add(win);
 	elm_object_scale_set(device_list,1.0);
@@ -120,7 +120,8 @@ void gui_create(DeviceList* DL) {
 	evas_object_show(bt);
 	evas_object_smart_callback_add(bt, "clicked", cb_settings_dialog, DL);
 
-	DL->li = device_list;	
+	DL->li = device_list;
+	DL->header = header;	
    gui_device_list_populate(DL);
   
    evas_object_show(win);
@@ -220,6 +221,7 @@ void gui_settings_dialog_create() {
 
 	// add button hbox
 	hbox = elm_box_add(win);
+	
 	elm_box_horizontal_set(hbox, 1);
 	evas_object_size_hint_weight_set(hbox, 1.0, 0.0);
 	evas_object_size_hint_align_set(hbox, -1.0, 0.0);
@@ -230,7 +232,7 @@ void gui_settings_dialog_create() {
 	fr = elm_frame_add(win);
 	elm_object_style_set(fr, "outdent_top");
 	evas_object_size_hint_weight_set(fr, 0.0, 0.0);
-	evas_object_size_hint_align_set(fr, 0.0, 1.0);
+	evas_object_size_hint_align_set(fr, 0.0, -1.0);
 	elm_box_pack_end(hbox, fr);
 	evas_object_show(fr);
 
@@ -239,7 +241,7 @@ void gui_settings_dialog_create() {
 	//fprintf(stderr, "\n\n\nGUI-ADDR:%s;\n\n\n", ADAPTER->addr); 
 	lb = elm_label_add(win);
 	elm_label_label_set(lb, buf);
-	elm_box_pack_end(hbox, lb);
+	elm_frame_content_set(fr, lb);
 	evas_object_show(lb);
 	
 	//HERE STARTS ALL THE OPTIONS LIST:
@@ -303,17 +305,39 @@ void gui_settings_dialog_create() {
 	evas_object_show(hbox);
 	
 	lb = elm_label_add(win);
-	elm_label_label_set(lb, "<b>Discoverable:</b>");
+	elm_label_label_set(lb, "<b>Discoverable:</b> ");
 	elm_box_pack_end(hbox, lb);
 	evas_object_show(lb);
 	
 	tg = elm_toggle_add(win);
-	//elm_toggle_label_set(tg, "<b>Discoverable:</b>");
 	elm_toggle_states_labels_set(tg, "On", "Off");
 	elm_toggle_state_set(tg, ADAPTER->discoverable);
 	elm_box_pack_end(hbox, tg);
 	evas_object_show(tg);
 	/* TODO: add callback on change status */
+	
+	//endl
+	
+	hbox = elm_box_add(win);
+	elm_box_horizontal_set(hbox, 1);
+	evas_object_size_hint_weight_set(hbox, 1.0, 0.0);
+	evas_object_size_hint_align_set(hbox, -1.0, 0.0);
+	elm_box_pack_end(vbox_fr, hbox);
+	evas_object_show(hbox);
+	
+	lb = elm_label_add(win);
+	elm_label_label_set(lb, "<b>Discoverable timeout:</b> ");
+	elm_box_pack_end(hbox, lb);
+	evas_object_show(lb);
+	
+	entry = elm_entry_add(win);
+	elm_entry_single_line_set(entry, TRUE);
+	sprintf(buf, "%d", ADAPTER->discoverable_timeout);
+	elm_entry_entry_set(entry, buf);
+	elm_box_pack_end(hbox, entry);
+	evas_object_show(entry);
+	/* TODO: callback that saves modified name on unfocus */
+	
 	
 	// PAIRABLE TOGGLE + TIMEOUT:
 	// add a frame
@@ -339,7 +363,7 @@ void gui_settings_dialog_create() {
 	evas_object_show(hbox);
 	
 	lb = elm_label_add(win);
-	elm_label_label_set(lb, "<b>Pairable:</b>");
+	elm_label_label_set(lb, "<b>Pairable: </b>");
 	elm_box_pack_end(hbox, lb);
 	evas_object_show(lb);
 	
@@ -360,7 +384,7 @@ void gui_settings_dialog_create() {
 	evas_object_show(hbox);
 	
 	lb = elm_label_add(win);
-	elm_label_label_set(lb, "<b>Pairable timeout:</b>");
+	elm_label_label_set(lb, "<b>Pairable timeout:</b> ");
 	elm_box_pack_end(hbox, lb);
 	evas_object_show(lb);
 	
