@@ -21,10 +21,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "gui.h"
 #include "dbus.h"
 
-void dbus_init_session(DeviceList* data) {
-	
+void dbus_init_session(DeviceList* DL) {
+
 	/* First we get device dbus interface */
-	DBUSCONN = e_dbus_bus_get(DBUS_BUS_SYSTEM); 
+	DBUSCONN->conn = e_dbus_bus_get(DBUS_BUS_SYSTEM); 
 	
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
@@ -32,54 +32,80 @@ void dbus_init_session(DeviceList* data) {
 		"/",
 		"org.bluez.Manager",
 		"DefaultAdapter");
-	e_dbus_message_send(DBUSCONN, msg, cb_get_dbus_path, -1, data);
+	e_dbus_message_send(DBUSCONN->conn, msg, cb_dbus_init_session, -1, DL);
 	dbus_message_unref(msg);
 		
 }
 
-void dbus_update_local_device_info(DeviceList* data) {
-	
+void dbus_update_local_device_info(DeviceList* DL) {
+
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
 		"org.bluez",
-		BLUEZPATH,
+		DBUSCONN->path,
 		"org.bluez.Adapter",
 		"GetProperties");
-	e_dbus_message_send(DBUSCONN, msg, cb_update_local_device_info, -1, data);
+	e_dbus_message_send(DBUSCONN->conn, msg, cb_update_local_device_info, -1, DL);
 	dbus_message_unref(msg);
 	
 }
 
-void dbus_start_discovery(DeviceList* data) {
-	
+void dbus_discovery_start(DeviceList* DL) {
+
 /* now connect to signals and send StartDiscovery message */
 
-    e_dbus_signal_handler_add(DBUSCONN,
+	DBUSCONN->DeviceFound = e_dbus_signal_handler_add(
+    DBUSCONN->conn,
 	"org.bluez",
-	BLUEZPATH,
+	DBUSCONN->path,
 	"org.bluez.Adapter",
 	"DeviceFound",
 	cb_device_found,
-	data);
+	DL);
 	
-	e_dbus_signal_handler_add(DBUSCONN,
+	DBUSCONN->DeviceDissapeared = e_dbus_signal_handler_add(
+	DBUSCONN->conn,
 	"org.bluez", 
-	BLUEZPATH,
+	DBUSCONN->path,
 	"org.bluez.Adapter",
 	"DeviceDisappeared",
 	cb_device_disappeared,
-	data);
+	DL);
 
+	/* TODO: here free Eina devices list to start discovery from zero */
+	DL->devices = eina_list_free (DL->devices);
+	gui_device_list_clear(DL->li);
 	
+	/* send start message */
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
 		"org.bluez",
-		BLUEZPATH,
+		DBUSCONN->path,
 		"org.bluez.Adapter",
 		"StartDiscovery");
 	
-	e_dbus_message_send(DBUSCONN, msg, cb_start_discovery, -1, NULL);
+	e_dbus_message_send(DBUSCONN->conn, msg, cb_discovery_start_msg, -1, DL);
 	dbus_message_unref(msg);
 
    //e_dbus_connection_close(conn); 
+}
+
+
+void dbus_discovery_stop(DeviceList* DL) {
+	
+	/* disconnect from discovery signals, as other apps can be discovering too */
+	e_dbus_signal_handler_del(DBUSCONN->conn, DBUSCONN->DeviceFound);
+	e_dbus_signal_handler_del(DBUSCONN->conn, DBUSCONN->DeviceDissapeared);
+	
+	/* send stop message */
+	DBusMessage *msg;
+	msg = dbus_message_new_method_call(
+		"org.bluez",
+		DBUSCONN->path,
+		"org.bluez.Adapter",
+		"StopDiscovery");
+	
+	e_dbus_message_send(DBUSCONN->conn, msg, cb_discovery_stop_msg, -1, DL);
+	dbus_message_unref(msg);
+	
 }

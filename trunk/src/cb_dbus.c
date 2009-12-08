@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "cb_dbus.h"
 
 
-void cb_get_dbus_path(void *data, DBusMessage *replymsg, DBusError *error) {
+void cb_dbus_init_session(void *data, DBusMessage *replymsg, DBusError *error) {
 	
 	char *path = NULL;
 	
@@ -35,16 +35,16 @@ void cb_get_dbus_path(void *data, DBusMessage *replymsg, DBusError *error) {
 	}
 	
 	if(!path) {
-		fprintf(stderr, "Could not get bluez dbus RemoteDevice path. EXIT NOW!\n", path);
+		fprintf(stderr, "Could not get bluez dbus RemoteDevice path. EXIT NOW!\n");
 		exit(EXIT_FAILURE);
 	}
 	
-	BLUEZPATH = path;
-	fprintf(stderr, "Using path '%s' to connect to bluez dbus daemon...\n", BLUEZPATH);
+	DBUSCONN->path = strdup(path);
+	fprintf(stderr, "Using path '%s' to connect to bluez dbus daemon...\n", DBUSCONN->path);
 	
 	//get local device info and start signals on that interface:
-	dbus_update_local_device_info();
-	dbus_start_discovery(data);
+	dbus_update_local_device_info(data);
+	dbus_discovery_start(data);
 }
 
 
@@ -52,6 +52,10 @@ void cb_get_dbus_path(void *data, DBusMessage *replymsg, DBusError *error) {
 void cb_update_local_device_info (void *data, DBusMessage *replymsg, DBusError *error) {
 		
 	fprintf(stderr, "Updating local device info...\n");	
+	
+	if (dbus_error_is_set(error)) {
+		printf("Error: %s - %s\n", error->name, error->message);
+	}
 		
 	DBusMessageIter array_iter, dict_iter, key_iter, value_iter;
 	int tmp = 0;
@@ -76,7 +80,6 @@ void cb_update_local_device_info (void *data, DBusMessage *replymsg, DBusError *
 		if(!strcmp(key,"Address")) {
 			dbus_message_iter_get_basic(&value_iter, &ADAPTER->addr);
 			ADAPTER->addr = strdup(ADAPTER->addr); //make a copy
-			//fprintf(stderr, "\n\n\nADDR:%s;\n\n\n", ADAPTER->addr);
 					
 		} else if(!strcmp(key,"Class")) {
 			dbus_message_iter_get_basic(&value_iter, &tmp);
@@ -113,23 +116,25 @@ void cb_update_local_device_info (void *data, DBusMessage *replymsg, DBusError *
 		
 		dbus_message_iter_next (&dict_iter);
 	}
-
-	if (dbus_error_is_set(error)) {
-		printf("Error: %s - %s\n", error->name, error->message);
-	}
-	
-	//fprintf(stderr, "ADDR:%s; name:%s, discoverable:%d; discoverable_timeout:%d;", 
-	//ADAPTER->addr, ADAPTER->name, ADAPTER->discoverable, ADAPTER->discoverable_timeout);
-
 }
 
 
-void cb_start_discovery(void *data, DBusMessage *replymsg, DBusError *error) {
+void cb_discovery_start_msg(void *data, DBusMessage *replymsg, DBusError *error) {
 	if (dbus_error_is_set(error)) {
 		printf("Error: %s - %s\n", error->name, error->message);
 	} else {
 	//set LocalDevice->discovering to True manually... lot faster :)
 	ADAPTER->discovering = TRUE;	
+	}
+}
+
+
+void cb_discovery_stop_msg(void *data, DBusMessage *replymsg, DBusError *error) {
+	if (dbus_error_is_set(error)) {
+		printf("Error: %s - %s\n", error->name, error->message);
+	} else {
+	//set LocalDevice->discovering to False manually... lot faster :)
+	ADAPTER->discovering = FALSE;	
 	}
 }
 
@@ -149,7 +154,7 @@ void cb_device_found (void *data, DBusMessage *msg) {
 	dbus_message_get_args(msg, error,
 	                      DBUS_TYPE_STRING, &dev_addr, DBUS_TYPE_INVALID);
 	
-	if (dbus_error_is_set(error)) {
+	if (error &&  dbus_error_is_set(error)) {
 		printf("Error: %s - %s\n", error->name, error->message);
 	}
 	
@@ -176,7 +181,7 @@ void cb_device_disappeared (void *data, DBusMessage *msg) {
 	dbus_message_get_args(msg, error,
 	                      DBUS_TYPE_STRING, &dev_addr, DBUS_TYPE_INVALID);
 	
-	if (dbus_error_is_set(error)) {
+	if (error && dbus_error_is_set(error)) {
 		printf("Error: %s - %s\n", error->name, error->message);
 	}
 	

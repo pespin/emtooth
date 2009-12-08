@@ -21,7 +21,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 void gui_create(DeviceList* DL) {
 
-   Evas_Object *win, *bg, *vbox, *fr, *lb, *device_list, *hbox, *hbox1, *bt;
+   Evas_Object *win, *bg, *vbox, *fr, *lb, *device_list, *hbox, *hbox1, *bt, *bt_start, *bt_stop;
+
+	//DeviceList + evas object used in button callbacks
+	DeviceListCb* Cb;
 
    win = elm_win_add(NULL, "main_win", ELM_WIN_BASIC);
    elm_win_title_set(win, "emtooth");
@@ -82,13 +85,32 @@ void gui_create(DeviceList* DL) {
 	evas_object_show(hbox1);
 
 	//add buttons to hbox1
-	bt = elm_button_add(win);
-	elm_button_label_set(bt, "Refresh");
-	evas_object_size_hint_weight_set(bt, 1.0, 1.0);
-	evas_object_size_hint_align_set(bt, -1.0, -1.0);
-	elm_box_pack_end(hbox1, bt);
-	evas_object_show(bt);
-	evas_object_smart_callback_add(bt, "clicked", cb_device_list_refresh, DL);
+	bt_start = elm_button_add(win);
+	elm_button_label_set(bt_start, "Start Discovery");
+	evas_object_size_hint_weight_set(bt_start, 1.0, 1.0);
+	evas_object_size_hint_align_set(bt_start, -1.0, -1.0);
+	//elm_box_pack_end(hbox1, bt_start);
+	//evas_object_show(bt_start);
+	
+	bt_stop = elm_button_add(win);
+	elm_button_label_set(bt_stop, "Stop Discovery");
+	evas_object_size_hint_weight_set(bt_stop, 1.0, 1.0);
+	evas_object_size_hint_align_set(bt_stop, -1.0, -1.0);
+	elm_box_pack_end(hbox1, bt_stop);
+	evas_object_show(bt_stop);
+	
+	//button callbacks:
+	Cb = malloc(sizeof(DeviceListCb));
+	Cb->DL = DL;
+	Cb->parent = hbox1;
+	Cb->obj = bt_stop;
+	evas_object_smart_callback_add(bt_start, "clicked", cb_discovery_start_clicked, Cb);
+	
+	Cb = malloc(sizeof(DeviceListCb));
+	Cb->DL = DL;
+	Cb->parent = hbox1;
+	Cb->obj = bt_start;
+	evas_object_smart_callback_add(bt_stop, "clicked", cb_discovery_stop_clicked, Cb);
 
 	bt = elm_button_add(win);
 	elm_button_label_set(bt, "Settings");
@@ -98,9 +120,7 @@ void gui_create(DeviceList* DL) {
 	evas_object_show(bt);
 	evas_object_smart_callback_add(bt, "clicked", cb_settings_dialog, DL);
 
-
 	DL->li = device_list;	
-
    gui_device_list_populate(DL);
   
    evas_object_show(win);
@@ -109,7 +129,6 @@ void gui_create(DeviceList* DL) {
 
 
 void gui_device_list_remove(DeviceList* DL, RemoteDevice* device) {
-	
 	fprintf(stderr, "Removing RemoteDevice %s from list...\n", device->addr);
 	
 	DL->devices = eina_list_remove(DL->devices, device);
@@ -122,7 +141,7 @@ void gui_device_list_remove(DeviceList* DL, RemoteDevice* device) {
 
 
 void gui_device_list_append(DeviceList* DL, RemoteDevice* device) {
-
+	
 	fprintf(stderr, "Adding RemoteDevice %s to list...\n", device->addr);
 	
 	//Add last RemoteDevice to eina list.
@@ -142,6 +161,8 @@ void gui_device_list_append(DeviceList* DL, RemoteDevice* device) {
 void gui_device_list_populate(DeviceList* DL) {
 	
 	fprintf(stderr, "Populating list with RemoteDevices already catched...\n");
+	
+	
 	Evas_Object *ic;
 	RemoteDevice* device;
 	Eina_List* cur;
@@ -153,7 +174,6 @@ void gui_device_list_populate(DeviceList* DL) {
 		elm_list_item_append(DL->li, device->addr, ic, NULL,  NULL, device);
 		evas_object_show(ic);
 	}
-
 	elm_list_go(DL->li);
 }
 
@@ -161,15 +181,16 @@ void gui_device_list_populate(DeviceList* DL) {
 
 void gui_device_list_clear(Evas_Object *li) {
 
-fprintf(stderr, "Clearing list of RemoteDevices...\n");
+fprintf(stderr, "\nClearing list of RemoteDevices...\n");
 	const Eina_List *items;
-	
+	/*
 	while ((items = elm_list_items_get(li))) {
         elm_list_item_del(items->data);
-     }
+     } */
+
+
+	elm_list_clear(li);
 	
-	//is this necessary?
-	elm_list_go(li);
 }
 
 
@@ -289,6 +310,42 @@ void gui_settings_dialog_create() {
 	tg = elm_toggle_add(win);
 	//elm_toggle_label_set(tg, "<b>Discoverable:</b>");
 	elm_toggle_states_labels_set(tg, "On", "Off");
+	elm_toggle_state_set(tg, ADAPTER->discoverable);
+	elm_box_pack_end(hbox, tg);
+	evas_object_show(tg);
+	/* TODO: add callback on change status */
+	
+	// PAIRABLE TOGGLE + TIMEOUT:
+	// add a frame
+	fr = elm_frame_add(win);
+	elm_object_style_set(fr, "default");
+	evas_object_size_hint_weight_set(fr, 1.0, 0.0);
+	evas_object_size_hint_align_set(fr, -1.0, -1.0);
+	elm_box_pack_end(vbox_in, fr);
+	evas_object_show(fr);
+	
+	vbox_fr = elm_box_add(win);
+	elm_win_resize_object_add(win, vbox_fr);
+	evas_object_size_hint_align_set(vbox_fr, -1.0, 0.0);
+	evas_object_size_hint_weight_set(vbox_fr, 1.0, 1.0);
+	elm_frame_content_set(fr, vbox_fr);
+	evas_object_show(vbox_in);
+	
+	hbox = elm_box_add(win);
+	elm_box_horizontal_set(hbox, 1);
+	evas_object_size_hint_weight_set(hbox, 1.0, 0.0);
+	evas_object_size_hint_align_set(hbox, -1.0, 0.0);
+	elm_box_pack_end(vbox_fr, hbox);
+	evas_object_show(hbox);
+	
+	lb = elm_label_add(win);
+	elm_label_label_set(lb, "<b>Pairable:</b>");
+	elm_box_pack_end(hbox, lb);
+	evas_object_show(lb);
+	
+	tg = elm_toggle_add(win);
+	elm_toggle_states_labels_set(tg, "On", "Off");
+		elm_toggle_state_set(tg, ADAPTER->pairable);
 	elm_box_pack_end(hbox, tg);
 	evas_object_show(tg);
 	/* TODO: add callback on change status */
@@ -303,13 +360,13 @@ void gui_settings_dialog_create() {
 	evas_object_show(hbox);
 	
 	lb = elm_label_add(win);
-	elm_label_label_set(lb, "<b>Discoverable timeout:</b>");
+	elm_label_label_set(lb, "<b>Pairable timeout:</b>");
 	elm_box_pack_end(hbox, lb);
 	evas_object_show(lb);
 	
 	entry = elm_entry_add(win);
 	elm_entry_single_line_set(entry, TRUE);
-	sprintf(buf, "%d", ADAPTER->discoverable_timeout);
+	sprintf(buf, "%d", ADAPTER->pairable_timeout);
 	elm_entry_entry_set(entry, buf);
 	elm_box_pack_end(hbox, entry);
 	evas_object_show(entry);

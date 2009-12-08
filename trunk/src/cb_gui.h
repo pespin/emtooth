@@ -23,7 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 void cb_safe_exit(void *data, Evas_Object *obj, void *event_info);
 void cb_close_win(void *data, Evas_Object *obj, void *event_info);
 
-void cb_device_list_refresh(void *data, Evas_Object *obj, void *event_info);
+void cb_discovery_start_clicked(void *data, Evas_Object *obj, void *event_info);
+void cb_discovery_stop_clicked(void *data, Evas_Object *obj, void *event_info);
 void cb_device_list_selected(void *data, Evas_Object *obj, void *event_info);
 
 void cb_settings_dialog(void *data, Evas_Object *obj, void *event_info);

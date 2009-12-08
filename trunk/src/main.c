@@ -26,6 +26,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 EAPI int
 elm_main(int argc, char **argv)
 { 
+	
+	DBUSCONN = (DbusConn*) malloc(sizeof(DbusConn));
+	DBUSCONN->path = NULL;
+	
 	ADAPTER = malloc(sizeof(LocalDevice));
 	ADAPTER->addr = NULL;
 	ADAPTER->name = NULL;
