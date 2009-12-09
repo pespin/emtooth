@@ -39,11 +39,12 @@ elm_main(int argc, char **argv)
 	DL->devices =  NULL;
 	DL->li = NULL;
 	
+	//start the dbus thread
 	int ret;
 	pthread_t t_id;
-	//start the dbus thread
 	ret = pthread_create(&t_id, NULL, (void *)dbus_init_session, NULL);
    
+   //start the GUI:
    gui_create();
   
    elm_run();

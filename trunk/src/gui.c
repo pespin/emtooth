@@ -23,7 +23,6 @@ void gui_create() {
 
    Evas_Object *win, *bg, *vbox, *fr, *header, *device_list, *hbox, *hbox1, *bt, *bt_start, *bt_stop;
 
-	//DeviceList + evas object used in button callbacks
 	ObjCb* Cb;
 
    win = elm_win_add(NULL, "main_win", ELM_WIN_BASIC);
@@ -133,24 +132,25 @@ void gui_device_list_remove(RemoteDevice* device) {
 	DL->devices = eina_list_remove(DL->devices, device);
 	
 	/* TODO: just remove one item instead of rewriting all the list */
-	gui_device_list_clear(DL->li);
+	elm_list_clear(DL->li);
 	gui_device_list_populate();
 	
 }
 
 
 void gui_device_list_append(RemoteDevice* device) {
-	
+
 	fprintf(stderr, "Adding RemoteDevice %s to list...\n", device->addr);
 	
-	//Add last RemoteDevice to eina list.
-	DL->devices = eina_list_append(DL->devices, device);
+	char buf[255];
+	if(device->path) snprintf(buf, 255, "[%s] %s", device->addr, device->alias);
+	else snprintf(buf, 255, "[%s] (unknown)", device->addr); 
 	
 	Evas_Object *ic;
 	ic = elm_icon_add(DL->li);
 	elm_icon_standard_set(ic, "arrow_left");
     elm_icon_scale_set(ic, 0, 1);
-    elm_list_item_append(DL->li, device->addr, ic, NULL,  NULL, device);
+    elm_list_item_append(DL->li, buf, ic, NULL,  NULL, device);
 	evas_object_show(ic);
 	
 	elm_list_go(DL->li);
@@ -161,36 +161,39 @@ void gui_device_list_populate() {
 	
 	fprintf(stderr, "Populating list with RemoteDevices already catched...\n");
 	
+	char buf[255];
 	
 	Evas_Object *ic;
 	RemoteDevice* device;
 	Eina_List* cur;
 	
 	EINA_LIST_FOREACH(DL->devices, cur, device) {
+		if(device->path) snprintf(buf, 255, "[%s] %s", device->addr, device->alias);
+		else snprintf(buf, 255, "[%s] (unknown)", device->addr); 
 		ic = elm_icon_add(DL->li);
         elm_icon_standard_set(ic, "arrow_left");
         elm_icon_scale_set(ic, 0, 1);
-		elm_list_item_append(DL->li, device->addr, ic, NULL,  NULL, device);
+		elm_list_item_append(DL->li, buf, ic, NULL,  NULL, device);
 		evas_object_show(ic);
 	}
 	elm_list_go(DL->li);
 }
 
 
-
+/*
 void gui_device_list_clear(Evas_Object *li) {
 
 fprintf(stderr, "\nClearing list of RemoteDevices...\n");
 	const Eina_List *items;
-	/*
+	/ *
 	while ((items = elm_list_items_get(li))) {
         elm_list_item_del(items->data);
-     } */
+     } * /
 
 
 	elm_list_clear(li);
 	
-}
+} */
 
 
 void gui_settings_dialog_create() {

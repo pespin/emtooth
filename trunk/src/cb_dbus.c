@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  
  static  int cb_device_found_helper(RemoteDevice *s, const char *new_RemoteDevice) {
 	if (!s) return -1;
+	fprintf(stderr, "COMPARER FUNC: '%s'\n", s->addr);
 	return strcmp(s->addr, new_RemoteDevice);
 }
 
@@ -288,6 +289,9 @@ void cb_get_remote_device_info (void *data, DBusMessage *replymsg, DBusError *er
 	}
 	
 	fprintf(stderr, "Done!\n");
+	
+	/* Now we have all info, append device to device GUI list */
+	gui_device_list_append(device);
 }
 
 
@@ -322,15 +326,15 @@ void cb_device_found (void *data, DBusMessage *msg) {
 		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
 	}
 	
-	fprintf(stderr, "RemoteDevice FOUND SIGNAL --> %s\n", dev_addr);
+	fprintf(stderr, "FOUND SIGNAL --> %s\n", dev_addr);
 	
 	/* see if the RemoteDevice is already in the list before adding */
-	int *cmp = eina_list_search_unsorted(DL->devices, (Eina_Compare_Cb)cb_device_found_helper, dev_addr);
-	if(cmp==0) {
+	Eina_List* li = eina_list_search_unsorted_list(DL->devices, (Eina_Compare_Cb)cb_device_found_helper, dev_addr);
+	if(!li) {
 		RemoteDevice* device = malloc(sizeof(RemoteDevice));
 		device->addr = dev_addr;
-		gui_device_list_append(device);
-		
+		device->alias = NULL;
+		DL->devices = eina_list_append(DL->devices, device);
 		/* Call  org.bluez.Adapter.CreateDevice xx:xx:xx:xx:xx:xx to get its path */
 		dbus_get_remote_device_path(device);
 	}
@@ -341,6 +345,7 @@ void cb_device_disappeared (void *data, DBusMessage *msg) {
 
 	char *dev_addr=NULL;
 	DBusError *error=NULL;
+	Eina_List* li=NULL;
 	
 	dbus_message_get_args(msg, error,
 	                      DBUS_TYPE_STRING, &dev_addr, DBUS_TYPE_INVALID);
@@ -349,13 +354,13 @@ void cb_device_disappeared (void *data, DBusMessage *msg) {
 		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
 	}
 	
-	fprintf(stderr, "RemoteDevice DISSAPEARED! --> %s\n", dev_addr);
+	fprintf(stderr, "DISSAPEARED SIGNAL --> %s\n", dev_addr);
 	
-	int *cmp = eina_list_search_unsorted(DL->devices, (Eina_Compare_Cb)cb_device_found_helper, dev_addr);
-	if(cmp!=0) {
-		/*TODO create a func to initizalize RemoteDevices */
-		RemoteDevice* device = malloc(sizeof(RemoteDevice));
-		device->addr = dev_addr;
+	li = eina_list_search_unsorted_list(DL->devices, (Eina_Compare_Cb)cb_device_found_helper, dev_addr);
+	if(li) {
+		fprintf(stderr, "\nENTERED REMOVE IF\n\n", dev_addr);
+		RemoteDevice* device = eina_list_data_get(li);
+		fprintf(stderr, "\nREMOVE DEVICE:%s;\n\n", device->addr);
 		gui_device_list_remove(device);
 	}
 	

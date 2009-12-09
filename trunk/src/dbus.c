@@ -117,7 +117,7 @@ void dbus_discovery_start() {
 	"org.bluez.Adapter",
 	"DeviceFound",
 	cb_device_found,
-	DL);
+	NULL);
 	
 	DBUSCONN->DeviceDissapeared = e_dbus_signal_handler_add(
 	DBUSCONN->conn,
@@ -126,11 +126,7 @@ void dbus_discovery_start() {
 	"org.bluez.Adapter",
 	"DeviceDisappeared",
 	cb_device_disappeared,
-	DL);
-
-	/* TODO: here free Eina devices list to start discovery from zero */
-	DL->devices = eina_list_free (DL->devices);
-	gui_device_list_clear(DL->li);
+	NULL);
 	
 	/* send start message */
 	DBusMessage *msg;
@@ -140,7 +136,7 @@ void dbus_discovery_start() {
 		"org.bluez.Adapter",
 		"StartDiscovery");
 	
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_discovery_start_msg, -1, DL);
+	e_dbus_message_send(DBUSCONN->conn, msg, cb_discovery_start_msg, -1, NULL);
 	dbus_message_unref(msg);
 
    //e_dbus_connection_close(conn); 
@@ -161,7 +157,7 @@ void dbus_discovery_stop() {
 		"org.bluez.Adapter",
 		"StopDiscovery");
 	
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_discovery_stop_msg, -1, DL);
+	e_dbus_message_send(DBUSCONN->conn, msg, cb_discovery_stop_msg, -1, NULL);
 	dbus_message_unref(msg);
 	
 }
