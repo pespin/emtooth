@@ -28,10 +28,20 @@ typedef struct _DeviceList {
 } DeviceList;
 
 typedef struct _ObjCb {
-	//DeviceList* DL;
 	Evas_Object* obj;
 	Evas_Object* parent;
 } ObjCb;
+
+typedef union _DbusReturn {
+	char* value_string;
+	int value_int;
+} DbusReturn;
+
+typedef struct _StructDbus {
+	char* key;
+	int value_type;
+	DbusReturn value;
+} StructDbus;
 
 typedef struct _RemoteDevice {
 	char* path;
