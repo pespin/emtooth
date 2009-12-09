@@ -279,8 +279,6 @@ static  int cb_device_found_helper(RemoteDevice *s, const char *new_RemoteDevice
 }
 
 void cb_device_found (void *data, DBusMessage *msg) {
-	
-	DeviceList* DL = (DeviceList*) data;
 
 	char *dev_addr=NULL;
 	DBusError *error=NULL;
@@ -299,7 +297,7 @@ void cb_device_found (void *data, DBusMessage *msg) {
 	if(cmp==0) {
 		RemoteDevice* device = malloc(sizeof(RemoteDevice));
 		device->addr = dev_addr;
-		gui_device_list_append(DL, device);
+		gui_device_list_append(device);
 		
 		/* Call  org.bluez.Adapter.CreateDevice xx:xx:xx:xx:xx:xx to get its path */
 		dbus_get_remote_device_path(device);
@@ -308,8 +306,6 @@ void cb_device_found (void *data, DBusMessage *msg) {
 }
 
 void cb_device_disappeared (void *data, DBusMessage *msg) {
-	
-	DeviceList* DL = (DeviceList*) data;
 
 	char *dev_addr=NULL;
 	DBusError *error=NULL;
@@ -328,7 +324,7 @@ void cb_device_disappeared (void *data, DBusMessage *msg) {
 		/*TODO create a func to initizalize RemoteDevices */
 		RemoteDevice* device = malloc(sizeof(RemoteDevice));
 		device->addr = dev_addr;
-		gui_device_list_remove(DL, device);
+		gui_device_list_remove(device);
 	}
 	
 }

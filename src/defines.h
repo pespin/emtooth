@@ -27,11 +27,11 @@ typedef struct _DeviceList {
 	Evas_Object* header;
 } DeviceList;
 
-typedef struct _DeviceListCb {
-	DeviceList* DL;
+typedef struct _ObjCb {
+	//DeviceList* DL;
 	Evas_Object* obj;
 	Evas_Object* parent;
-} DeviceListCb;
+} ObjCb;
 
 typedef struct _RemoteDevice {
 	char* path;
@@ -74,5 +74,6 @@ typedef struct _DbusConn {
 
 LocalDevice* ADAPTER;
 DbusConn* DBUSCONN;
+DeviceList* DL;
 
 

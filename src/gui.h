@@ -21,10 +21,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 void gui_create();
 
-void gui_device_list_remove(DeviceList* DL, RemoteDevice* device);
+void gui_device_list_remove(RemoteDevice* device);
 
-void gui_device_list_append(DeviceList* DL, RemoteDevice* device);
+void gui_device_list_append(RemoteDevice* device);
 
-void gui_device_list_populate(DeviceList* DL);
+void gui_device_list_populate();
 
 void gui_device_list_clear(Evas_Object *li);

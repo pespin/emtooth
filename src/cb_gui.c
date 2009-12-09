@@ -30,7 +30,7 @@ void cb_close_win(void *data, Evas_Object *obj, void *event_info) {
 
 void cb_discovery_start_clicked(void *data, Evas_Object *obj, void *event_info) {
 	fprintf(stderr, "Start Discovery button pressed.\n");
-	DeviceListCb* Cb = (DeviceListCb*) data;
+	ObjCb* Cb = (ObjCb*) data;
    
 	evas_object_hide(obj);
 	elm_box_unpack(Cb->parent, obj);
@@ -38,16 +38,16 @@ void cb_discovery_start_clicked(void *data, Evas_Object *obj, void *event_info) 
 	elm_box_pack_start(Cb->parent, Cb->obj);
 	evas_object_show(Cb->obj);
 	
-	elm_label_label_set(Cb->DL->header, "Discovering Devices...");
+	elm_label_label_set(DL->header, "Discovering Devices...");
 	
-	dbus_discovery_start(Cb->DL);
+	dbus_discovery_start();
 }
 
 
 void cb_discovery_stop_clicked(void *data, Evas_Object *obj, void *event_info) {
    fprintf(stderr, "Stop Discovery button pressed.\n");
    
-   DeviceListCb* Cb = (DeviceListCb*) data;
+   ObjCb* Cb = (ObjCb*) data;
    char buf[255];
    
 	evas_object_hide(obj);
@@ -56,15 +56,14 @@ void cb_discovery_stop_clicked(void *data, Evas_Object *obj, void *event_info) {
 	elm_box_pack_start(Cb->parent, Cb->obj);
 	evas_object_show(Cb->obj);
 	
-	sprintf(buf, "%d Devices Found:", eina_list_count(Cb->DL->devices));
-	elm_label_label_set(Cb->DL->header, buf);
+	sprintf(buf, "%d Devices Found:", eina_list_count(DL->devices));
+	elm_label_label_set(DL->header, buf);
 	
-	dbus_discovery_stop(Cb->DL);
+	dbus_discovery_stop();
 }
 
 
 void cb_device_list_selected(void *data, Evas_Object *obj, void *event_info) {
-   DeviceList* DL = (DeviceList*) data;
    
 	Elm_List_Item  *item = elm_list_selected_item_get(DL->li);
 	if(!item) return;
