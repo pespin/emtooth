@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "gui.h"
 #include "dbus.h"
 
-void dbus_init_session(DeviceList* DL) {
+void dbus_init_session() {
 
 	/* First we get device dbus interface */
 	DBUSCONN->conn = e_dbus_bus_get(DBUS_BUS_SYSTEM); 
@@ -106,7 +106,7 @@ void dbus_get_remote_device_info(RemoteDevice* device) {
 
 
 
-void dbus_discovery_start(DeviceList* DL) {
+void dbus_discovery_start() {
 
 /* now connect to signals and send StartDiscovery message */
 
@@ -147,7 +147,7 @@ void dbus_discovery_start(DeviceList* DL) {
 }
 
 
-void dbus_discovery_stop(DeviceList* DL) {
+void dbus_discovery_stop() {
 	
 	/* disconnect from discovery signals, as other apps can be discovering too */
 	e_dbus_signal_handler_del(DBUSCONN->conn, DBUSCONN->DeviceFound);

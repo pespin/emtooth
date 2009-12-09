@@ -20,13 +20,13 @@ Foundation, Inc., 51 Franklin Stre et, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <E_DBus.h>
 #include "cb_dbus.h"
 
-void dbus_init_session(DeviceList* DL);
+void dbus_init_session();
 void dbus_get_remote_device_path(RemoteDevice* device);
 void dbus_create_remote_device_path(RemoteDevice* device);
 
 void dbus_get_local_device_info();
 void dbus_get_remote_device_info(RemoteDevice* device);
 
-void dbus_discovery_start(DeviceList* DL);
+void dbus_discovery_start();
 
-void dbus_discovery_stop(DeviceList* DL);
+void dbus_discovery_stop();

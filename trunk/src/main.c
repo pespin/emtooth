@@ -27,23 +27,24 @@ EAPI int
 elm_main(int argc, char **argv)
 { 
 	
+	/* init GLOBALS */
 	DBUSCONN = (DbusConn*) malloc(sizeof(DbusConn));
 	DBUSCONN->path = NULL;
 	
-	ADAPTER = malloc(sizeof(LocalDevice));
+	ADAPTER = (LocalDevice*) malloc(sizeof(LocalDevice));
 	ADAPTER->addr = NULL;
 	ADAPTER->name = NULL;
 	
-	DeviceList DL;
-	DL.devices =  NULL;
-	DL.li = NULL;
+	DL = (DeviceList*) malloc(sizeof(DeviceList));
+	DL->devices =  NULL;
+	DL->li = NULL;
 	
 	int ret;
 	pthread_t t_id;
 	//start the dbus thread
-	ret = pthread_create(&t_id, NULL, (void *)dbus_init_session, &DL);
+	ret = pthread_create(&t_id, NULL, (void *)dbus_init_session, NULL);
    
-   gui_create(&DL);
+   gui_create();
   
    elm_run();
    elm_shutdown();

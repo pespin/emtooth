@@ -19,12 +19,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include "gui.h"
 
-void gui_create(DeviceList* DL) {
+void gui_create() {
 
    Evas_Object *win, *bg, *vbox, *fr, *header, *device_list, *hbox, *hbox1, *bt, *bt_start, *bt_stop;
 
 	//DeviceList + evas object used in button callbacks
-	DeviceListCb* Cb;
+	ObjCb* Cb;
 
    win = elm_win_add(NULL, "main_win", ELM_WIN_BASIC);
    elm_win_title_set(win, "emtooth");
@@ -100,14 +100,12 @@ void gui_create(DeviceList* DL) {
 	evas_object_show(bt_stop);
 	
 	//button callbacks:
-	Cb = malloc(sizeof(DeviceListCb));
-	Cb->DL = DL;
+	Cb = malloc(sizeof(ObjCb));
 	Cb->parent = hbox1;
 	Cb->obj = bt_stop;
 	evas_object_smart_callback_add(bt_start, "clicked", cb_discovery_start_clicked, Cb);
 	
-	Cb = malloc(sizeof(DeviceListCb));
-	Cb->DL = DL;
+	Cb = malloc(sizeof(ObjCb));
 	Cb->parent = hbox1;
 	Cb->obj = bt_start;
 	evas_object_smart_callback_add(bt_stop, "clicked", cb_discovery_stop_clicked, Cb);
@@ -122,26 +120,26 @@ void gui_create(DeviceList* DL) {
 
 	DL->li = device_list;
 	DL->header = header;	
-   gui_device_list_populate(DL);
+   gui_device_list_populate();
   
    evas_object_show(win);
 	
 }
 
 
-void gui_device_list_remove(DeviceList* DL, RemoteDevice* device) {
+void gui_device_list_remove(RemoteDevice* device) {
 	fprintf(stderr, "Removing RemoteDevice %s from list...\n", device->addr);
 	
 	DL->devices = eina_list_remove(DL->devices, device);
 	
 	/* TODO: just remove one item instead of rewriting all the list */
 	gui_device_list_clear(DL->li);
-	gui_device_list_populate(DL);
+	gui_device_list_populate();
 	
 }
 
 
-void gui_device_list_append(DeviceList* DL, RemoteDevice* device) {
+void gui_device_list_append(RemoteDevice* device) {
 	
 	fprintf(stderr, "Adding RemoteDevice %s to list...\n", device->addr);
 	
@@ -159,7 +157,7 @@ void gui_device_list_append(DeviceList* DL, RemoteDevice* device) {
 }
 
 
-void gui_device_list_populate(DeviceList* DL) {
+void gui_device_list_populate() {
 	
 	fprintf(stderr, "Populating list with RemoteDevices already catched...\n");
 	
