@@ -38,6 +38,10 @@ void cb_discovery_start_clicked(void *data, Evas_Object *obj, void *event_info) 
 	elm_box_pack_start(Cb->parent, Cb->obj);
 	evas_object_show(Cb->obj);
 	
+	//clear device list:
+	DL->devices = eina_list_free (DL->devices);
+	elm_list_clear(DL->li);
+	
 	elm_label_label_set(DL->header, "Discovering Devices...");
 	
 	dbus_discovery_start();
@@ -68,16 +72,9 @@ void cb_device_list_selected(void *data, Evas_Object *obj, void *event_info) {
 	Elm_List_Item  *item = elm_list_selected_item_get(DL->li);
 	if(!item) return;
 	RemoteDevice* device = elm_list_item_data_get(item);
-	fprintf(stderr, "Device %s selected!\npath:%s;\nalias:%s;\nTrusted:%d;\n\n", 
+	fprintf(stderr, "\nDevice %s selected!\npath:%s;\nalias:%s;\nTrusted:%d;\n\n", 
 	device->addr, device->path, device->alias,device->trusted);
-	
-	/*ATENTTION,FIXME! this callback can happen before dbus has retrived info
-	 * about remote device... I should mv gui_device_append() to an stage after this...
-	 * 
-	 * Maybe just look if some value inside struct is null here and do nothing?*/
-	
-   /* TODO: here we call a function inside gui.c to create a win with 
-    * info/functions on the selected device */
+
 }
 
 
