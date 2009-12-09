@@ -23,6 +23,53 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "cb_dbus.h"
 
 
+
+/* Auxiliar functions used below: */
+ 
+ static  int cb_device_found_helper(RemoteDevice *s, const char *new_RemoteDevice) {
+	if (!s) return -1;
+	return strcmp(s->addr, new_RemoteDevice);
+}
+
+
+static StructDbus* dbus_get_next_struct_in_dict(DBusMessageIter *dict_iter) {
+		DBusMessageIter key_iter, value_iter;
+	
+		StructDbus* ret = malloc(sizeof(StructDbus));
+		ret->value.value_int=0;
+		ret->value.value_string=NULL;
+		int tmp = DBUS_TYPE_INVALID;
+		ret->value_type = DBUS_TYPE_INVALID; 
+		
+	    //get key:
+        dbus_message_iter_recurse(dict_iter, &key_iter);
+        dbus_message_iter_get_basic(&key_iter, &ret->key);
+        ret->key = strdup(ret->key); //make copy
+        
+        //set value_iter to point to next value:
+        dbus_message_iter_next (&key_iter);
+        dbus_message_iter_recurse (&key_iter, &value_iter);
+        
+        tmp = dbus_message_iter_get_arg_type(&value_iter);
+        ret->value_type = tmp;
+        
+        if(ret->value_type == DBUS_TYPE_STRING || ret->value_type == DBUS_TYPE_OBJECT_PATH) {
+			dbus_message_iter_get_basic(&value_iter, &ret->value.value_string);
+			ret->value.value_string = strdup(ret->value.value_string);
+		}
+		else  if(ret->value_type == DBUS_TYPE_UINT32 || ret->value_type == DBUS_TYPE_BOOLEAN) {
+			dbus_message_iter_get_basic(&value_iter, &tmp);
+			ret->value.value_int = tmp;
+		} /*else { here comes array types, no need to handle them
+			 fprintf(stderr, "\n\nUNKNOWN VALUE RECEIVED fROM DBUS: int:%d; char:%c;\n\n", ret->value_type, ret->value_type);
+		} */
+		
+	return ret;
+}
+ 
+ 
+/* CALLBACK FUNCTIONS */
+
 void cb_dbus_init_session(void *data, DBusMessage *replymsg, DBusError *error) {
 	
 	char *path = NULL;
@@ -121,68 +168,66 @@ void cb_get_local_device_info (void *data, DBusMessage *replymsg, DBusError *err
 	fprintf(stderr, "Updating local device info... ");	
 	
 	if (dbus_error_is_set(error)) {
-		printf("Error: %s - %s\n", error->name, error->message);
+		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
 	}
 		
-	DBusMessageIter array_iter, dict_iter, key_iter, value_iter;
-	int tmp = 0;
-
+	DBusMessageIter array_iter, dict_iter;
 	//open dict:
 	dbus_message_iter_init(replymsg, &array_iter);
 	dbus_message_iter_recurse(&array_iter, &dict_iter);
 	
+	StructDbus* ret;
+	int type = dbus_message_iter_get_arg_type (&dict_iter);
+	
 	//foreach pair...:
-	while (dbus_message_iter_get_arg_type (&dict_iter) != DBUS_TYPE_INVALID) {
-		const char *key = NULL;
+	while (type != DBUS_TYPE_INVALID) {
+		
+		ret = dbus_get_next_struct_in_dict(&dict_iter);
+		
+		/*DEBUG
+		fprintf(stderr, "\n\n\nDICTIONARY STRUCT READ: \n");
+		if(ret->value_type==DBUS_TYPE_STRING || ret->value_type == DBUS_TYPE_OBJECT_PATH) 
+			fprintf(stderr, "string: '%s'", ret->value.value_string);
+		else if(ret->value_type==DBUS_TYPE_UINT32 || ret->value_type == DBUS_TYPE_BOOLEAN)
+			fprintf(stderr, "integer: '%d'", ret->value.value_int);	*/		
         
-        //get key:
-        dbus_message_iter_recurse(&dict_iter, &key_iter);
-        dbus_message_iter_get_basic(&key_iter, &key);
-        
-        //set value_iter to point to next value:
-        dbus_message_iter_next (&key_iter);
-        dbus_message_iter_recurse (&key_iter, &value_iter);
-
         //Depending on key, save value where it should go:
-		if(!strcmp(key,"Address")) {
-			dbus_message_iter_get_basic(&value_iter, &ADAPTER->addr);
-			ADAPTER->addr = strdup(ADAPTER->addr); //make a copy
+		if(!strcmp(ret->key,"Address")) {
+			ADAPTER->addr =  ret->value.value_string;
 					
-		} else if(!strcmp(key,"Class")) {
-			dbus_message_iter_get_basic(&value_iter, &tmp);
-			ADAPTER->class = tmp;
+		} else if(!strcmp(ret->key,"Class")) {
+			ADAPTER->class = ret->value.value_int;
 			
-		} else if(!strcmp(key,"Discoverable")) {
-			dbus_message_iter_get_basic(&value_iter, &tmp);
-			ADAPTER->discoverable = tmp;
+		} else if(!strcmp(ret->key,"Discoverable")) {
+			ADAPTER->discoverable = ret->value.value_int;
 			
-		} else if(!strcmp(key,"DiscoverableTimeout")) {
-			dbus_message_iter_get_basic(&value_iter, &tmp);
-			ADAPTER->discoverable_timeout = tmp;
+		} else if(!strcmp(ret->key,"DiscoverableTimeout")) {
+			ADAPTER->discoverable_timeout = ret->value.value_int;
 			
-		} else if(!strcmp(key,"Discovering")) {
-			dbus_message_iter_get_basic(&value_iter, &tmp);
-			ADAPTER->discovering = tmp;
+		} else if(!strcmp(ret->key,"Discovering")) {
+			ADAPTER->discovering = ret->value.value_int;
 			
-		} else if(!strcmp(key,"Name")) {
-			dbus_message_iter_get_basic(&value_iter, &ADAPTER->name);
-			ADAPTER->name = strdup(ADAPTER->name);
+		} else if(!strcmp(ret->key,"Name")) {
+			ADAPTER->name = ret->value.value_string;
 			
-		} else if(!strcmp(key,"Pairable")) {
-			dbus_message_iter_get_basic(&value_iter, &tmp);
-			ADAPTER->pairable = tmp;
+		} else if(!strcmp(ret->key,"Pairable")) {
+			ADAPTER->pairable = ret->value.value_int;
 			
-		} else if(!strcmp(key,"PairableTimeout")) {
-			dbus_message_iter_get_basic(&value_iter, &tmp);
-			ADAPTER->pairable_timeout = tmp;
-			
-		} else if(!strcmp(key,"Powered")) {
-			dbus_message_iter_get_basic(&value_iter, &tmp);
-			ADAPTER->powered = tmp;
+		} else if(!strcmp(ret->key,"PairableTimeout")) {
+			ADAPTER->pairable_timeout = ret->value.value_int;
+
+		} else if(!strcmp(ret->key,"Powered")) {
+			ADAPTER->powered = ret->value.value_int;
 		}
 		
+		//free stuff: key, as we are not using it, and struct.
+		if(ret->key) free(ret->key);
+		if(ret) free(ret);
+		
 		dbus_message_iter_next (&dict_iter);
+		type = dbus_message_iter_get_arg_type (&dict_iter);
 	}
+	
 	fprintf(stderr, "Done!\n");
 }
 
@@ -198,58 +243,51 @@ void cb_get_remote_device_info (void *data, DBusMessage *replymsg, DBusError *er
 		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
 	}
 		
-	DBusMessageIter array_iter, dict_iter, key_iter, value_iter;
-	int tmp = 0;
+	DBusMessageIter array_iter, dict_iter;
 
 	//open dict:
 	dbus_message_iter_init(replymsg, &array_iter);
 	dbus_message_iter_recurse(&array_iter, &dict_iter);
 	
+	StructDbus* ret;
+	int type = dbus_message_iter_get_arg_type (&dict_iter);
+	
 	//foreach pair...:
-	while (dbus_message_iter_get_arg_type (&dict_iter) != DBUS_TYPE_INVALID) {
-		const char *key = NULL;
-        //get key:
-        dbus_message_iter_recurse(&dict_iter, &key_iter);
-        dbus_message_iter_get_basic(&key_iter, &key);
-        
-        //set value_iter to point to next value:
-        dbus_message_iter_next (&key_iter);
-        dbus_message_iter_recurse (&key_iter, &value_iter);
+	while (type != DBUS_TYPE_INVALID) {
+		ret = dbus_get_next_struct_in_dict(&dict_iter);
 
         //Depending on key, save value where it should go:
-		if(!strcmp(key,"Alias")) {
-			dbus_message_iter_get_basic(&value_iter, &device->alias);
-			device->alias = strdup(device->alias); //make a copy
+		if(!strcmp(ret->key,"Alias")) {
+			device->alias = ret->value.value_string;
 					
-		} else if(!strcmp(key,"Class")) {
-			dbus_message_iter_get_basic(&value_iter, &tmp);
-			device->class = tmp;
+		} else if(!strcmp(ret->key,"Class")) {
+			device->class = ret->value.value_int;
 			
-		} else if(!strcmp(key,"Connected")) {
-			dbus_message_iter_get_basic(&value_iter, &device->connected);
-			device->connected = tmp;
+		} else if(!strcmp(ret->key,"Connected")) {
+			device->connected = ret->value.value_int;
 			
-		} else if(!strcmp(key,"Icon")) {
-			dbus_message_iter_get_basic(&value_iter, &device->icon);
-			device->icon = strdup(device->icon);
+		} else if(!strcmp(ret->key,"Icon")) {
+			device->icon = ret->value.value_string;
 			
-		} else if(!strcmp(key,"Name")) {
-			dbus_message_iter_get_basic(&value_iter, &device->name);
-			device->name = strdup(device->name);
+		} else if(!strcmp(ret->key,"Name")) {
+			device->name = ret->value.value_string;
 			
-		} else if(!strcmp(key,"Paired")) {
-			dbus_message_iter_get_basic(&value_iter, &tmp);
-			device->paired = tmp;
+		} else if(!strcmp(ret->key,"Paired")) {
+			device->paired = ret->value.value_int;
 			
-		} else if(!strcmp(key,"Trusted")) {
-			dbus_message_iter_get_basic(&value_iter, &tmp);
-			device->trusted = tmp;
+		} else if(!strcmp(ret->key,"Trusted")) {
+			device->trusted = ret->value.value_int;
 		}
 		
+		//free stuff: key, as we are not using it, and struct.
+		if(ret->key) free(ret->key);
+		if(ret) free(ret);
+		
 		dbus_message_iter_next (&dict_iter);
+		type = dbus_message_iter_get_arg_type (&dict_iter);
 	}
-	fprintf(stderr, "Done!\n");
 	
+	fprintf(stderr, "Done!\n");
 }
 
 
@@ -270,12 +308,6 @@ void cb_discovery_stop_msg(void *data, DBusMessage *replymsg, DBusError *error) 
 	//set LocalDevice->discovering to False manually... lot faster :)
 	ADAPTER->discovering = FALSE;	
 	}
-}
-
-
-static  int cb_device_found_helper(RemoteDevice *s, const char *new_RemoteDevice) {
-	if (!s) return -1;
-	return strcmp(s->addr, new_RemoteDevice);
 }
 
 void cb_device_found (void *data, DBusMessage *msg) {
