@@ -18,146 +18,46 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 #include <E_DBus.h>
-#include "gui.h"
 #include "dbus.h"
+#include "bluez.h"
 
 void dbus_init_session() {
 
-	/* First we get device dbus interface */
-	DBUSCONN->conn = e_dbus_bus_get(DBUS_BUS_SYSTEM); 
-	
-	DBusMessage *msg;
-	msg = dbus_message_new_method_call(
-		"org.bluez",
-		"/",
-		"org.bluez.Manager",
-		"DefaultAdapter");
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_dbus_init_session, -1, DL);
-	dbus_message_unref(msg);
+	bluez_init_session();
 		
 }
 
-
-void dbus_get_remote_device_path(RemoteDevice* device) {
-
-	DBusMessage *msg;
-	msg = dbus_message_new_method_call(
-		"org.bluez",
-		DBUSCONN->path,
-		"org.bluez.Adapter",
-		"FindDevice");
-			
-	dbus_message_append_args (msg,
-		DBUS_TYPE_STRING, &device->addr,
-		DBUS_TYPE_INVALID);
-
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_get_remote_device_path, -1, device);
-	dbus_message_unref(msg);
+StructDbus* dbus_get_next_struct_in_dict(DBusMessageIter *dict_iter) {
+		DBusMessageIter key_iter, value_iter;
 	
-}
-
-
-void dbus_create_remote_device_path(RemoteDevice* device) {
-
-	DBusMessage *msg;
-	msg = dbus_message_new_method_call(
-		"org.bluez",
-		DBUSCONN->path,
-		"org.bluez.Adapter",
-		"CreateDevice");
-			
-	dbus_message_append_args (msg,
-		DBUS_TYPE_STRING, &device->addr,
-		DBUS_TYPE_INVALID);
-
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_create_remote_device_path, -1, device);
-	dbus_message_unref(msg);
-	
-}
-
-
-
-void dbus_get_local_device_info() {
-
-	DBusMessage *msg;
-	msg = dbus_message_new_method_call(
-		"org.bluez",
-		DBUSCONN->path,
-		"org.bluez.Adapter",
-		"GetProperties");
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_get_local_device_info, -1, NULL);
-	dbus_message_unref(msg);
-	
-}
-
-
-void dbus_get_remote_device_info(RemoteDevice* device) {
-
-	DBusMessage *msg;
-	msg = dbus_message_new_method_call(
-		"org.bluez",
-		device->path,
-		"org.bluez.Device",
-		"GetProperties");
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_get_remote_device_info, -1, device);
-	dbus_message_unref(msg);
-	
-}
-
-
-
-void dbus_discovery_start() {
-
-/* now connect to signals and send StartDiscovery message */
-
-	DBUSCONN->DeviceFound = e_dbus_signal_handler_add(
-    DBUSCONN->conn,
-	"org.bluez",
-	DBUSCONN->path,
-	"org.bluez.Adapter",
-	"DeviceFound",
-	cb_device_found,
-	NULL);
-	
-	DBUSCONN->DeviceDissapeared = e_dbus_signal_handler_add(
-	DBUSCONN->conn,
-	"org.bluez", 
-	DBUSCONN->path,
-	"org.bluez.Adapter",
-	"DeviceDisappeared",
-	cb_device_disappeared,
-	NULL);
-	
-	/* send start message */
-	DBusMessage *msg;
-	msg = dbus_message_new_method_call(
-		"org.bluez",
-		DBUSCONN->path,
-		"org.bluez.Adapter",
-		"StartDiscovery");
-	
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_discovery_start_msg, -1, NULL);
-	dbus_message_unref(msg);
-
-   //e_dbus_connection_close(conn); 
-}
-
-
-void dbus_discovery_stop() {
-	
-	/* disconnect from discovery signals, as other apps can be discovering too */
-	e_dbus_signal_handler_del(DBUSCONN->conn, DBUSCONN->DeviceFound);
-	e_dbus_signal_handler_del(DBUSCONN->conn, DBUSCONN->DeviceDissapeared);
-	
-	/* send stop message */
-	DBusMessage *msg;
-	msg = dbus_message_new_method_call(
-		"org.bluez",
-		DBUSCONN->path,
-		"org.bluez.Adapter",
-		"StopDiscovery");
-	
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_discovery_stop_msg, -1, NULL);
-	dbus_message_unref(msg);
-	
+		StructDbus* ret = malloc(sizeof(StructDbus));
+		ret->value.value_int=0;
+		ret->value.value_string=NULL;
+		int tmp = DBUS_TYPE_INVALID;
+		ret->value_type = DBUS_TYPE_INVALID; 
+		
+	    //get key:
+        dbus_message_iter_recurse(dict_iter, &key_iter);
+        dbus_message_iter_get_basic(&key_iter, &ret->key);
+        ret->key = strdup(ret->key); //make copy
+        
+        //set value_iter to point to next value:
+        dbus_message_iter_next (&key_iter);
+        dbus_message_iter_recurse (&key_iter, &value_iter);
+        
+        tmp = dbus_message_iter_get_arg_type(&value_iter);
+        ret->value_type = tmp;
+        
+        if(ret->value_type == DBUS_TYPE_STRING || ret->value_type == DBUS_TYPE_OBJECT_PATH) {
+			dbus_message_iter_get_basic(&value_iter, &ret->value.value_string);
+			ret->value.value_string = strdup(ret->value.value_string);
+		}
+		else  if(ret->value_type == DBUS_TYPE_UINT32 || ret->value_type == DBUS_TYPE_BOOLEAN) {
+			dbus_message_iter_get_basic(&value_iter, &tmp);
+			ret->value.value_int = tmp;
+		} /*else { here comes array types, no need to handle them
+			 fprintf(stderr, "\n\nUNKNOWN VALUE RECEIVED fROM DBUS: int:%d; char:%c;\n\n", ret->value_type, ret->value_type);
+		} */
+		
+	return ret;
 }

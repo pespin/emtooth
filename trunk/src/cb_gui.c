@@ -18,7 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 #include <Elementary.h>
-#include "gui.h"
+#include "cb_gui.h"
 
 void cb_safe_exit(void *data, Evas_Object *obj, void *event_info) {
    elm_exit();
@@ -44,7 +44,7 @@ void cb_discovery_start_clicked(void *data, Evas_Object *obj, void *event_info) 
 	
 	elm_label_label_set(DL->header, "Discovering Devices...");
 	
-	dbus_discovery_start();
+	bluez_discovery_start();
 }
 
 
@@ -63,7 +63,7 @@ void cb_discovery_stop_clicked(void *data, Evas_Object *obj, void *event_info) {
 	sprintf(buf, "%d Devices Found:", eina_list_count(DL->devices));
 	elm_label_label_set(DL->header, buf);
 	
-	dbus_discovery_stop();
+	bluez_discovery_stop();
 }
 
 
