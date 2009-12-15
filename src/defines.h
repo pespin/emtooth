@@ -19,6 +19,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <Elementary.h>
 #include <E_DBus.h>
 
+#ifndef _EMTOOTH_DEFINES_H
+#define _EMTOOTH_DEFINES_H       1
+
+
 typedef int bool;
 
 typedef struct _DeviceList {
@@ -86,4 +90,4 @@ LocalDevice* ADAPTER;
 DbusConn* DBUSCONN;
 DeviceList* DL;
 
-
+#endif
