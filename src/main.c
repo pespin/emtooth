@@ -39,6 +39,12 @@ elm_main(int argc, char **argv)
 	DL->devices =  NULL;
 	DL->li = NULL;
 	
+	/* Thread created OnStart:
+	 * 1- Start dbus connection
+	 * 2- Start bluetooth using frameworkd if it is present
+	 * 3- Start bluez session + get local device info
+	 * 4- Start device discovery + TODO: create openobex server to receive files
+	 */
 	//start the dbus thread
 	int ret;
 	pthread_t t_id;
@@ -48,6 +54,7 @@ elm_main(int argc, char **argv)
    gui_create();
   
    elm_run();
+   //cb_safe_exit() is called on close main win
    elm_shutdown();
    return 0;
 }

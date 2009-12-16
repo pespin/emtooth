@@ -22,9 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "bluez.h"
 
 void bluez_init_session() {
-
-	/* First we get device dbus interface */
-	DBUSCONN->conn = e_dbus_bus_get(DBUS_BUS_SYSTEM); 
 	
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(

@@ -14,11 +14,17 @@ emtooth_SOURCES = \
 	src/cb_dbus.h \
 	src/cb_gui.c \
 	src/cb_gui.h \
+	src/cb_obex.c \
+	src/cb_obex.h \
 	src/bluez.c \
 	src/bluez.h \
 	src/dbus.c \
 	src/dbus.h \
+	src/fso.c \
+	src/fso.h \
 	src/gui.c \
-	src/gui.h
+	src/gui.h \
+	src/obex.c \
+	src/obex.h
 emtooth_LDADD = @ELEMENTARY_LIBS@
 emtooth_CFLAGS =
