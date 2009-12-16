@@ -155,3 +155,51 @@ void bluez_discovery_stop() {
 	dbus_message_unref(msg);
 	
 }
+
+
+void bluez_set_property(StructDbus* info) {
+	
+	DBusMessageIter iter, sub;
+	
+	DBusMessage *msg;
+	msg = dbus_message_new_method_call(
+		"org.bluez",
+		DBUSCONN->path,
+		"org.bluez.Adapter",
+		"SetProperty");
+	
+	dbus_message_iter_init_append(msg, &iter); 	
+	
+	dbus_message_iter_append_basic(&iter, DBUS_TYPE_STRING, &info->key);
+	
+	char* buf = malloc(64);
+	sprintf(buf, "%c", info->value_type);
+	
+	dbus_message_iter_open_container(&iter,
+		DBUS_TYPE_VARIANT,
+		buf,
+		&sub);
+	
+	
+	switch (info->value_type){
+	
+	case DBUS_TYPE_BOOLEAN:
+	case DBUS_TYPE_UINT32:		
+		dbus_message_iter_append_basic(&sub, info->value_type, &info->value.value_int); 	
+		break;
+	case DBUS_TYPE_STRING:
+	case DBUS_TYPE_OBJECT_PATH:
+		dbus_message_iter_append_basic(&sub, info->value_type, &info->value.value_string);
+		break;		
+		
+	}
+	
+	dbus_message_iter_close_container(&iter, &sub);
+	
+	dbus_message_append_args (msg, DBUS_TYPE_INVALID);
+
+	e_dbus_message_send(DBUSCONN->conn, msg, cb_set_property, -1, NULL);
+	dbus_message_unref(msg);
+	/*TODO: free DBUSStruct*/
+	
+}

@@ -331,3 +331,12 @@ void cb_device_disappeared (void *data, DBusMessage *msg) {
 	}
 	
 }
+
+
+
+void cb_set_property(void *data, DBusMessage *replymsg, DBusError *error) {
+	if (dbus_error_is_set(error)) {
+		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
+	} else	fprintf(stderr, "Property updated.\n");
+	
+}

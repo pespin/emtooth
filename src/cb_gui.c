@@ -83,3 +83,30 @@ void cb_settings_dialog(void *data, Evas_Object *obj, void *event_info) {
 
 		gui_settings_dialog_create();
 }
+
+
+void cb_discoverable_changed(void *data, Evas_Object *obj, void *event_info) {
+
+	StructDbus* info = malloc(sizeof(StructDbus));
+	
+	info->key = strdup("Discoverable");
+	info->value_type=DBUS_TYPE_BOOLEAN;
+	info->value.value_int = elm_toggle_state_get(obj);
+	ADAPTER->discoverable = info->value.value_int;
+	fprintf(stderr, "Discoverable status changed to %d\n", ADAPTER->discoverable);
+	bluez_set_property(info);
+	
+}
+
+void cb_pairable_changed(void *data, Evas_Object *obj, void *event_info) {
+	
+	StructDbus* info = malloc(sizeof(StructDbus));
+	
+	info->key = strdup("Pairable");
+	info->value_type=DBUS_TYPE_BOOLEAN;
+	info->value.value_int = elm_toggle_state_get(obj);
+	ADAPTER->discoverable = info->value.value_int;
+	fprintf(stderr, "Pairable status changed to %d\n", ADAPTER->discoverable);
+	bluez_set_property(info);
+	
+}
