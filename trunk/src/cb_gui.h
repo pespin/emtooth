@@ -28,3 +28,6 @@ void cb_discovery_stop_clicked(void *data, Evas_Object *obj, void *event_info);
 void cb_device_list_selected(void *data, Evas_Object *obj, void *event_info);
 
 void cb_settings_dialog(void *data, Evas_Object *obj, void *event_info);
+
+void cb_discoverable_changed(void *data, Evas_Object *obj, void *event_info);
+void cb_pairable_changed(void *data, Evas_Object *obj, void *event_info);

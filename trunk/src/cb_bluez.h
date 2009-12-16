@@ -29,6 +29,7 @@ void cb_get_remote_device_info (void *data, DBusMessage *replymsg, DBusError *er
 void cb_discovery_start_msg(void *data, DBusMessage *replymsg, DBusError *error);
 void cb_discovery_stop_msg(void *data, DBusMessage *replymsg, DBusError *error);
 
-void cb_device_disappeared (void *data, DBusMessage *msg);
+void cb_device_disappeared(void *data, DBusMessage *msg);
+void cb_device_found(void *data, DBusMessage *msg);
 
-void cb_device_found (void *data, DBusMessage *msg);
+void cb_set_property(void *data, DBusMessage *replymsg, DBusError *error);

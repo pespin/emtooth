@@ -220,21 +220,21 @@ void gui_settings_dialog_create() {
 	evas_object_size_hint_weight_set(vbox, 1.0, 1.0);
 	evas_object_show(vbox);
 
-	// add button hbox
-	hbox = elm_box_add(win);
+	// add address hbox
+	/*hbox = elm_box_add(win);
 	
 	elm_box_horizontal_set(hbox, 1);
 	evas_object_size_hint_weight_set(hbox, 1.0, 0.0);
 	evas_object_size_hint_align_set(hbox, -1.0, 0.0);
 	elm_box_pack_end(vbox, hbox);
-	evas_object_show(hbox);
+	evas_object_show(hbox); */
 
 	// add a frame
 	fr = elm_frame_add(win);
 	elm_object_style_set(fr, "outdent_top");
 	evas_object_size_hint_weight_set(fr, 0.0, 0.0);
 	evas_object_size_hint_align_set(fr, 0.0, -1.0);
-	elm_box_pack_end(hbox, fr);
+	elm_box_pack_end(vbox, fr);
 	evas_object_show(fr);
 
 	//ADDRESS
@@ -315,7 +315,7 @@ void gui_settings_dialog_create() {
 	elm_toggle_state_set(tg, ADAPTER->discoverable);
 	elm_box_pack_end(hbox, tg);
 	evas_object_show(tg);
-	/* TODO: add callback on change status */
+	evas_object_smart_callback_add(tg, "changed", cb_discoverable_changed, NULL);
 	
 	//endl
 	
@@ -373,7 +373,7 @@ void gui_settings_dialog_create() {
 		elm_toggle_state_set(tg, ADAPTER->pairable);
 	elm_box_pack_end(hbox, tg);
 	evas_object_show(tg);
-	/* TODO: add callback on change status */
+	evas_object_smart_callback_add(tg, "changed", cb_pairable_changed, NULL);
 	
 	//endl
 	
