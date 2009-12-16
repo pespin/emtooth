@@ -22,8 +22,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "bluez.h"
 
 void dbus_init_session() {
+	
+	/* First we get device dbus interface */
+	DBUSCONN->conn = e_dbus_bus_get(DBUS_BUS_SYSTEM); 
 
-	bluez_init_session();
+	//run intermediate pass to request bluetooth resource
+	fso_enable_bluetooth();
+
 		
 }
 
