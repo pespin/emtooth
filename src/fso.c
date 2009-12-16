@@ -50,12 +50,19 @@ void fso_enable_bluetooth() {
 	
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
-		"org.freesmartphone.odeviced",
-		"/org/freesmartphone/Resource/Bluetooth",
-		"org.freesmartphone.Resource",
-		"Enable");
+		"org.freesmartphone.ousaged",
+		"/org/freesmartphone/Usage",
+		"org.freesmartphone.Usage",
+		"RequestResource");
+	
+	char* str = strdup("Bluetooth");
+	dbus_message_append_args (msg,
+		DBUS_TYPE_STRING, &str,
+		DBUS_TYPE_INVALID);
+		
 	e_dbus_message_send(DBUSCONN->conn, msg, cb_fso_enable_bluetooth, -1, NULL);
 	dbus_message_unref(msg);
+	free(str);
 		
 }
 
@@ -64,11 +71,18 @@ void fso_disable_bluetooth() {
 	
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
-		"org.freesmartphone.odeviced",
-		"/org/freesmartphone/Resource/Bluetooth",
-		"org.freesmartphone.Resource",
-		"Disable");
+		"org.freesmartphone.ousaged",
+		"/org/freesmartphone/Usage",
+		"org.freesmartphone.Usage",
+		"ReleaseResource");
+		
+	char* str = strdup("Bluetooth");
+	dbus_message_append_args (msg,
+		DBUS_TYPE_STRING, &str,
+		DBUS_TYPE_INVALID);
+		
 	e_dbus_message_send(DBUSCONN->conn, msg, cb_fso_disable_bluetooth, -1, NULL);
 	dbus_message_unref(msg);
+	free(str);
 		
 }
