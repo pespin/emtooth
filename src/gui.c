@@ -233,13 +233,12 @@ void gui_settings_dialog_create() {
 	fr = elm_frame_add(win);
 	elm_object_style_set(fr, "outdent_top");
 	evas_object_size_hint_weight_set(fr, 0.0, 0.0);
-	evas_object_size_hint_align_set(fr, 0.0, -1.0);
+	evas_object_size_hint_align_set(fr, 0.0, 0.0);
 	elm_box_pack_end(vbox, fr);
 	evas_object_show(fr);
 
 	//ADDRESS
 	sprintf(buf, "<b>Address:</b> %s", ADAPTER->addr);
-	//fprintf(stderr, "\n\n\nGUI-ADDR:%s;\n\n\n", ADAPTER->addr); 
 	lb = elm_label_add(win);
 	elm_label_label_set(lb, buf);
 	elm_frame_content_set(fr, lb);
@@ -418,4 +417,41 @@ void gui_settings_dialog_create() {
   
    evas_object_show(win);
 	
+}
+
+
+
+void gui_alert_create(const char *message)
+{
+	Evas_Object *win, *bg, *inwin, *lb, *bt1;
+
+	win = elm_win_add(NULL, "inwin", ELM_WIN_DIALOG_BASIC);
+	elm_win_title_set(win, "Alert!");
+	elm_win_autodel_set(win, 1);
+
+	bg = elm_bg_add(win);
+	elm_win_resize_object_add(win, bg);
+	evas_object_size_hint_weight_set(bg, 1.0, 1.0);
+	evas_object_show(bg);
+
+	inwin = elm_win_inwin_add(win);
+	elm_object_style_set(inwin, "minimal_vertical");
+	evas_object_show(inwin);
+
+	lb = elm_label_add(win);
+	elm_label_label_set(lb,message);
+	elm_win_inwin_content_set(inwin, lb);
+	evas_object_show(lb);
+	
+	//add close button
+	bt1 = elm_button_add(win);
+	elm_button_label_set(bt1, "Ok");
+	evas_object_size_hint_weight_set(bt1, 1.0, 1.0);
+	evas_object_size_hint_align_set(bt1, -1.0, -1.0);
+	elm_box_pack_end(inwin, bt1);
+	evas_object_show(bt1);
+	evas_object_smart_callback_add(bt1, "clicked", cb_alert_bt, win);
+	
+	evas_object_resize(win, 320, 240);
+	evas_object_show(win);
 }

@@ -24,22 +24,22 @@ Foundation, Inc., 51 Franklin Stre et, Fifth Floor, Boston, MA  02110-1301, USA.
 /* callbacks */
 
 void cb_fso_enable_bluetooth(void *data, DBusMessage *replymsg, DBusError *error) {
+
+	fprintf(stderr, "Request sent to frameworkd to enable bluetooth resource.\n");
 	
 	if (dbus_error_is_set(error)) 
 		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
 
-	fprintf(stderr, "Request sent to frameworkd to enable bluetooth resource.\n");
-	
 	bluez_init_session();
 	
 }
 
 void cb_fso_disable_bluetooth(void *data, DBusMessage *replymsg, DBusError *error) {
 	
+	fprintf(stderr, "Request sent to frameworkd to disable bluetooth resource.\n");
+	
 	if (dbus_error_is_set(error)) 
 		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
-
-	fprintf(stderr, "Request sent to frameworkd to disable bluetooth resource.\n");
 	
 }
 
@@ -55,14 +55,11 @@ void fso_enable_bluetooth() {
 		"org.freesmartphone.Usage",
 		"RequestResource");
 	
-	char* str = strdup("Bluetooth");
-	dbus_message_append_args (msg,
-		DBUS_TYPE_STRING, &str,
-		DBUS_TYPE_INVALID);
+	const char *str = "Bluetooth";
+	dbus_message_append_args (msg, DBUS_TYPE_STRING, &str, DBUS_TYPE_INVALID);
 		
 	e_dbus_message_send(DBUSCONN->conn, msg, cb_fso_enable_bluetooth, -1, NULL);
 	dbus_message_unref(msg);
-	free(str);
 		
 }
 
@@ -76,13 +73,10 @@ void fso_disable_bluetooth() {
 		"org.freesmartphone.Usage",
 		"ReleaseResource");
 		
-	char* str = strdup("Bluetooth");
-	dbus_message_append_args (msg,
-		DBUS_TYPE_STRING, &str,
-		DBUS_TYPE_INVALID);
+	const char *str = "Bluetooth";
+	dbus_message_append_args (msg, DBUS_TYPE_STRING, &str, DBUS_TYPE_INVALID);
 		
 	e_dbus_message_send(DBUSCONN->conn, msg, cb_fso_disable_bluetooth, -1, NULL);
 	dbus_message_unref(msg);
-	free(str);
 		
 }

@@ -23,6 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 void bluez_init_session() {
 	
+	fprintf(stderr, "Getting default bluetooth adapter from bluez...\n");
+	
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
 		"org.bluez",

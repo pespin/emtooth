@@ -20,6 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <Elementary.h>
 #include "defines.h"
 
+void cb_alert_bt(void *data, Evas_Object *obj, void *event_info);
+
 void cb_safe_exit(void *data, Evas_Object *obj, void *event_info);
 void cb_close_win(void *data, Evas_Object *obj, void *event_info);
 
