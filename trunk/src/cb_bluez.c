@@ -324,7 +324,6 @@ void cb_device_disappeared (void *data, DBusMessage *msg) {
 	
 	li = eina_list_search_unsorted_list(DL->devices, (Eina_Compare_Cb)cb_device_found_helper, dev_addr);
 	if(li) {
-		fprintf(stderr, "\nENTERED REMOVE IF\n\n", dev_addr);
 		RemoteDevice* device = eina_list_data_get(li);
 		fprintf(stderr, "\nREMOVE DEVICE:%s;\n\n", device->addr);
 		gui_device_list_remove(device);
@@ -337,6 +336,6 @@ void cb_device_disappeared (void *data, DBusMessage *msg) {
 void cb_set_property(void *data, DBusMessage *replymsg, DBusError *error) {
 	if (dbus_error_is_set(error)) {
 		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
-	} else	fprintf(stderr, "Property updated.\n");
+	} else	fprintf(stderr, "Property updated. TODO: need to handle this and apply changes.\n");
 	
 }

@@ -27,4 +27,8 @@ void gui_device_list_append(RemoteDevice* device);
 
 void gui_device_list_populate();
 
-void gui_device_list_clear(Evas_Object *li);
+//void gui_device_list_clear(Evas_Object *li);
+
+void gui_settings_dialog_create();
+
+void gui_alert_create(const char *message);
