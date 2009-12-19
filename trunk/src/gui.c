@@ -220,20 +220,11 @@ void gui_settings_dialog_create() {
 	evas_object_size_hint_weight_set(vbox, 1.0, 1.0);
 	evas_object_show(vbox);
 
-	// add address hbox
-	/*hbox = elm_box_add(win);
-	
-	elm_box_horizontal_set(hbox, 1);
-	evas_object_size_hint_weight_set(hbox, 1.0, 0.0);
-	evas_object_size_hint_align_set(hbox, -1.0, 0.0);
-	elm_box_pack_end(vbox, hbox);
-	evas_object_show(hbox); */
-
 	// add a frame
 	fr = elm_frame_add(win);
 	elm_object_style_set(fr, "outdent_top");
 	evas_object_size_hint_weight_set(fr, 0.0, 0.0);
-	evas_object_size_hint_align_set(fr, 0.0, 0.0);
+	evas_object_size_hint_align_set(fr, 0.5, 0.5);
 	elm_box_pack_end(vbox, fr);
 	evas_object_show(fr);
 
@@ -279,7 +270,7 @@ void gui_settings_dialog_create() {
 	elm_entry_entry_set(entry, ADAPTER->name);
 	elm_box_pack_end(hbox, entry);
 	evas_object_show(entry);
-	/* TODO: callback that saves modified name on unfocus */
+	/* TODO: callback that saves modified name on unfocus: entry_changed signal */
 	
 	// DISCOVERABLE TOGGLE + TIMEOUT:
 	// add a frame
@@ -336,7 +327,7 @@ void gui_settings_dialog_create() {
 	elm_entry_entry_set(entry, buf);
 	elm_box_pack_end(hbox, entry);
 	evas_object_show(entry);
-	/* TODO: callback that saves modified name on unfocus */
+	/* TODO: callback that saves modified name on unfocus: entry_changed signal  */
 	
 	
 	// PAIRABLE TOGGLE + TIMEOUT:
@@ -394,7 +385,7 @@ void gui_settings_dialog_create() {
 	elm_entry_entry_set(entry, buf);
 	elm_box_pack_end(hbox, entry);
 	evas_object_show(entry);
-	/* TODO: callback that saves modified name on unfocus */
+	/* TODO: callback that saves modified name on unfocus: entry_changed signal */
 	
 	
 	//BOTTOM:
