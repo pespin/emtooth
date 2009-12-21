@@ -39,12 +39,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 void cb_bluez_init_session(void *data, DBusMessage *replymsg, DBusError *error) {
 	
+	if(!replymsg) fprintf(stderr, "ERROR ON BLUEZ-DBUS!\n");
+	
 	char *path = NULL;
 	
 	dbus_message_get_args(replymsg, error,
 	                      DBUS_TYPE_OBJECT_PATH, &path, DBUS_TYPE_INVALID);
 	
-	if (dbus_error_is_set(error)) {
+	if (error && dbus_error_is_set(error)) {
 		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
 	}
 	
