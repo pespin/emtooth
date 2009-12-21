@@ -238,7 +238,6 @@ void gui_settings_dialog_create() {
 	//HERE STARTS ALL THE OPTIONS LIST:
 	
 	vbox_in = elm_box_add(win);
-	elm_win_resize_object_add(win, vbox_in);
 	evas_object_size_hint_align_set(vbox_in, -1.0, 0.0);
 	evas_object_size_hint_weight_set(vbox_in, 1.0, 1.0);
 	elm_box_pack_end(vbox, vbox_in);
@@ -282,7 +281,6 @@ void gui_settings_dialog_create() {
 	evas_object_show(fr);
 	
 	vbox_fr = elm_box_add(win);
-	elm_win_resize_object_add(win, vbox_fr);
 	evas_object_size_hint_align_set(vbox_fr, -1.0, 0.0);
 	evas_object_size_hint_weight_set(vbox_fr, 1.0, 1.0);
 	elm_frame_content_set(fr, vbox_fr);
@@ -340,7 +338,6 @@ void gui_settings_dialog_create() {
 	evas_object_show(fr);
 	
 	vbox_fr = elm_box_add(win);
-	elm_win_resize_object_add(win, vbox_fr);
 	evas_object_size_hint_align_set(vbox_fr, -1.0, 0.0);
 	evas_object_size_hint_weight_set(vbox_fr, 1.0, 1.0);
 	elm_frame_content_set(fr, vbox_fr);
