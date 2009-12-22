@@ -30,7 +30,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  
  static  int cb_device_found_helper(RemoteDevice *s, const char *new_RemoteDevice) {
 	if (!s) return -1;
-	//fprintf(stderr, "COMPARER FUNC: '%s'\n", s->addr);
 	return strcmp(s->addr, new_RemoteDevice);
 }
  
@@ -38,6 +37,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 /* CALLBACK FUNCTIONS */
 
 void cb_bluez_init_session(void *data, DBusMessage *replymsg, DBusError *error) {
+	
+	if (dbus_error_is_set(error)) {
+		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
+	}
 	
 	if(!replymsg) fprintf(stderr, "ERROR ON BLUEZ-DBUS!\n");
 	
