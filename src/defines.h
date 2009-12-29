@@ -22,6 +22,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef _EMTOOTH_DEFINES_H
 #define _EMTOOTH_DEFINES_H       1
 
+#define DBUSLOG(error) if (dbus_error_is_set(error)) fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
+
 typedef int bool;
 
 typedef struct _DeviceList {

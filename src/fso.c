@@ -27,8 +27,7 @@ void cb_fso_enable_bluetooth(void *data, DBusMessage *replymsg, DBusError *error
 
 	fprintf(stderr, "Request sent to frameworkd to enable bluetooth resource.\n");
 	
-	if (dbus_error_is_set(error)) 
-		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
+	DBUSLOG(error);
 
 	bluez_init_session();
 	
@@ -38,8 +37,7 @@ void cb_fso_disable_bluetooth(void *data, DBusMessage *replymsg, DBusError *erro
 	
 	fprintf(stderr, "Request sent to frameworkd to disable bluetooth resource.\n");
 	
-	if (dbus_error_is_set(error)) 
-		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
+	DBUSLOG(error);
 	
 }
 
