@@ -266,7 +266,7 @@ void gui_settings_dialog_create() {
 	
 	entry = elm_entry_add(win);
 	elm_entry_single_line_set(entry, TRUE);
-	elm_entry_entry_set(entry, ADAPTER->name);
+	elm_entry_entry_set(entry, ADAPTER->alias);
 	elm_box_pack_end(hbox, entry);
 	evas_object_show(entry);
 	/* TODO: callback that saves modified name on unfocus: entry_changed signal */

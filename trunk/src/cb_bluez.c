@@ -38,9 +38,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 void cb_bluez_init_session(void *data, DBusMessage *replymsg, DBusError *error) {
 	
-	if (dbus_error_is_set(error)) {
-		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
-	}
+	DBUSLOG(error);
 	
 	if(!replymsg) fprintf(stderr, "ERROR ON BLUEZ-DBUS!\n");
 	
@@ -49,9 +47,7 @@ void cb_bluez_init_session(void *data, DBusMessage *replymsg, DBusError *error) 
 	dbus_message_get_args(replymsg, error,
 	                      DBUS_TYPE_OBJECT_PATH, &path, DBUS_TYPE_INVALID);
 	
-	if (error && dbus_error_is_set(error)) {
-		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
-	}
+	DBUSLOG(error);
 	
 	if(!path) {
 		fprintf(stderr, "Could not get bluez dbus RemoteDevice path. EXIT NOW!\n");
@@ -87,9 +83,7 @@ void cb_get_remote_device_path (void *data, DBusMessage *replymsg, DBusError *er
 	dbus_message_get_args(replymsg, error,
 	                      DBUS_TYPE_OBJECT_PATH, &path, DBUS_TYPE_INVALID);
 	
-	if (dbus_error_is_set(error)) {
-		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
-	}
+	DBUSLOG(error);
 	
 
 	if(!path) { 
@@ -116,9 +110,7 @@ void cb_create_remote_device_path (void *data, DBusMessage *replymsg, DBusError 
 	dbus_message_get_args(replymsg, error,
 	                      DBUS_TYPE_OBJECT_PATH, &path, DBUS_TYPE_INVALID);
 	
-	if (dbus_error_is_set(error)) {
-		printf("Error: %s - %s\n", error->name, error->message);
-	}
+	DBUSLOG(error);
 	
 	if(!path) {
 		fprintf(stderr, "Could not create a path to remote device [%s]\n", device->addr);
@@ -139,9 +131,7 @@ void cb_get_local_device_info (void *data, DBusMessage *replymsg, DBusError *err
 		
 	fprintf(stderr, "Updating local device info... ");	
 	
-	if (dbus_error_is_set(error)) {
-		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
-	}
+	DBUSLOG(error);
 		
 	DBusMessageIter array_iter, dict_iter;
 	//open dict:
@@ -211,9 +201,7 @@ void cb_get_remote_device_info (void *data, DBusMessage *replymsg, DBusError *er
 	
 	fprintf(stderr, "Updating remote device [%s][%s] info... ", device->addr, device->path);
 	
-	if (dbus_error_is_set(error)) {
-		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
-	}
+	DBUSLOG(error);
 		
 	DBusMessageIter array_iter, dict_iter;
 
@@ -293,9 +281,7 @@ void cb_device_found (void *data, DBusMessage *msg) {
 	dbus_message_get_args(msg, error,
 	                      DBUS_TYPE_STRING, &dev_addr, DBUS_TYPE_INVALID);
 	
-	if (error &&  dbus_error_is_set(error)) {
-		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
-	}
+	DBUSLOG(error);
 	
 	fprintf(stderr, "FOUND SIGNAL --> %s\n", dev_addr);
 	
@@ -321,9 +307,7 @@ void cb_device_disappeared (void *data, DBusMessage *msg) {
 	dbus_message_get_args(msg, error,
 	                      DBUS_TYPE_STRING, &dev_addr, DBUS_TYPE_INVALID);
 	
-	if (error && dbus_error_is_set(error)) {
-		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
-	}
+	DBUSLOG(error);
 	
 	fprintf(stderr, "DISSAPEARED SIGNAL --> %s\n", dev_addr);
 	
