@@ -266,7 +266,7 @@ void gui_settings_dialog_create() {
 	
 	entry = elm_entry_add(win);
 	elm_entry_single_line_set(entry, TRUE);
-	elm_entry_entry_set(entry, ADAPTER->alias);
+	elm_entry_entry_set(entry, ADAPTER->name);
 	elm_box_pack_end(hbox, entry);
 	evas_object_show(entry);
 	/* TODO: callback that saves modified name on unfocus: entry_changed signal */
@@ -407,11 +407,9 @@ void gui_settings_dialog_create() {
 	
 }
 
-
-
 void gui_alert_create(const char *message)
 {
-	Evas_Object *win, *bg, *inwin, *lb, *bt1;
+	Evas_Object *win, *bg, *inwin, *vbox, *lb, *bt1;
 
 	win = elm_win_add(NULL, "inwin", ELM_WIN_DIALOG_BASIC);
 	elm_win_title_set(win, "Alert!");
@@ -426,9 +424,13 @@ void gui_alert_create(const char *message)
 	elm_object_style_set(inwin, "minimal_vertical");
 	evas_object_show(inwin);
 
+	vbox = elm_box_add(win);
+	elm_win_inwin_content_set(inwin, vbox);
+	evas_object_show(vbox);
+	
 	lb = elm_label_add(win);
 	elm_label_label_set(lb,message);
-	elm_win_inwin_content_set(inwin, lb);
+	elm_box_pack_end(vbox, lb);
 	evas_object_show(lb);
 	
 	//add close button
@@ -436,7 +438,7 @@ void gui_alert_create(const char *message)
 	elm_button_label_set(bt1, "Ok");
 	evas_object_size_hint_weight_set(bt1, 1.0, 1.0);
 	evas_object_size_hint_align_set(bt1, -1.0, -1.0);
-	elm_box_pack_end(inwin, bt1);
+	elm_box_pack_end(vbox, bt1);
 	evas_object_show(bt1);
 	evas_object_smart_callback_add(bt1, "clicked", cb_alert_bt, win);
 	
