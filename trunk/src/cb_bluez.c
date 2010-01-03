@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <stdio.h>
 #include <E_DBus.h>
+#include <unistd.h> /* sleep() */
 #include "gui.h"
 #include "cb_bluez.h"
 #include "dbus.h"
@@ -40,18 +41,30 @@ void cb_bluez_init_session(void *data, DBusMessage *replymsg, DBusError *error) 
 	
 	DBUSLOG(error);
 	
-	if(!replymsg) fprintf(stderr, "ERROR ON BLUEZ-DBUS!\n");
-	
+	if(!replymsg) { /* no org.bluez, fso still loading it [fso bug] */
+		fprintf(stderr, "ERROR ON BLUEZ-DBUS!\n");
+		
+		if(bluez_error_counter<6) {
+			if(bluez_error_counter==0)
+					gui_alert_create("Sorry, it seems bluez dbus interface is not \
+					running at the moment. Retrying some more times before exiting...");
+			bluez_error_counter++;
+			sleep(2);					
+			bluez_init_session();
+			return;
+		} else exit(EXIT_FAILURE);
+	}
 	char *path = NULL;
-	
 	dbus_message_get_args(replymsg, error,
 	                      DBUS_TYPE_OBJECT_PATH, &path, DBUS_TYPE_INVALID);
 	
 	DBUSLOG(error);
 	
 	if(!path) {
-		fprintf(stderr, "Could not get bluez dbus RemoteDevice path. EXIT NOW!\n");
-		exit(EXIT_FAILURE);
+		fprintf(stderr, "Could not get bluez dbus device path. EXIT NOW!\n");
+		gui_alert_create("Could not get bluez dbus device path. Exiting...\n");
+		sleep(5);
+		return;
 	}
 	
 	DBUSCONN->path = strdup(path);
@@ -320,11 +333,23 @@ void cb_device_disappeared (void *data, DBusMessage *msg) {
 	
 }
 
+void cb_property_changed(void *data, DBusMessage *msg) {
+
+	DBusError *error=NULL;
+	
+	//dbus_message_get_args(msg, error, DBUS_TYPE_STRING, &dev_addr, DBUS_TYPE_INVALID);
+	
+	DBUSLOG(error);
+	
+	fprintf(stderr, "PROPERTY CHANGED SIGNAL\n");
+	
+	/* TODO: finish handling here */
+	bluez_get_local_device_info();
+	
+}
+
 
 
 void cb_set_property(void *data, DBusMessage *replymsg, DBusError *error) {
-	if (dbus_error_is_set(error)) {
-		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
-	} else	fprintf(stderr, "Property updated. TODO: need to handle this and apply changes.\n");
-	
+	DBUSLOG(error);
 }

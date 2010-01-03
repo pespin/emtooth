@@ -90,28 +90,42 @@ void cb_settings_dialog(void *data, Evas_Object *obj, void *event_info) {
 }
 
 
-void cb_discoverable_changed(void *data, Evas_Object *obj, void *event_info) {
-
+void cb_toggle_value_changed(void *data, Evas_Object *obj, void *event_info) {
+	
 	StructDbus* info = malloc(sizeof(StructDbus));
 	
-	info->key = strdup("Discoverable");
+	info->key = strdup(data);
 	info->value_type=DBUS_TYPE_BOOLEAN;
 	info->value.value_int = elm_toggle_state_get(obj);
-	ADAPTER->discoverable = info->value.value_int;
-	fprintf(stderr, "Discoverable status changed to %d\n", ADAPTER->discoverable);
-	bluez_set_property(info);
+	
+	fprintf(stderr, "Callback: change ->  %s=%d\n", info->key, info->value.value_int);
+	bluez_set_property(info);	
 	
 }
 
-void cb_pairable_changed(void *data, Evas_Object *obj, void *event_info) {
+
+void cb_entry_value_integer_changed(void *data, Evas_Object *obj, void *event_info) {
 	
 	StructDbus* info = malloc(sizeof(StructDbus));
 	
-	info->key = strdup("Pairable");
-	info->value_type=DBUS_TYPE_BOOLEAN;
-	info->value.value_int = elm_toggle_state_get(obj);
-	ADAPTER->discoverable = info->value.value_int;
-	fprintf(stderr, "Pairable status changed to %d\n", ADAPTER->discoverable);
-	bluez_set_property(info);
+	info->key = strdup(data);
+	info->value_type=DBUS_TYPE_UINT32;
+	info->value.value_int = atoi(elm_entry_entry_get(obj));
+	
+	fprintf(stderr, "Callback: change ->  %s=%d\n", info->key, info->value.value_int);
+	bluez_set_property(info);	
+	
+}
+
+void cb_entry_value_string_changed(void *data, Evas_Object *obj, void *event_info) {
+	
+	StructDbus* info = malloc(sizeof(StructDbus));
+	
+	info->key = strdup(data);
+	info->value_type=DBUS_TYPE_STRING;
+	info->value.value_string = strdup(elm_entry_entry_get(obj));
+	
+	fprintf(stderr, "Callback: change ->  %s=%s\n", info->key, info->value.value_string);
+	bluez_set_property(info);	
 	
 }

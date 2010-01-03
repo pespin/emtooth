@@ -269,7 +269,7 @@ void gui_settings_dialog_create() {
 	elm_entry_entry_set(entry, ADAPTER->name);
 	elm_box_pack_end(hbox, entry);
 	evas_object_show(entry);
-	/* TODO: callback that saves modified name on unfocus: entry_changed signal */
+	evas_object_smart_callback_add(entry, "changed", cb_entry_value_string_changed, "Name");
 	
 	// DISCOVERABLE TOGGLE + TIMEOUT:
 	// add a frame
@@ -303,7 +303,7 @@ void gui_settings_dialog_create() {
 	elm_toggle_state_set(tg, ADAPTER->discoverable);
 	elm_box_pack_end(hbox, tg);
 	evas_object_show(tg);
-	evas_object_smart_callback_add(tg, "changed", cb_discoverable_changed, NULL);
+	evas_object_smart_callback_add(tg, "changed", cb_toggle_value_changed, "Discoverable");
 	
 	//endl
 	
@@ -325,7 +325,7 @@ void gui_settings_dialog_create() {
 	elm_entry_entry_set(entry, buf);
 	elm_box_pack_end(hbox, entry);
 	evas_object_show(entry);
-	/* TODO: callback that saves modified name on unfocus: entry_changed signal  */
+	evas_object_smart_callback_add(entry, "changed", cb_entry_value_integer_changed, "DiscoverableTimeout");
 	
 	
 	// PAIRABLE TOGGLE + TIMEOUT:
@@ -360,7 +360,7 @@ void gui_settings_dialog_create() {
 		elm_toggle_state_set(tg, ADAPTER->pairable);
 	elm_box_pack_end(hbox, tg);
 	evas_object_show(tg);
-	evas_object_smart_callback_add(tg, "changed", cb_pairable_changed, NULL);
+	evas_object_smart_callback_add(tg, "changed", cb_toggle_value_changed, "Pairable");
 	
 	//endl
 	
@@ -382,7 +382,7 @@ void gui_settings_dialog_create() {
 	elm_entry_entry_set(entry, buf);
 	elm_box_pack_end(hbox, entry);
 	evas_object_show(entry);
-	/* TODO: callback that saves modified name on unfocus: entry_changed signal */
+	evas_object_smart_callback_add(entry, "changed", cb_entry_value_integer_changed, "PairableTimeout");
 	
 	
 	//BOTTOM:
