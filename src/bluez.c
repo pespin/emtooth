@@ -33,6 +33,16 @@ void bluez_init_session() {
 		"DefaultAdapter");
 	e_dbus_message_send(DBUSCONN->conn, msg, cb_bluez_init_session, -1, NULL);
 	dbus_message_unref(msg);
+	
+	//connect to ChangeProperty signal
+	e_dbus_signal_handler_add(
+	DBUSCONN->conn,
+	"org.bluez", 
+	DBUSCONN->path,
+	"org.bluez.Adapter",
+	"PropertyChanged",
+	cb_property_changed,
+	NULL);
 		
 }
 
