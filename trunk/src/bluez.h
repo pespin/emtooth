@@ -31,4 +31,4 @@ void bluez_get_remote_device_info(RemoteDevice* device);
 void bluez_discovery_start();
 void bluez_discovery_stop();
 
-void bluez_set_property(StructDbus* info);
+void bluez_set_property(StructDbus* info, const char* path, const char* interface);

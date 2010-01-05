@@ -37,6 +37,12 @@ typedef struct _ObjCb {
 	Evas_Object* parent;
 } ObjCb;
 
+typedef struct _GuiCb {
+	char* property;
+	char* path;
+	char* interface;
+} GuiCb;
+
 typedef union _DbusReturn {
 	char* value_string;
 	int value_int;
@@ -77,8 +83,9 @@ typedef struct _LocalDevice {
 
 
 typedef struct _DbusConn {
-	char* path;
-	E_DBus_Connection* conn;
+	char* bluez_path;
+	E_DBus_Connection* sysconn;
+	E_DBus_Connection* sessionconn;
 	E_DBus_Signal_Handler* DeviceFound;
 	E_DBus_Signal_Handler* DeviceDissapeared;
 } DbusConn;
@@ -92,5 +99,11 @@ int bluez_error_counter; //times tried to acces bluez (while fso still loading)
 LocalDevice* ADAPTER;
 DbusConn* DBUSCONN;
 DeviceList* DL;
+
+
+
+/* misc functions in defines.c */
+GuiCb* init_cb_struct(const char* property, const char* path);
+
 
 #endif

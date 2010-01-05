@@ -31,14 +31,14 @@ void bluez_init_session() {
 		"/",
 		"org.bluez.Manager",
 		"DefaultAdapter");
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_bluez_init_session, -1, NULL);
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_bluez_init_session, -1, NULL);
 	dbus_message_unref(msg);
 	
 	//connect to ChangeProperty signal
 	e_dbus_signal_handler_add(
-	DBUSCONN->conn,
+	DBUSCONN->sysconn,
 	"org.bluez", 
-	DBUSCONN->path,
+	DBUSCONN->bluez_path,
 	"org.bluez.Adapter",
 	"PropertyChanged",
 	cb_property_changed,
@@ -52,7 +52,7 @@ void bluez_get_remote_device_path(RemoteDevice* device) {
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
 		"org.bluez",
-		DBUSCONN->path,
+		DBUSCONN->bluez_path,
 		"org.bluez.Adapter",
 		"FindDevice");
 			
@@ -60,7 +60,7 @@ void bluez_get_remote_device_path(RemoteDevice* device) {
 		DBUS_TYPE_STRING, &device->addr,
 		DBUS_TYPE_INVALID);
 
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_get_remote_device_path, -1, device);
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_get_remote_device_path, -1, device);
 	dbus_message_unref(msg);
 	
 }
@@ -70,7 +70,7 @@ void bluez_create_remote_device_path(RemoteDevice* device) {
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
 		"org.bluez",
-		DBUSCONN->path,
+		DBUSCONN->bluez_path,
 		"org.bluez.Adapter",
 		"CreateDevice");
 			
@@ -78,7 +78,7 @@ void bluez_create_remote_device_path(RemoteDevice* device) {
 		DBUS_TYPE_STRING, &device->addr,
 		DBUS_TYPE_INVALID);
 
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_create_remote_device_path, -1, device);
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_create_remote_device_path, -1, device);
 	dbus_message_unref(msg);
 	
 }
@@ -88,10 +88,10 @@ void bluez_get_local_device_info() {
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
 		"org.bluez",
-		DBUSCONN->path,
+		DBUSCONN->bluez_path,
 		"org.bluez.Adapter",
 		"GetProperties");
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_get_local_device_info, -1, NULL);
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_get_local_device_info, -1, NULL);
 	dbus_message_unref(msg);
 	
 }
@@ -105,7 +105,7 @@ void bluez_get_remote_device_info(RemoteDevice* device) {
 		device->path,
 		"org.bluez.Device",
 		"GetProperties");
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_get_remote_device_info, -1, device);
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_get_remote_device_info, -1, device);
 	dbus_message_unref(msg);
 	
 }
@@ -117,18 +117,18 @@ void bluez_discovery_start() {
 /* now connect to signals and send StartDiscovery message */
 
 	DBUSCONN->DeviceFound = e_dbus_signal_handler_add(
-    DBUSCONN->conn,
+    DBUSCONN->sysconn,
 	"org.bluez",
-	DBUSCONN->path,
+	DBUSCONN->bluez_path,
 	"org.bluez.Adapter",
 	"DeviceFound",
 	cb_device_found,
 	NULL);
 	
 	DBUSCONN->DeviceDissapeared = e_dbus_signal_handler_add(
-	DBUSCONN->conn,
+	DBUSCONN->sysconn,
 	"org.bluez", 
-	DBUSCONN->path,
+	DBUSCONN->bluez_path,
 	"org.bluez.Adapter",
 	"DeviceDisappeared",
 	cb_device_disappeared,
@@ -138,11 +138,11 @@ void bluez_discovery_start() {
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
 		"org.bluez",
-		DBUSCONN->path,
+		DBUSCONN->bluez_path,
 		"org.bluez.Adapter",
 		"StartDiscovery");
 	
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_discovery_start_msg, -1, NULL);
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_discovery_start_msg, -1, NULL);
 	dbus_message_unref(msg);
 
    //e_dbus_connection_close(conn); 
@@ -152,66 +152,47 @@ void bluez_discovery_start() {
 void bluez_discovery_stop() {
 	
 	/* disconnect from discovery signals, as other apps can be discovering too */
-	e_dbus_signal_handler_del(DBUSCONN->conn, DBUSCONN->DeviceFound);
-	e_dbus_signal_handler_del(DBUSCONN->conn, DBUSCONN->DeviceDissapeared);
+	e_dbus_signal_handler_del(DBUSCONN->sysconn, DBUSCONN->DeviceFound);
+	e_dbus_signal_handler_del(DBUSCONN->sysconn, DBUSCONN->DeviceDissapeared);
 	
 	/* send stop message */
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
 		"org.bluez",
-		DBUSCONN->path,
+		DBUSCONN->bluez_path,
 		"org.bluez.Adapter",
 		"StopDiscovery");
 	
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_discovery_stop_msg, -1, NULL);
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_discovery_stop_msg, -1, NULL);
 	dbus_message_unref(msg);
 	
 }
 
 
-void bluez_set_property(StructDbus* info) {
+void bluez_set_property(StructDbus* info, const char* path, const char* interface) {
 	
 	DBusMessageIter iter, sub;
 	
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
 		"org.bluez",
-		DBUSCONN->path,
-		"org.bluez.Adapter",
+		path,
+		interface,
 		"SetProperty");
 	
+	//start with args:
 	dbus_message_iter_init_append(msg, &iter); 	
 	
-	dbus_message_iter_append_basic(&iter, DBUS_TYPE_STRING, &info->key);
-	
-	char* buf = malloc(64);
-	sprintf(buf, "%c", info->value_type);
-	
-	dbus_message_iter_open_container(&iter,
-		DBUS_TYPE_VARIANT,
-		buf,
-		&sub);
+	//do boring things in this func... blahblahblah
+	dbus_append_pair_to_dict(&iter, info->key, info->value_type, info->value);
 	
 	
-	switch (info->value_type){
-	
-	case DBUS_TYPE_BOOLEAN:
-	case DBUS_TYPE_UINT32:		
-		dbus_message_iter_append_basic(&sub, info->value_type, &info->value.value_int); 	
-		break;
-	case DBUS_TYPE_STRING:
-	case DBUS_TYPE_OBJECT_PATH:
-		dbus_message_iter_append_basic(&sub, info->value_type, &info->value.value_string);
-		break;		
-		
-	}
-	
-	dbus_message_iter_close_container(&iter, &sub);
-	
+	//finish with args
 	dbus_message_append_args (msg, DBUS_TYPE_INVALID);
 
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_set_property, -1, NULL);
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_set_property, -1, NULL);
 	dbus_message_unref(msg);
-	/*TODO: free DBUSStruct*/
+	
+	free(info);
 	
 }
