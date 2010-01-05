@@ -269,7 +269,8 @@ void gui_settings_dialog_create() {
 	elm_entry_entry_set(entry, ADAPTER->name);
 	elm_box_pack_end(hbox, entry);
 	evas_object_show(entry);
-	evas_object_smart_callback_add(entry, "changed", cb_entry_value_string_changed, "Name");
+	evas_object_smart_callback_add(entry, "changed", cb_entry_value_string_changed,
+									init_cb_struct("Name", NULL));
 	
 	// DISCOVERABLE TOGGLE + TIMEOUT:
 	// add a frame
@@ -303,7 +304,8 @@ void gui_settings_dialog_create() {
 	elm_toggle_state_set(tg, ADAPTER->discoverable);
 	elm_box_pack_end(hbox, tg);
 	evas_object_show(tg);
-	evas_object_smart_callback_add(tg, "changed", cb_toggle_value_changed, "Discoverable");
+	evas_object_smart_callback_add(tg, "changed", cb_toggle_value_changed,
+								init_cb_struct("Discoverable", NULL));
 	
 	//endl
 	
@@ -325,7 +327,8 @@ void gui_settings_dialog_create() {
 	elm_entry_entry_set(entry, buf);
 	elm_box_pack_end(hbox, entry);
 	evas_object_show(entry);
-	evas_object_smart_callback_add(entry, "changed", cb_entry_value_integer_changed, "DiscoverableTimeout");
+	evas_object_smart_callback_add(entry, "changed", cb_entry_value_integer_changed, 
+										init_cb_struct("DiscoverableTimeout", NULL));
 	
 	
 	// PAIRABLE TOGGLE + TIMEOUT:
@@ -360,8 +363,9 @@ void gui_settings_dialog_create() {
 		elm_toggle_state_set(tg, ADAPTER->pairable);
 	elm_box_pack_end(hbox, tg);
 	evas_object_show(tg);
-	evas_object_smart_callback_add(tg, "changed", cb_toggle_value_changed, "Pairable");
-	
+	evas_object_smart_callback_add(tg, "changed", cb_toggle_value_changed,
+										init_cb_struct("Pairable", NULL));
+
 	//endl
 	
 	hbox = elm_box_add(win);
@@ -382,8 +386,8 @@ void gui_settings_dialog_create() {
 	elm_entry_entry_set(entry, buf);
 	elm_box_pack_end(hbox, entry);
 	evas_object_show(entry);
-	evas_object_smart_callback_add(entry, "changed", cb_entry_value_integer_changed, "PairableTimeout");
-	
+	evas_object_smart_callback_add(entry, "changed", cb_entry_value_integer_changed,
+									init_cb_struct("PairableTimeout", NULL));
 	
 	//BOTTOM:
 	// add button hbox
@@ -406,6 +410,193 @@ void gui_settings_dialog_create() {
    evas_object_show(win);
 	
 }
+
+
+
+void gui_remote_device_info_create(RemoteDevice* device) {
+
+	char buf[255];
+
+   Evas_Object *win, *bg, *vbox, *vbox_in, *vbox_fr, *fr, *lb, *hbox, *bt, *entry, *tg;
+
+   snprintf(buf, 255, "emtooth - %s", device->name);
+   win = elm_win_add(NULL, "remote_device", ELM_WIN_BASIC);
+   elm_win_title_set(win, buf);
+   elm_win_autodel_set(win, TRUE);
+
+   bg = elm_bg_add(win);
+   evas_object_size_hint_weight_set(bg, 1.0, 1.0);
+   elm_win_resize_object_add(win, bg);
+   evas_object_show(bg);
+   
+   	evas_object_resize(win, 480, 600);	
+   
+   	//add vbox
+	vbox = elm_box_add(win);
+	elm_win_resize_object_add(win, vbox);
+	evas_object_size_hint_weight_set(vbox, 1.0, 1.0);
+	evas_object_show(vbox);
+
+	// add a frame
+	fr = elm_frame_add(win);
+	elm_object_style_set(fr, "outdent_top");
+	evas_object_size_hint_weight_set(fr, 0.0, 0.0);
+	evas_object_size_hint_align_set(fr, 0.5, 0.5);
+	elm_box_pack_end(vbox, fr);
+	evas_object_show(fr);
+
+	//ADDRESS
+	snprintf(buf, 255, "[%s] %s", device->addr, device->name);
+	lb = elm_label_add(win);
+	elm_label_label_set(lb, buf);
+	elm_frame_content_set(fr, lb);
+	evas_object_show(lb);
+	
+	//HERE STARTS ALL THE OPTIONS LIST:
+	
+	vbox_in = elm_box_add(win);
+	evas_object_size_hint_align_set(vbox_in, -1.0, 0.0);
+	evas_object_size_hint_weight_set(vbox_in, 1.0, 1.0);
+	elm_box_pack_end(vbox, vbox_in);
+	evas_object_show(vbox_in);
+
+	// ALIAS:
+	// add a frame
+	fr = elm_frame_add(win);
+	elm_object_style_set(fr, "default");
+	evas_object_size_hint_weight_set(fr, 1.0, 0.0);
+	evas_object_size_hint_align_set(fr, -1.0, -1.0);
+	elm_box_pack_end(vbox_in, fr);
+	evas_object_show(fr);
+	
+	hbox = elm_box_add(win);
+	elm_box_horizontal_set(hbox, 1);
+	evas_object_size_hint_weight_set(hbox, 1.0, 0.0);
+	evas_object_size_hint_align_set(hbox, -1.0, 0.0);
+	elm_frame_content_set(fr, hbox);
+	evas_object_show(hbox);
+
+	lb = elm_label_add(win);
+	elm_label_label_set(lb, "<b>Alias:</b> ");
+	elm_box_pack_end(hbox, lb);
+	evas_object_show(lb);
+	
+	entry = elm_entry_add(win);
+	elm_entry_single_line_set(entry, TRUE);
+	elm_entry_entry_set(entry, device->alias);
+	elm_box_pack_end(hbox, entry);
+	evas_object_show(entry);
+	evas_object_smart_callback_add(entry, "changed", cb_entry_value_string_changed,
+									init_cb_struct("Alias", device->path));
+										
+	// CONNECTED TOGGLE
+	fr = elm_frame_add(win);
+	elm_object_style_set(fr, "default");
+	evas_object_size_hint_weight_set(fr, 1.0, 0.0);
+	evas_object_size_hint_align_set(fr, -1.0, -1.0);
+	elm_box_pack_end(vbox_in, fr);
+	evas_object_show(fr);
+	
+	
+	hbox = elm_box_add(win);
+	elm_box_horizontal_set(hbox, 1);
+	evas_object_size_hint_weight_set(hbox, 1.0, 0.0);
+	evas_object_size_hint_align_set(hbox, -1.0, 0.0);
+	elm_frame_content_set(fr, hbox);
+	evas_object_show(hbox);
+	
+	lb = elm_label_add(win);
+	elm_label_label_set(lb, "<b>Connected:</b> ");
+	elm_box_pack_end(hbox, lb);
+	evas_object_show(lb);
+	
+	tg = elm_toggle_add(win);
+	elm_toggle_states_labels_set(tg, "On", "Off");
+	elm_toggle_state_set(tg, device->connected);
+	elm_box_pack_end(hbox, tg);
+	evas_object_show(tg);
+	//TODO: callback. on activate -> connect
+	
+	// PAIRED TOGGLE
+	fr = elm_frame_add(win);
+	elm_object_style_set(fr, "default");
+	evas_object_size_hint_weight_set(fr, 1.0, 0.0);
+	evas_object_size_hint_align_set(fr, -1.0, -1.0);
+	elm_box_pack_end(vbox_in, fr);
+	evas_object_show(fr);
+	
+	
+	hbox = elm_box_add(win);
+	elm_box_horizontal_set(hbox, 1);
+	evas_object_size_hint_weight_set(hbox, 1.0, 0.0);
+	evas_object_size_hint_align_set(hbox, -1.0, 0.0);
+	elm_frame_content_set(fr, hbox);
+	evas_object_show(hbox);
+	
+	lb = elm_label_add(win);
+	elm_label_label_set(lb, "<b>Paired:</b> ");
+	elm_box_pack_end(hbox, lb);
+	evas_object_show(lb);
+	
+	tg = elm_toggle_add(win);
+	elm_toggle_states_labels_set(tg, "On", "Off");
+	elm_toggle_state_set(tg, device->paired);
+	elm_box_pack_end(hbox, tg);
+	evas_object_show(tg);
+	//TODO: callback. on activate -> pair
+	
+	// TRUSTED TOGGLE
+	fr = elm_frame_add(win);
+	elm_object_style_set(fr, "default");
+	evas_object_size_hint_weight_set(fr, 1.0, 0.0);
+	evas_object_size_hint_align_set(fr, -1.0, -1.0);
+	elm_box_pack_end(vbox_in, fr);
+	evas_object_show(fr);
+	
+	
+	hbox = elm_box_add(win);
+	elm_box_horizontal_set(hbox, 1);
+	evas_object_size_hint_weight_set(hbox, 1.0, 0.0);
+	evas_object_size_hint_align_set(hbox, -1.0, 0.0);
+	elm_frame_content_set(fr, hbox);
+	evas_object_show(hbox);
+	
+	lb = elm_label_add(win);
+	elm_label_label_set(lb, "<b>Trusted:</b> ");
+	elm_box_pack_end(hbox, lb);
+	evas_object_show(lb);
+	
+	tg = elm_toggle_add(win);
+	elm_toggle_states_labels_set(tg, "On", "Off");
+	elm_toggle_state_set(tg, device->trusted);
+	elm_box_pack_end(hbox, tg);
+	evas_object_show(tg);
+	//TODO: callback. on activate -> set trusted
+	
+	//BOTTOM:
+	// add button hbox
+	hbox = elm_box_add(win);
+	elm_box_horizontal_set(hbox, 1);
+	evas_object_size_hint_weight_set(hbox, 1.0, 0.0);
+	evas_object_size_hint_align_set(hbox, -1.0, 0.0);
+	elm_box_pack_end(vbox, hbox);
+	evas_object_show(hbox);
+
+	//add buttons to hbox
+	bt = elm_button_add(win);
+	elm_button_label_set(bt, "Close");
+	evas_object_size_hint_weight_set(bt, 1.0, 1.0);
+	evas_object_size_hint_align_set(bt, -1.0, -1.0);
+	elm_box_pack_end(hbox, bt);
+	evas_object_show(bt);
+	evas_object_smart_callback_add(bt, "clicked", cb_close_win, win);
+  
+   evas_object_show(win);
+	
+}
+
+
+
 
 void gui_alert_create(const char *message)
 {

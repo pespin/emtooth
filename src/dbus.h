@@ -22,3 +22,7 @@ Foundation, Inc., 51 Franklin Stre et, Fifth Floor, Boston, MA  02110-1301, USA.
 
 void dbus_init_session();
 StructDbus* dbus_get_next_struct_in_dict(DBusMessageIter *dict_iter);
+
+void dbus_append_variant(DBusMessageIter* iter, int value_type, DbusReturn value);
+void dbus_append_pair_to_dict(DBusMessageIter* iter, char* key, int value_type, DbusReturn value);
+

@@ -80,6 +80,8 @@ void cb_device_list_selected(void *data, Evas_Object *obj, void *event_info) {
 	RemoteDevice* device = elm_list_item_data_get(item);
 	fprintf(stderr, "\nDevice %s selected!\npath:%s;\nalias:%s;\nTrusted:%d;\n\n", 
 	device->addr, device->path, device->alias,device->trusted);
+	
+	gui_remote_device_info_create(device);
 
 }
 
@@ -92,40 +94,45 @@ void cb_settings_dialog(void *data, Evas_Object *obj, void *event_info) {
 
 void cb_toggle_value_changed(void *data, Evas_Object *obj, void *event_info) {
 	
+	GuiCb* cb = (GuiCb*) data;
+	
 	StructDbus* info = malloc(sizeof(StructDbus));
 	
-	info->key = strdup(data);
+	info->key = cb->property;
 	info->value_type=DBUS_TYPE_BOOLEAN;
 	info->value.value_int = elm_toggle_state_get(obj);
 	
 	fprintf(stderr, "Callback: change ->  %s=%d\n", info->key, info->value.value_int);
-	bluez_set_property(info);	
+	bluez_set_property(info, cb->path, cb->interface);	
 	
 }
 
 
 void cb_entry_value_integer_changed(void *data, Evas_Object *obj, void *event_info) {
 	
+	GuiCb* cb = (GuiCb*) data;
+	
 	StructDbus* info = malloc(sizeof(StructDbus));
 	
-	info->key = strdup(data);
+	info->key = cb->property;
 	info->value_type=DBUS_TYPE_UINT32;
 	info->value.value_int = atoi(elm_entry_entry_get(obj));
 	
 	fprintf(stderr, "Callback: change ->  %s=%d\n", info->key, info->value.value_int);
-	bluez_set_property(info);	
+	bluez_set_property(info, cb->path, cb->interface);	
 	
 }
 
 void cb_entry_value_string_changed(void *data, Evas_Object *obj, void *event_info) {
 	
+	GuiCb* cb = (GuiCb*) data;
+	
 	StructDbus* info = malloc(sizeof(StructDbus));
 	
-	info->key = strdup(data);
+	info->key = cb->property;
 	info->value_type=DBUS_TYPE_STRING;
 	info->value.value_string = strdup(elm_entry_entry_get(obj));
 	
 	fprintf(stderr, "Callback: change ->  %s=%s\n", info->key, info->value.value_string);
-	bluez_set_property(info);	
-	
+	bluez_set_property(info, cb->path, cb->interface);
 }

@@ -67,8 +67,8 @@ void cb_bluez_init_session(void *data, DBusMessage *replymsg, DBusError *error) 
 		return;
 	}
 	
-	DBUSCONN->path = strdup(path);
-	fprintf(stderr, "Using path '%s' to connect to bluez dbus daemon...\n", DBUSCONN->path);
+	DBUSCONN->bluez_path = strdup(path);
+	fprintf(stderr, "Using path '%s' to connect to bluez dbus daemon...\n", DBUSCONN->bluez_path);
 	
 	//get local device info and start signals on that interface:
 	bluez_get_local_device_info(data);

@@ -56,7 +56,7 @@ void fso_enable_bluetooth() {
 	const char *str = "Bluetooth";
 	dbus_message_append_args (msg, DBUS_TYPE_STRING, &str, DBUS_TYPE_INVALID);
 		
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_fso_enable_bluetooth, -1, NULL);
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_fso_enable_bluetooth, -1, NULL);
 	dbus_message_unref(msg);
 		
 }
@@ -74,7 +74,7 @@ void fso_disable_bluetooth() {
 	const char *str = "Bluetooth";
 	dbus_message_append_args (msg, DBUS_TYPE_STRING, &str, DBUS_TYPE_INVALID);
 		
-	e_dbus_message_send(DBUSCONN->conn, msg, cb_fso_disable_bluetooth, -1, NULL);
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_fso_disable_bluetooth, -1, NULL);
 	dbus_message_unref(msg);
 		
 }

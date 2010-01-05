@@ -23,9 +23,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 void dbus_init_session() {
 	
-	/* First we get device dbus interface */
-	DBUSCONN->conn = e_dbus_bus_get(DBUS_BUS_SYSTEM); 
-
+	/* First we get dbus sessions (system->bluez, session->obex) */
+	DBUSCONN->sysconn = e_dbus_bus_get(DBUS_BUS_SYSTEM); 
+	DBUSCONN->sessionconn = e_dbus_bus_get(DBUS_BUS_SESSION);
+	
 	//run intermediate pass to request bluetooth resource
 	fso_enable_bluetooth();
 
@@ -66,3 +67,45 @@ StructDbus* dbus_get_next_struct_in_dict(DBusMessageIter *dict_iter) {
 		
 	return ret;
 }
+
+void dbus_append_variant(DBusMessageIter* iter, int value_type, DbusReturn value) {
+	
+	DBusMessageIter sub;
+	
+	char* buf = malloc(64);
+	sprintf(buf, "%c", value_type);
+	
+	dbus_message_iter_open_container(iter,
+		DBUS_TYPE_VARIANT,
+		buf,
+		&sub);
+	
+	switch (value_type){
+	
+	case DBUS_TYPE_BOOLEAN:
+	case DBUS_TYPE_UINT32:		
+		dbus_message_iter_append_basic(&sub, value_type, &value.value_int); 	
+		break;
+	case DBUS_TYPE_STRING:
+	case DBUS_TYPE_OBJECT_PATH:
+		dbus_message_iter_append_basic(&sub, value_type, &value.value_string);
+		break;		
+		
+	}
+	
+	dbus_message_iter_close_container(iter, &sub);
+	
+}
+
+void dbus_append_pair_to_dict(DBusMessageIter* iter, char* key, int value_type, DbusReturn value) {
+
+	dbus_message_iter_append_basic(iter, DBUS_TYPE_STRING, &key);
+	
+	char* buf = malloc(64);
+	sprintf(buf, "%c", value_type);
+	
+	dbus_append_variant(iter, value_type, value);
+
+	
+}
+

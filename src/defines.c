@@ -14,23 +14,27 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+Foundation, Inc., 51 Franklin Stre et, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 #include "defines.h"
-#include "cb_gui.h"
 
-void gui_create();
 
-void gui_device_list_remove(RemoteDevice* device);
+GuiCb* init_cb_struct(const char* property, const char* path) {
+	
+		GuiCb* cb = malloc(sizeof(GuiCb));
+		
+		fprintf(stderr, "property: %s\n", property);
+		
+		cb->property = strdup(property);
+		
+		if(!path || path==DBUSCONN->bluez_path) {
+			cb->path = DBUSCONN->bluez_path;
+			cb->interface = strdup("org.bluez.Adapter");
+		} else { 
+			cb->path = strdup(path);
+			cb->interface = strdup("org.bluez.Device");
+		}
+		
+		return cb;
+}
 
-void gui_device_list_append(RemoteDevice* device);
-
-void gui_device_list_populate();
-
-//void gui_device_list_clear(Evas_Object *li);
-
-void gui_settings_dialog_create();
-
-void gui_remote_device_info_create();
-
-void gui_alert_create(const char *message);
