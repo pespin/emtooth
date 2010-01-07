@@ -26,8 +26,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #define DBUSLOG(error) if (error && dbus_error_is_set(error)) fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
 
-#define BLUEZ_AGENT_PATH "/org/bluez/test_agent"
-
 
 /* STRUCTS-typedefs */
 

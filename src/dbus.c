@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 void dbus_init_session() {
 	
 	/* First we get dbus sessions (system->bluez, session->obex) */
+	e_dbus_object_init();
 	DBUSCONN->sysconn = e_dbus_bus_get(DBUS_BUS_SYSTEM); 
 	DBUSCONN->sessionconn = e_dbus_bus_get(DBUS_BUS_SESSION);
 	
