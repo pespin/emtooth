@@ -20,8 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <E_DBus.h>
 #include "defines.h"
 #include "cb_bluez.h"
+#include "dbus.h"
 
-void bluez_init_session();
+void bluez_get_default_adapter();
+
 void bluez_get_remote_device_path(RemoteDevice* device);
 void bluez_create_remote_device_path(RemoteDevice* device);
 

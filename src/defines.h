@@ -22,7 +22,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef _EMTOOTH_DEFINES_H
 #define _EMTOOTH_DEFINES_H       1
 
+/* defines */
+
 #define DBUSLOG(error) if (error && dbus_error_is_set(error)) fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
+
+#define BLUEZ_AGENT_PATH "/org/bluez/test_agent"
+
+
+/* STRUCTS-typedefs */
 
 typedef int bool;
 
@@ -70,6 +77,7 @@ typedef struct _RemoteDevice {
 
 
 typedef struct _LocalDevice {
+	char* path;
 	char* addr;
 	int class;
 	bool discoverable;
@@ -83,7 +91,6 @@ typedef struct _LocalDevice {
 
 
 typedef struct _DbusConn {
-	char* bluez_path;
 	E_DBus_Connection* sysconn;
 	E_DBus_Connection* sessionconn;
 	E_DBus_Signal_Handler* DeviceFound;
