@@ -54,14 +54,16 @@ static const DBusObjectPathVTable agent_table = {
 }; */
 
 
-void bluez_agent_create_object_path(const char* agent_path) {
+void bluez_agent_create_object_path() {
 	
 	/* return dbus_connection_register_object_path(DBUSCONN->sysconn, agent_path,
 							&agent_table, NULL); */
-
-	e_dbus_object_add(DBUSCONN->sysconn, 
-						"/org/bluez/test_agent", 
-						NULL);
+	const char* agent_path = "/org/bluez/test_agent";
+	fprintf(stderr, "Creating object path for bluez agent [%s]...\n", agent_path);
+	
+	E_DBus_Object* obj;
+	obj = e_dbus_object_add(DBUSCONN->sysconn, agent_path, NULL);
+	if(obj==NULL) fprintf(stderr, "NULL!\n");
 }
 
 void bluez_agent_register(const char *agent_path, const char *capabilities) {
