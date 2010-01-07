@@ -37,7 +37,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  
 /* CALLBACK FUNCTIONS */
 
-void cb_bluez_init_session(void *data, DBusMessage *replymsg, DBusError *error) {
+void cb_get_default_adapter(void *data, DBusMessage *replymsg, DBusError *error) {
 	
 	DBUSLOG(error);
 	
@@ -50,7 +50,7 @@ void cb_bluez_init_session(void *data, DBusMessage *replymsg, DBusError *error) 
 					running at the moment. Retrying some more times before exiting...");
 			bluez_error_counter++;
 			sleep(2);					
-			bluez_init_session();
+			bluez_get_default_adapter();
 			return;
 		} else exit(EXIT_FAILURE);
 	}
@@ -67,10 +67,25 @@ void cb_bluez_init_session(void *data, DBusMessage *replymsg, DBusError *error) 
 		return;
 	}
 	
-	DBUSCONN->bluez_path = strdup(path);
-	fprintf(stderr, "Using path '%s' to connect to bluez dbus daemon...\n", DBUSCONN->bluez_path);
+	ADAPTER->path = strdup(path);
+	fprintf(stderr, "Using path '%s' to connect to bluez dbus daemon...\n", ADAPTER->path);
 	
-	//get local device info and start signals on that interface:
+	/* connect to ChangeProperty signal */
+	e_dbus_signal_handler_add(
+	DBUSCONN->sysconn,
+	"org.bluez", 
+	ADAPTER->path,
+	"org.bluez.Adapter",
+	"PropertyChanged",
+	cb_property_changed,
+	NULL);
+	
+	/* Now we have adapter path,
+	get local device info, register agent and start signals on that interface: */
+	
+	//FIXME: crashes
+	//bluez_agent_create_object_path(BLUEZ_AGENT_PATH); 
+	//bluez_agent_register(BLUEZ_AGENT_PATH, NULL);
 	bluez_get_local_device_info(data);
 	bluez_discovery_start(data);
 }
@@ -346,10 +361,4 @@ void cb_property_changed(void *data, DBusMessage *msg) {
 	/* TODO: finish handling here */
 	bluez_get_local_device_info();
 	
-}
-
-
-
-void cb_set_property(void *data, DBusMessage *replymsg, DBusError *error) {
-	DBUSLOG(error);
 }

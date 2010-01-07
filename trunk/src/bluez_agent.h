@@ -17,8 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-#include "cb_dbus.h"
+#include "defines.h"
 
-void cb_dbus_generic(void *data, DBusMessage *replymsg, DBusError *error) {
-	DBUSLOG(error);
-}
+void bluez_agent_create_object_path(const char* agent_path);
+
+void bluez_agent_register(const char *agent_path, const char *capabilities);

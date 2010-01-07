@@ -27,8 +27,8 @@ GuiCb* init_cb_struct(const char* property, const char* path) {
 		
 		cb->property = strdup(property);
 		
-		if(!path || path==DBUSCONN->bluez_path) {
-			cb->path = DBUSCONN->bluez_path;
+		if(!path || path==ADAPTER->path) {
+			cb->path = ADAPTER->path;
 			cb->interface = strdup("org.bluez.Adapter");
 		} else { 
 			cb->path = strdup(path);

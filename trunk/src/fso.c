@@ -29,7 +29,7 @@ void cb_fso_enable_bluetooth(void *data, DBusMessage *replymsg, DBusError *error
 	
 	DBUSLOG(error);
 
-	bluez_init_session();
+	bluez_get_default_adapter();
 	
 }
 

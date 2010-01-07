@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <E_DBus.h>
 #include "defines.h"
 
-void cb_bluez_init_session(void *data, DBusMessage *replymsg, DBusError *error);
+void cb_get_default_adapter(void *data, DBusMessage *replymsg, DBusError *error);
 void cb_create_remote_device_path(void *data, DBusMessage *replymsg, DBusError *error);
 void cb_get_remote_device_path(void *data, DBusMessage *replymsg, DBusError *error);
 
@@ -28,7 +28,6 @@ void cb_get_remote_device_info (void *data, DBusMessage *replymsg, DBusError *er
 
 void cb_discovery_start_msg(void *data, DBusMessage *replymsg, DBusError *error);
 void cb_discovery_stop_msg(void *data, DBusMessage *replymsg, DBusError *error);
-void cb_set_property(void *data, DBusMessage *replymsg, DBusError *error);
 
 /* signals */
 void cb_device_disappeared(void *data, DBusMessage *msg);

@@ -11,6 +11,8 @@ emtooth_SOURCES = \
 	src/defines.h \
 	src/cb_bluez.c \
 	src/cb_bluez.h \
+	src/cb_bluez_agent.c \
+	src/cb_bluez_agent.h \
 	src/cb_dbus.c \
 	src/cb_dbus.h \
 	src/cb_gui.c \
@@ -19,6 +21,8 @@ emtooth_SOURCES = \
 	src/cb_obex.h \
 	src/bluez.c \
 	src/bluez.h \
+	src/bluez_agent.c \
+	src/bluez_agent.h \
 	src/dbus.c \
 	src/dbus.h \
 	src/fso.c \

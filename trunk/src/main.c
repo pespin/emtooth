@@ -29,11 +29,11 @@ elm_main(int argc, char **argv)
 	
 	/* init GLOBALS */
 	DBUSCONN = (DbusConn*) malloc(sizeof(DbusConn));
-	DBUSCONN->bluez_path = NULL;
 	
 	ADAPTER = (LocalDevice*) malloc(sizeof(LocalDevice));
 	ADAPTER->addr = NULL;
 	ADAPTER->name = NULL;
+	ADAPTER->path = NULL;
 	
 	DL = (DeviceList*) malloc(sizeof(DeviceList));
 	DL->devices =  NULL;

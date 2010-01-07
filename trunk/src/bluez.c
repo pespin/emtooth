@@ -19,9 +19,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <E_DBus.h>
 #include "gui.h"
-#include "bluez.h"
+#include "cb_dbus.h"
+#include "cb_bluez.h"
 
-void bluez_init_session() {
+void bluez_get_default_adapter() {
 	
 	fprintf(stderr, "Getting default bluetooth adapter from bluez...\n");
 	
@@ -31,18 +32,8 @@ void bluez_init_session() {
 		"/",
 		"org.bluez.Manager",
 		"DefaultAdapter");
-	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_bluez_init_session, -1, NULL);
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_get_default_adapter, -1, NULL);
 	dbus_message_unref(msg);
-	
-	//connect to ChangeProperty signal
-	e_dbus_signal_handler_add(
-	DBUSCONN->sysconn,
-	"org.bluez", 
-	DBUSCONN->bluez_path,
-	"org.bluez.Adapter",
-	"PropertyChanged",
-	cb_property_changed,
-	NULL);
 		
 }
 
@@ -52,7 +43,7 @@ void bluez_get_remote_device_path(RemoteDevice* device) {
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
 		"org.bluez",
-		DBUSCONN->bluez_path,
+		ADAPTER->path,
 		"org.bluez.Adapter",
 		"FindDevice");
 			
@@ -70,7 +61,7 @@ void bluez_create_remote_device_path(RemoteDevice* device) {
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
 		"org.bluez",
-		DBUSCONN->bluez_path,
+		ADAPTER->path,
 		"org.bluez.Adapter",
 		"CreateDevice");
 			
@@ -88,7 +79,7 @@ void bluez_get_local_device_info() {
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
 		"org.bluez",
-		DBUSCONN->bluez_path,
+		ADAPTER->path,
 		"org.bluez.Adapter",
 		"GetProperties");
 	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_get_local_device_info, -1, NULL);
@@ -119,7 +110,7 @@ void bluez_discovery_start() {
 	DBUSCONN->DeviceFound = e_dbus_signal_handler_add(
     DBUSCONN->sysconn,
 	"org.bluez",
-	DBUSCONN->bluez_path,
+	ADAPTER->path,
 	"org.bluez.Adapter",
 	"DeviceFound",
 	cb_device_found,
@@ -128,7 +119,7 @@ void bluez_discovery_start() {
 	DBUSCONN->DeviceDissapeared = e_dbus_signal_handler_add(
 	DBUSCONN->sysconn,
 	"org.bluez", 
-	DBUSCONN->bluez_path,
+	ADAPTER->path,
 	"org.bluez.Adapter",
 	"DeviceDisappeared",
 	cb_device_disappeared,
@@ -138,7 +129,7 @@ void bluez_discovery_start() {
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
 		"org.bluez",
-		DBUSCONN->bluez_path,
+		ADAPTER->path,
 		"org.bluez.Adapter",
 		"StartDiscovery");
 	
@@ -159,7 +150,7 @@ void bluez_discovery_stop() {
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
 		"org.bluez",
-		DBUSCONN->bluez_path,
+		ADAPTER->path,
 		"org.bluez.Adapter",
 		"StopDiscovery");
 	
@@ -190,7 +181,7 @@ void bluez_set_property(StructDbus* info, const char* path, const char* interfac
 	//finish with args
 	dbus_message_append_args (msg, DBUS_TYPE_INVALID);
 
-	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_set_property, -1, NULL);
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_dbus_generic, -1, NULL);
 	dbus_message_unref(msg);
 	
 	free(info);
