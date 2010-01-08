@@ -1,5 +1,5 @@
-DESCRIPTION = "A bluetooth/bluez manager written in elementary"
-AUTOR = "pespin seen sometimes on #openmoko-cdevel"
+DESCRIPTION = "A bluetooth/bluez manager written in elementary for embedded systems"
+AUTOR = "Pau Espin Pedrol (Sharwin_F) <pespin.shar@gmail.com>"
 HOMEPAGE = "http://code.google.com/p/emtooth/"
 SECTION = "x11/applications"
 LICENSE = "GPLv2"
