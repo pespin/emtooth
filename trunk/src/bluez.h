@@ -30,6 +30,8 @@ void bluez_create_remote_device_path(RemoteDevice* device);
 void bluez_get_local_device_info();
 void bluez_get_remote_device_info(RemoteDevice* device);
 
+void bluez_register_agent(const char *capabilities);
+
 void bluez_discovery_start();
 void bluez_discovery_stop();
 

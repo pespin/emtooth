@@ -102,6 +102,31 @@ void bluez_get_remote_device_info(RemoteDevice* device) {
 }
 
 
+void bluez_register_agent(const char *capabilities) {
+	
+	fprintf(stderr, "Registering bluez agent...\n");
+	
+	DBusMessage *msg;
+
+	dbus_message_new_method_call(
+	"org.bluez", 
+	ADAPTER->path,
+	"org.bluez.Adapter", 
+	"RegisterAgent");
+	
+	/* FIXME: segfaults from here onwards */
+	dbus_message_append_args(msg, 
+	DBUS_TYPE_OBJECT_PATH, &BLUEZ_AGENT_PATH,
+					DBUS_TYPE_STRING, &capabilities,
+					DBUS_TYPE_INVALID);
+					
+	e_dbus_message_send(DBUSCONN->sysconn, msg, NULL, -1, NULL);
+
+	dbus_message_unref(msg);
+
+}
+
+
 
 void bluez_discovery_start() {
 

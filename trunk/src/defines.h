@@ -105,6 +105,8 @@ LocalDevice* ADAPTER;
 DbusConn* DBUSCONN;
 DeviceList* DL;
 
+char* BLUEZ_AGENT_PATH;
+
 
 
 /* misc functions in defines.c */
