@@ -83,9 +83,8 @@ void cb_get_default_adapter(void *data, DBusMessage *replymsg, DBusError *error)
 	/* Now we have adapter path,
 	get local device info, register agent and start signals on that interface: */
 	
+	bluez_agent_create();
 
-	bluez_agent_create_object_path(); 
-	//bluez_agent_register(BLUEZ_AGENT_PATH, NULL);
 	bluez_get_local_device_info(data);
 	bluez_discovery_start(data);
 }

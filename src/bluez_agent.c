@@ -21,10 +21,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <E_DBus.h>
 #include "cb_dbus.h"
 #include "bluez_agent.h"
+#include "cb_bluez_agent.h"
 
-
+/*
 static DBusHandlerResult bluez_agent_message(DBusConnection *conn, DBusMessage *msg, void *data) {
-/*	if (dbus_message_is_method_call(msg, "org.bluez.Agent",
+	if (dbus_message_is_method_call(msg, "org.bluez.Agent",
 							"RequestPinCode"))
 		return request_pincode_message(conn, msg, data);
 
@@ -43,47 +44,34 @@ static DBusHandlerResult bluez_agent_message(DBusConnection *conn, DBusMessage *
 		return cancel_message(conn, msg, data);
 
 	if (dbus_message_is_method_call(msg, "org.bluez.Agent", "Release"))
-		return release_message(conn, msg, data);*/
+		return release_message(conn, msg, data);
 
 	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 
-/*
 static const DBusObjectPathVTable agent_table = {
 	.message_function = bluez_agent_message,
 }; */
 
-
-void bluez_agent_create_object_path() {
+void bluez_agent_create() {
 	
-	/* return dbus_connection_register_object_path(DBUSCONN->sysconn, agent_path,
-							&agent_table, NULL); */
-	const char* agent_path = "/org/bluez/test_agent";
-	fprintf(stderr, "Creating object path for bluez agent [%s]...\n", agent_path);
+	fprintf(stderr, "Creating bluez agent [%s]...\n", BLUEZ_AGENT_PATH);
 	
 	E_DBus_Object* obj;
-	obj = e_dbus_object_add(DBUSCONN->sysconn, agent_path, NULL);
-	if(obj==NULL) fprintf(stderr, "NULL!\n");
-}
-
-void bluez_agent_register(const char *agent_path, const char *capabilities) {
+	E_DBus_Interface* iface;
 	
-	fprintf(stderr, "Registering bluez agent...\n");
 	
-	DBusMessage *msg;
-
-	dbus_message_new_method_call(
-	"org.bluez", 
-	ADAPTER->path,
-	"org.bluez.Adapter", 
-	"RegisterAgent");
-
-	dbus_message_append_args(msg, DBUS_TYPE_OBJECT_PATH, &agent_path,
-					DBUS_TYPE_STRING, &capabilities,
-					DBUS_TYPE_INVALID);
-
-	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_dbus_generic, -1, NULL);
-
-	dbus_message_unref(msg);
-
+	obj = e_dbus_object_add(DBUSCONN->sysconn, BLUEZ_AGENT_PATH, NULL);
+	iface = e_dbus_interface_new("org.bluez.Agent");
+	if(!iface || !obj) {
+		fprintf(stderr, "ERROR: bluez agent creation: iface or obj == NULL\n", BLUEZ_AGENT_PATH);
+		return;
+	}
+	
+	e_dbus_object_interface_attach(obj, iface);
+	e_dbus_interface_method_add(iface, "RequestPinCode",
+	 "", "", bluez_agent_method_RequestPinCode);
+	
+	//fixme: segfaults
+	//bluez_register_agent("aa");
 }

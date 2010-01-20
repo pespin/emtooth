@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <E_DBus.h>
 #include "dbus.h"
+#include "cb_dbus.h"
 #include "bluez.h"
 
 void dbus_init_session() {
@@ -28,6 +29,8 @@ void dbus_init_session() {
 	DBUSCONN->sysconn = e_dbus_bus_get(DBUS_BUS_SYSTEM); 
 	DBUSCONN->sessionconn = e_dbus_bus_get(DBUS_BUS_SESSION);
 	
+	e_dbus_request_name(DBUSCONN->sessionconn, "org.emtooth.services",
+					     0, cb_dbus_generic, NULL);
 	//run intermediate pass to request bluetooth resource
 	fso_enable_bluetooth();
 
