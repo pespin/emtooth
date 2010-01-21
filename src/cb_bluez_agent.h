@@ -20,4 +20,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <E_DBus.h>
 #include <stdio.h>
 
-void bluez_agent_method_RequestPinCode(void *data, DBusMessage *msg, DBusError *error);
+DBusMessage* bluez_agent_method_RequestPinCode(E_DBus_Object *obj, DBusMessage *msg);
+
+DBusMessage* bluez_agent_method_RequestPassKey(E_DBus_Object *obj, DBusMessage *msg);
+
+DBusMessage* bluez_agent_method_DisplayPasskey(E_DBus_Object *obj, DBusMessage *msg);
+
+DBusMessage* bluez_agent_method_RequestConfirmation(E_DBus_Object *obj, DBusMessage *msg);
+
+DBusMessage* bluez_agent_method_Authorize(E_DBus_Object *obj, DBusMessage *msg);
+
+DBusMessage* bluez_agent_method_ConfirmModeChange(E_DBus_Object *obj, DBusMessage *msg);
+
+DBusMessage* bluez_agent_method_Cancel(E_DBus_Object *obj, DBusMessage *msg);
+
+DBusMessage* bluez_agent_method_Release(E_DBus_Object *obj, DBusMessage *msg);

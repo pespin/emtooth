@@ -69,9 +69,31 @@ void bluez_agent_create() {
 	}
 	
 	e_dbus_object_interface_attach(obj, iface);
+	
 	e_dbus_interface_method_add(iface, "RequestPinCode",
-	 "", "", bluez_agent_method_RequestPinCode);
+	 "o", "s", bluez_agent_method_RequestPinCode);
+	 
+	e_dbus_interface_method_add(iface, "RequestPassKey",
+	 "o", "u", bluez_agent_method_RequestPassKey);
+	 
+	e_dbus_interface_method_add(iface, "DisplayPasskey",
+	 "ouq", "", bluez_agent_method_DisplayPasskey);
+	 
+	e_dbus_interface_method_add(iface, "RequestConfirmation",
+	 "ou", "", bluez_agent_method_RequestConfirmation);
+	
+	e_dbus_interface_method_add(iface, "Authorize",
+	 "os", "", bluez_agent_method_Authorize);
+
+	e_dbus_interface_method_add(iface, "ConfirmModeChange",
+	"s", "", bluez_agent_method_ConfirmModeChange);
+
+	e_dbus_interface_method_add(iface, "Cancel",
+	 "", "", bluez_agent_method_Cancel);
+	 
+	 e_dbus_interface_method_add(iface, "Release",
+	 "", "", bluez_agent_method_Release);
 	
 	//fixme: segfaults
-	//bluez_register_agent("aa");
+	bluez_register_agent("");
 }

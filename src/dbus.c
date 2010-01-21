@@ -74,7 +74,8 @@ void dbus_init_session() {
 	
 	e_dbus_request_name(DBUSCONN->sessionconn, "org.emtooth.services",
 					     0, cb_dbus_generic, NULL);
-					     	     
+	e_dbus_request_name(DBUSCONN->sysconn, "org.emtooth.services",
+					     0, cb_dbus_generic, NULL);				     	     
 	/* Implement service to know if there's already an emtooth instance running */
 	E_DBus_Object* obj;
 	E_DBus_Interface* iface;
