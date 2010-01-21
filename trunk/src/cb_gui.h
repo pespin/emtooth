@@ -34,3 +34,5 @@ void cb_settings_dialog(void *data, Evas_Object *obj, void *event_info);
 void cb_entry_value_integer_changed(void *data, Evas_Object *obj, void *event_info);
 void cb_entry_value_string_changed(void *data, Evas_Object *obj, void *event_info);
 void cb_toggle_value_changed(void *data, Evas_Object *obj, void *event_info);
+
+void cb_remote_paired_changed(void *data, Evas_Object *obj, void *event_info);
