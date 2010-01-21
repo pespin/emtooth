@@ -39,7 +39,7 @@ elm_main(int argc, char **argv)
 	DL->devices =  NULL;
 	DL->li = NULL;
 	
-	BLUEZ_AGENT_PATH = strdup("/org/bluez/agent");
+	BLUEZ_AGENT_PATH = strdup("/org/emtooth/bluez/agent");
 	
 	/* Thread created OnStart:
 	 * 1- Start dbus connection
