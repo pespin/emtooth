@@ -74,6 +74,56 @@ void bluez_create_remote_device_path(RemoteDevice* device) {
 	
 }
 
+
+void bluez_create_remote_paired_device(RemoteDevice* device) {
+	
+	fprintf(stderr, "Pairing to device [%s][%s]...\n", device->addr, device->path);
+	
+	const char* capabilities = "";
+	
+	DBusMessage *msg;
+	msg = dbus_message_new_method_call(
+		"org.bluez",
+		ADAPTER->path,
+		"org.bluez.Adapter",
+		"CreatePairedDevice");
+	
+	dbus_message_append_args (msg,
+		DBUS_TYPE_STRING, &device->addr,
+		DBUS_TYPE_OBJECT_PATH, &device->path,
+		DBUS_TYPE_STRING, &capabilities,
+		DBUS_TYPE_INVALID);
+
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_create_remote_paired_device, -1, device);
+	dbus_message_unref(msg);
+	
+	
+}
+
+void bluez_remove_remote_device(RemoteDevice* device) {
+	
+	fprintf(stderr, "Removing remote device [%s][%s]...\n", device->addr, device->path);
+	
+	const char* capabilities = "";
+	
+	DBusMessage *msg;
+	msg = dbus_message_new_method_call(
+		"org.bluez",
+		ADAPTER->path,
+		"org.bluez.Adapter",
+		"RemoveDevice");
+	
+	dbus_message_append_args (msg,
+		DBUS_TYPE_OBJECT_PATH, &device->path,
+		DBUS_TYPE_INVALID);
+
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_dbus_generic, -1, NULL);
+	dbus_message_unref(msg);
+	
+}
+
+
+
 void bluez_get_local_device_info() {
 
 	DBusMessage *msg;

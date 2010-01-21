@@ -136,3 +136,16 @@ void cb_entry_value_string_changed(void *data, Evas_Object *obj, void *event_inf
 	fprintf(stderr, "Callback: change ->  %s=%s\n", info->key, info->value.value_string);
 	bluez_set_property(info, cb->path, cb->interface);
 }
+
+void cb_remote_paired_changed(void *data, Evas_Object *obj, void *event_info) {
+	
+	RemoteDevice* device = (RemoteDevice*) data;
+	
+	fprintf(stderr, "Callback: Paired change ->  value=%d\n", elm_toggle_state_get(obj));
+	
+	if(elm_toggle_state_get(obj))
+		bluez_create_remote_paired_device(device);
+	//TODO: remove pairing, how?
+	//else
+	//	bluez_remove_remote_device(device);
+}

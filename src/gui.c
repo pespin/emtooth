@@ -517,6 +517,7 @@ void gui_remote_device_info_create(RemoteDevice* device) {
 	evas_object_show(tg);
 	//TODO: callback. on activate -> connect
 	
+	
 	// PAIRED TOGGLE
 	fr = elm_frame_add(win);
 	elm_object_style_set(fr, "default");
@@ -524,7 +525,6 @@ void gui_remote_device_info_create(RemoteDevice* device) {
 	evas_object_size_hint_align_set(fr, -1.0, -1.0);
 	elm_box_pack_end(vbox_in, fr);
 	evas_object_show(fr);
-	
 	
 	hbox = elm_box_add(win);
 	elm_box_horizontal_set(hbox, 1);
@@ -544,6 +544,8 @@ void gui_remote_device_info_create(RemoteDevice* device) {
 	elm_box_pack_end(hbox, tg);
 	evas_object_show(tg);
 	//TODO: callback. on activate -> pair
+	evas_object_smart_callback_add(tg, "changed", cb_remote_paired_changed,
+									device);
 	
 	// TRUSTED TOGGLE
 	fr = elm_frame_add(win);

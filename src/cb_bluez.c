@@ -121,6 +121,17 @@ void cb_get_remote_device_path (void *data, DBusMessage *replymsg, DBusError *er
 	device->path = strdup(path);
 	fprintf(stderr, "Using path '%s' to connect to remote device [%s]...\n", device->path, device->addr);
 	
+	//Connect to PropertyChanged signal:
+	e_dbus_signal_handler_add(
+	DBUSCONN->sysconn,
+	"org.bluez", 
+	device->path,
+	"org.bluez.Device",
+	"PropertyChanged",
+	cb_property_changed,
+	device);
+	
+	
 	//get remote device info:
 	bluez_get_remote_device_info(device);
 }
@@ -131,6 +142,8 @@ void cb_create_remote_device_path (void *data, DBusMessage *replymsg, DBusError 
 	RemoteDevice* device = (RemoteDevice*) data;
 	
 	fprintf(stderr, "Creating remote device [%s] dbus path...\n", device->addr);
+	
+	DBUSLOG(error);
 	
 	char *path = NULL;
 	
@@ -280,6 +293,25 @@ void cb_get_remote_device_info (void *data, DBusMessage *replymsg, DBusError *er
 	gui_device_list_append(device);
 }
 
+void cb_create_remote_paired_device(void *data, DBusMessage *replymsg, DBusError *error) {
+	
+	RemoteDevice* device = (RemoteDevice*) data;
+	
+	//fprintf(stderr, "Pairing to device [%s]...\n", device->addr);
+	
+	DBUSLOG(error);
+	
+	char *path;
+	
+	dbus_message_get_args(replymsg, error,
+	                      DBUS_TYPE_OBJECT_PATH, &path, DBUS_TYPE_INVALID);
+	
+	DBUSLOG(error);
+
+	//device->path = strdup(path);
+	fprintf(stderr, "PAIRED PATH: {%s}", path); 
+
+}
 
 void cb_discovery_start_msg(void *data, DBusMessage *replymsg, DBusError *error) {
 	if (dbus_error_is_set(error)) {
@@ -351,13 +383,31 @@ void cb_property_changed(void *data, DBusMessage *msg) {
 
 	DBusError *error=NULL;
 	
-	//dbus_message_get_args(msg, error, DBUS_TYPE_STRING, &dev_addr, DBUS_TYPE_INVALID);
+	char* dev_addr;
+	
+	//todo: next argument is a (variant) value of the property changed.
+	dbus_message_get_args(msg, error, DBUS_TYPE_STRING, &dev_addr, DBUS_TYPE_INVALID);
 	
 	DBUSLOG(error);
 	
-	fprintf(stderr, "PROPERTY CHANGED SIGNAL\n");
+	fprintf(stderr, "PROPERTY CHANGED SIGNAL: [%s]\n", dev_addr);
 	
 	/* TODO: finish handling here */
-	bluez_get_local_device_info();
+	if(!data) bluez_get_local_device_info();
+	else {
+		RemoteDevice* device = (RemoteDevice*) data;
+		bluez_get_remote_device_info(device);
+	}
+	
+}
+
+
+void cb_device_removed(void *data, DBusMessage *msg) {
+	
+	RemoteDevice* device = (RemoteDevice*) data;
+	
+	fprintf(stderr, "DeviceRemoved signal: [%s]\n", device->addr);
+	
+	gui_device_list_remove(device);
 	
 }

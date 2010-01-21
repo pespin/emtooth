@@ -27,6 +27,9 @@ void bluez_get_default_adapter();
 void bluez_get_remote_device_path(RemoteDevice* device);
 void bluez_create_remote_device_path(RemoteDevice* device);
 
+void bluez_create_remote_paired_device(RemoteDevice* device);
+void bluez_remove_remote_device(RemoteDevice* device);
+
 void bluez_get_local_device_info();
 void bluez_get_remote_device_info(RemoteDevice* device);
 
