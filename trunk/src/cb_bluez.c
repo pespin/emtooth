@@ -85,8 +85,8 @@ void cb_get_default_adapter(void *data, DBusMessage *replymsg, DBusError *error)
 	
 	bluez_agent_create();
 
-	bluez_get_local_device_info(data);
-	bluez_discovery_start(data);
+	bluez_get_local_device_info();
+	bluez_discovery_start();
 }
 
 
@@ -159,6 +159,18 @@ void cb_create_remote_device_path (void *data, DBusMessage *replymsg, DBusError 
 	
 	device->path = strdup(path);
 	fprintf(stderr, "Using path '%s' to connect to remote device [%s]...\n", device->path, device->addr);
+	
+	
+		//Connect to PropertyChanged signal:
+	e_dbus_signal_handler_add(
+	DBUSCONN->sysconn,
+	"org.bluez", 
+	device->path,
+	"org.bluez.Device",
+	"PropertyChanged",
+	cb_property_changed,
+	device);
+	
 	
 	//get remote device info:
 	bluez_get_remote_device_info(device);
@@ -313,12 +325,14 @@ void cb_create_remote_paired_device(void *data, DBusMessage *replymsg, DBusError
 
 }
 
+
+//TODO: move this 2 below to cb_dbus_generic
 void cb_discovery_start_msg(void *data, DBusMessage *replymsg, DBusError *error) {
 	if (dbus_error_is_set(error)) {
 		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
 	} else {
 	//set LocalDevice->discovering to True manually... lot faster :)
-	ADAPTER->discovering = TRUE;	
+	//ADAPTER->discovering = TRUE;	
 	}
 }
 
@@ -328,7 +342,7 @@ void cb_discovery_stop_msg(void *data, DBusMessage *replymsg, DBusError *error) 
 		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
 	} else {
 	//set LocalDevice->discovering to False manually... lot faster :)
-	ADAPTER->discovering = FALSE;	
+	//ADAPTER->discovering = FALSE;	
 	}
 }
 
