@@ -633,7 +633,7 @@ void gui_alert_create(const char *message)
 	evas_object_size_hint_align_set(bt1, -1.0, -1.0);
 	elm_box_pack_end(vbox, bt1);
 	evas_object_show(bt1);
-	evas_object_smart_callback_add(bt1, "clicked", cb_alert_bt, win);
+	evas_object_smart_callback_add(bt1, "clicked", cb_close_win, win);
 	
 	evas_object_resize(win, 320, 240);
 	evas_object_show(win);

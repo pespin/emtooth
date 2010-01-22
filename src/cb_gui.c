@@ -20,11 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <Elementary.h>
 #include "cb_gui.h"
 
-void cb_alert_bt(void *data, Evas_Object *obj, void *event_info){
-	Evas_Object* win = (Evas_Object*) data;
-	evas_object_del(win);
-}
-
 void cb_safe_exit(void *data, Evas_Object *obj, void *event_info) {
 	fso_disable_bluetooth();
 	elm_exit();
