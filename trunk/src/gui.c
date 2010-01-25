@@ -203,7 +203,6 @@ void gui_settings_dialog_create() {
    win = elm_win_add(NULL, "settings_dialog", ELM_WIN_BASIC);
    elm_win_title_set(win, "emtooth - Settings");
    elm_win_autodel_set(win, TRUE);
-   //evas_object_smart_callback_add(win, "delete,request", cb_close_win, win);
 
    bg = elm_bg_add(win);
    evas_object_size_hint_weight_set(bg, 1.0, 1.0);
@@ -509,9 +508,10 @@ void gui_remote_device_info_create(RemoteDevice* device) {
 	evas_object_show(lb);
 	
 	tg = elm_toggle_add(win);
-	elm_toggle_states_labels_set(tg, "On", "Off");
+	elm_toggle_states_labels_set(tg, "Yes", "No");
 	elm_toggle_state_set(tg, device->connected);
 	elm_box_pack_end(hbox, tg);
+	elm_object_disabled_set(tg, TRUE);
 	evas_object_show(tg);
 	//TODO: callback. on activate -> connect
 	
@@ -537,8 +537,9 @@ void gui_remote_device_info_create(RemoteDevice* device) {
 	evas_object_show(lb);
 	
 	tg = elm_toggle_add(win);
-	elm_toggle_states_labels_set(tg, "On", "Off");
+	elm_toggle_states_labels_set(tg, "Yes", "No");
 	elm_toggle_state_set(tg, device->paired);
+	elm_object_disabled_set(tg, device->paired);
 	elm_box_pack_end(hbox, tg);
 	evas_object_show(tg);
 	//TODO: callback. on activate -> pair

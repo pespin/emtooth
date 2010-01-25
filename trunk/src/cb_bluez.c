@@ -335,27 +335,6 @@ void cb_create_remote_paired_device(void *data, DBusMessage *replymsg, DBusError
 
 }
 
-
-//TODO: move this 2 below to cb_dbus_generic
-void cb_discovery_start_msg(void *data, DBusMessage *replymsg, DBusError *error) {
-	if (dbus_error_is_set(error)) {
-		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
-	} else {
-	//set LocalDevice->discovering to True manually... lot faster :)
-	//ADAPTER->discovering = TRUE;	
-	}
-}
-
-
-void cb_discovery_stop_msg(void *data, DBusMessage *replymsg, DBusError *error) {
-	if (dbus_error_is_set(error)) {
-		fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
-	} else {
-	//set LocalDevice->discovering to False manually... lot faster :)
-	//ADAPTER->discovering = FALSE;	
-	}
-}
-
 void cb_device_found (void *data, DBusMessage *msg) {
 
 	char *dev_addr=NULL;
