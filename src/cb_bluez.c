@@ -34,6 +34,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 	return strcmp(s->addr, new_RemoteDevice);
 }
  
+ static  int cb_device_found_helper2(Elm_List_Item* s, const char *new_RemoteDevice) {
+	if (!s) return -1;
+	RemoteDevice* device = (RemoteDevice*) elm_list_item_data_get(s);
+	return cb_device_found_helper(device, new_RemoteDevice);
+}
+ 
+
  
 /* CALLBACK FUNCTIONS */
 
@@ -46,8 +53,8 @@ void cb_get_default_adapter(void *data, DBusMessage *replymsg, DBusError *error)
 		
 		if(bluez_error_counter<6) {
 			if(bluez_error_counter==0)
-					gui_alert_create("Sorry, it seems bluez dbus interface is not \
-					running at the moment. Retrying some more times before exiting...");
+					gui_alert_create("Sorry, it seems bluez dbus interface is not" \
+					"running at the moment. Retrying some more times before exiting...");
 			bluez_error_counter++;
 			sleep(2);					
 			bluez_get_default_adapter();
@@ -301,8 +308,11 @@ void cb_get_remote_device_info (void *data, DBusMessage *replymsg, DBusError *er
 	
 	fprintf(stderr, "Done!\n");
 	
-	/* Now we have all info, append device to device GUI list */
-	gui_device_list_append(device);
+	/* Now we have all info, append device to device GUI list if necessary */
+	const Eina_List* li = elm_list_items_get(DL->li);
+	li = eina_list_search_unsorted_list(li, (Eina_Compare_Cb)cb_device_found_helper2, device->addr);
+	
+	if(!li) gui_device_list_append(device);
 }
 
 void cb_create_remote_paired_device(void *data, DBusMessage *replymsg, DBusError *error) {
