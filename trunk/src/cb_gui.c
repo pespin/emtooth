@@ -122,7 +122,7 @@ void cb_entry_value_string_changed(void *data, Evas_Object *obj, void *event_inf
 	
 	GuiCb* cb = (GuiCb*) data;
 	
-	StructDbus* info = malloc(sizeof(StructDbus));
+	StructDbus* info = (StructDbus*) malloc(sizeof(StructDbus));
 	
 	info->key = cb->property;
 	info->value_type=DBUS_TYPE_STRING;
