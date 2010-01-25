@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 void gui_create() {
 
-   Evas_Object *win, *bg, *vbox, *fr, *header, *device_list, *hbox, *hbox1, *bt, *bt_start, *bt_stop;
+   Evas_Object *win, *bg, *vbox, *fr, *hbox, *hbox1, *bt, *bt_start, *bt_stop;
 
 	ObjCb* Cb;
 
@@ -60,20 +60,22 @@ void gui_create() {
 	evas_object_show(fr);
 
 	// add a label
-	header = elm_label_add(win);
-	elm_label_label_set(header, "Discovering Devices...");
-	elm_frame_content_set(fr, header);
-	evas_object_show(header);  
 	
-	device_list = elm_list_add(win);
-	elm_object_scale_set(device_list,1.0);
-	elm_scroller_bounce_set(device_list, 0 ,0);
-	evas_object_size_hint_weight_set(device_list, 1.0, 1.0);
-	evas_object_size_hint_align_set(device_list, -1.0, -1.0);
-	elm_genlist_multi_select_set(device_list, 0); 
-	elm_box_pack_end(vbox, device_list);
-	evas_object_smart_callback_add(device_list, "clicked", cb_device_list_selected, DL); 
-	evas_object_show(device_list);
+	DL->header = elm_label_add(win);
+	elm_label_label_set(DL->header, "Discovering Devices...");
+	elm_frame_content_set(fr, DL->header);
+	evas_object_show(DL->header);  
+	
+	DL->li = elm_list_add(win);
+	elm_object_scale_set(DL->li,1.0);
+	elm_scroller_bounce_set(DL->li, 0 ,0);
+	evas_object_size_hint_weight_set(DL->li, 1.0, 1.0);
+	evas_object_size_hint_align_set(DL->li, -1.0, -1.0);
+	//after last E bump, this segfaults for me:
+	//elm_genlist_multi_select_set(DL->li, 0); 
+	elm_box_pack_end(vbox, DL->li);
+	evas_object_smart_callback_add(DL->li, "clicked", cb_device_list_selected, DL); 
+	evas_object_show(DL->li);
 
 	// add button hbox1
 	hbox1 = elm_box_add(win);
@@ -116,10 +118,6 @@ void gui_create() {
 	elm_box_pack_end(hbox1, bt);
 	evas_object_show(bt);
 	evas_object_smart_callback_add(bt, "clicked", cb_settings_dialog, DL);
-
-	DL->li = device_list;
-	DL->header = header;	
-   gui_device_list_populate();
   
    evas_object_show(win);
 	
