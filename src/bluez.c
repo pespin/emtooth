@@ -207,7 +207,7 @@ void bluez_discovery_start() {
 		"org.bluez.Adapter",
 		"StartDiscovery");
 	
-	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_discovery_start_msg, -1, NULL);
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_dbus_generic, -1, NULL);
 	dbus_message_unref(msg);
 
    //e_dbus_connection_close(conn); 
@@ -228,7 +228,7 @@ void bluez_discovery_stop() {
 		"org.bluez.Adapter",
 		"StopDiscovery");
 	
-	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_discovery_stop_msg, -1, NULL);
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_dbus_generic, -1, NULL);
 	dbus_message_unref(msg);
 	
 }
