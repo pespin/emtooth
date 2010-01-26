@@ -568,7 +568,7 @@ void gui_remote_device_info_create(RemoteDevice* device) {
 	evas_object_show(lb);
 	
 	tg = elm_toggle_add(win);
-	elm_toggle_states_labels_set(tg, "On", "Off");
+	elm_toggle_states_labels_set(tg, "Yes", "No");
 	elm_toggle_state_set(tg, device->trusted);
 	elm_box_pack_end(hbox, tg);
 	evas_object_show(tg);

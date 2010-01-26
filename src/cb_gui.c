@@ -138,8 +138,10 @@ void cb_remote_paired_changed(void *data, Evas_Object *obj, void *event_info) {
 	
 	fprintf(stderr, "Callback: Paired change ->  value=%d\n", elm_toggle_state_get(obj));
 	
-	if(elm_toggle_state_get(obj))
+	if(elm_toggle_state_get(obj)) {
+		elm_object_disabled_set(obj, TRUE);
 		bluez_create_remote_paired_device(device);
+	}
 	//TODO: remove pairing, how?
 	//else
 	//	bluez_remove_remote_device(device);
