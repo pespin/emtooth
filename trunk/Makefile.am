@@ -33,3 +33,11 @@ emtooth_SOURCES = \
 	src/obex.h
 emtooth_LDADD = @ELEMENTARY_LIBS@
 emtooth_CFLAGS =
+
+
+desktopdir = $(datadir)/applications
+desktop_DATA = data/emtooth.desktop
+
+pixmapsdir = $(datadir)/pixmaps
+pixmaps_DATA =  data/emtooth.png
+
