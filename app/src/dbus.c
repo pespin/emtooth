@@ -98,40 +98,83 @@ void dbus_init_session() {
 		
 }
 
-StructDbus* dbus_get_next_struct_in_dict(DBusMessageIter *dict_iter) {
-		DBusMessageIter key_iter, value_iter;
+
+void dbus_dict_pair_debug(StructDbus* ret) {
 	
-		StructDbus* ret = malloc(sizeof(StructDbus));
-		ret->value.value_int=0;
-		ret->value.value_string=NULL;
-		int tmp = DBUS_TYPE_INVALID;
-		ret->value_type = DBUS_TYPE_INVALID; 
+	fprintf(stderr, "DICTIONARY STRUCT READ: %c\n", ret->value_type);
+	if(ret->value_type==DBUS_TYPE_STRING || ret->value_type == DBUS_TYPE_OBJECT_PATH) {
+		fprintf(stderr, "string: '%s'\n", ret->value.value_string);
 		
-	    //get key:
-        dbus_message_iter_recurse(dict_iter, &key_iter);
-        dbus_message_iter_get_basic(&key_iter, &ret->key);
-        ret->key = strdup(ret->key); //make copy
+	} else if(ret->value_type==DBUS_TYPE_UINT32 || ret->value_type == DBUS_TYPE_BOOLEAN) {
+		fprintf(stderr, "integer: '%d'\n", ret->value.value_int);
+		
+	} else fprintf(stderr, "UNKNOWN VALUE!\n");
+}
+
+
+
+void dbus_message_get_variant(DBusMessageIter* iter, StructDbus* ret) {
+	
+	DBusMessageIter value_iter;
+	
+	dbus_message_iter_recurse (iter, &value_iter);
         
-        //set value_iter to point to next value:
-        dbus_message_iter_next (&key_iter);
-        dbus_message_iter_recurse (&key_iter, &value_iter);
+    int tmp = dbus_message_iter_get_arg_type(&value_iter);
+    ret->value_type = tmp;
         
-        tmp = dbus_message_iter_get_arg_type(&value_iter);
-        ret->value_type = tmp;
-        
-        if(ret->value_type == DBUS_TYPE_STRING || ret->value_type == DBUS_TYPE_OBJECT_PATH) {
-			dbus_message_iter_get_basic(&value_iter, &ret->value.value_string);
-			ret->value.value_string = strdup(ret->value.value_string);
-		}
-		else  if(ret->value_type == DBUS_TYPE_UINT32 || ret->value_type == DBUS_TYPE_BOOLEAN) {
-			dbus_message_iter_get_basic(&value_iter, &tmp);
-			ret->value.value_int = tmp;
-		} /*else { here comes array types, no need to handle them
+    if(ret->value_type == DBUS_TYPE_STRING || ret->value_type == DBUS_TYPE_OBJECT_PATH) {
+		dbus_message_iter_get_basic(&value_iter, &ret->value.value_string);
+		ret->value.value_string = strdup(ret->value.value_string);
+	}
+	else if(ret->value_type == DBUS_TYPE_UINT32 || ret->value_type == DBUS_TYPE_BOOLEAN) {
+		dbus_message_iter_get_basic(&value_iter, &tmp);
+		ret->value.value_int = tmp;
+	} /*else { here comes array types, no need to handle them
 			 fprintf(stderr, "\n\nUNKNOWN VALUE RECEIVED fROM DBUS: int:%d; char:%c;\n\n", ret->value_type, ret->value_type);
 		} */
-		
-	return ret;
+	
 }
+
+
+StructDbus* dbus_message_iter_get_dict_pair(DBusMessageIter *key_iter) {
+	
+	StructDbus* ret = malloc(sizeof(StructDbus));
+	ret->value.value_int=0;
+	ret->value.value_string=NULL;
+	int tmp = DBUS_TYPE_INVALID;
+	ret->value_type = DBUS_TYPE_INVALID; 
+		
+	dbus_message_iter_get_basic(key_iter, &ret->key);
+	ret->key = strdup(ret->key);
+	
+	//set value_iter to point to next value:
+    dbus_message_iter_next (key_iter);
+        
+    dbus_message_get_variant(key_iter, ret);
+        
+    return ret;
+        
+}
+
+
+StructDbus* dbus_message_get_dict_pair(DBusMessage *msg) {
+	
+	DBusMessageIter key_iter;
+	
+	dbus_message_iter_init(msg, &key_iter);
+	
+	return dbus_message_iter_get_dict_pair(&key_iter);
+}
+
+
+StructDbus* dbus_get_next_struct_in_dict(DBusMessageIter *dict_iter) {
+		DBusMessageIter key_iter;
+		
+		dbus_message_iter_recurse(dict_iter, &key_iter);
+	
+		return dbus_message_iter_get_dict_pair(&key_iter);
+}
+
 
 void dbus_append_variant(DBusMessageIter* iter, int value_type, DbusReturn value) {
 	

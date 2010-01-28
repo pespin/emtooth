@@ -21,23 +21,53 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <stdio.h>
 #include "defines.h"
 
+ static  int cb_device_found_helper(RemoteDevice *s, const char *new_RemoteDevice) {
+	if (!s) return -1;
+	return strcmp(s->path, new_RemoteDevice);
+}
+
 
 DBusMessage* bluez_agent_method_RequestPinCode(E_DBus_Object *obj, DBusMessage *msg) {
 	
 	DBusMessage* reply;
+	char* device_path; 
+	Eina_List* li;
+	RemoteDevice* device;
 	
-	 fprintf(stderr, "AgentCb: someone requested PIN!\n");
+	DBusError* err = (DBusError*) malloc(sizeof(DBusError));
+	dbus_error_init(err);
+	
+	 dbus_message_get_args(msg, err,
+						DBUS_TYPE_OBJECT_PATH, &device_path,                      
+	                    DBUS_TYPE_INVALID);
+	 
+	fprintf(stderr, "AgentCb: someone requested PIN for device [%s]!\n", device_path); 
+	li = eina_list_search_unsorted_list(DL->devices, (Eina_Compare_Cb)cb_device_found_helper, device_path);
+	if(!li) {
+		fprintf(stderr, "AgentCb: someone requested PIN for device [NULL]! <<- ERR\n");
+		//TODO: throw dbus error
+		return NULL;
+	}
+	
+	device = eina_list_data_get(li);
+	
+	fprintf(stderr, "AgentCb: someone requested PIN for device [%s]!\n", device->addr);
 
 	//here we we'll call a popup to get the pin
 	
 	reply = dbus_message_new_method_return(msg);
-	
 	const char* tmp_pin = "1234";
 	dbus_message_append_args(reply, 
 					DBUS_TYPE_STRING, &tmp_pin,
 					DBUS_TYPE_INVALID);
-	 
+					
+					
+	DBUSLOG(err);
+	dbus_error_free(err);
+	
 	return reply;
+	
+	//return NULL;
 }
 
 
