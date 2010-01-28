@@ -203,14 +203,7 @@ void cb_get_local_device_info (void *data, DBusMessage *replymsg, DBusError *err
 	//foreach pair...:
 	while (type != DBUS_TYPE_INVALID) {
 		
-		ret = dbus_get_next_struct_in_dict(&dict_iter);
-		
-		/*DEBUG
-		fprintf(stderr, "\n\n\nDICTIONARY STRUCT READ: \n");
-		if(ret->value_type==DBUS_TYPE_STRING || ret->value_type == DBUS_TYPE_OBJECT_PATH) 
-			fprintf(stderr, "string: '%s'", ret->value.value_string);
-		else if(ret->value_type==DBUS_TYPE_UINT32 || ret->value_type == DBUS_TYPE_BOOLEAN)
-			fprintf(stderr, "integer: '%d'", ret->value.value_int);	*/		
+		ret = dbus_get_next_struct_in_dict(&dict_iter);	
         
         //Depending on key, save value where it should go:
 		if(!strcmp(ret->key,"Address")) {
@@ -345,7 +338,7 @@ void cb_device_found (void *data, DBusMessage *msg) {
 	
 	DBUSLOG(error);
 	
-	fprintf(stderr, "FOUND SIGNAL --> %s\n", dev_addr);
+	fprintf(stderr, "SIGNAL: DeviceFound --> %s\n", dev_addr);
 	
 	/* see if the RemoteDevice is already in the list before adding */
 	Eina_List* li = eina_list_search_unsorted_list(DL->devices, (Eina_Compare_Cb)cb_device_found_helper, dev_addr);
@@ -371,29 +364,28 @@ void cb_device_disappeared (void *data, DBusMessage *msg) {
 	
 	DBUSLOG(error);
 	
-	fprintf(stderr, "DISSAPEARED SIGNAL --> %s\n", dev_addr);
+	fprintf(stderr, "SIGNAL: DeviceDissapeared --> %s\n", dev_addr);
 	
 	li = eina_list_search_unsorted_list(DL->devices, (Eina_Compare_Cb)cb_device_found_helper, dev_addr);
 	if(li) {
 		RemoteDevice* device = eina_list_data_get(li);
-		fprintf(stderr, "\nREMOVE DEVICE:%s;\n\n", device->addr);
+		fprintf(stderr, "\nRemoving device [%s] from list\n", device->addr);
 		gui_device_list_remove(device);
 	}
 	
 }
 
 void cb_property_changed(void *data, DBusMessage *msg) {
-
-	DBusError *error=NULL;
 	
-	char* dev_addr;
+	StructDbus* ret = dbus_message_get_dict_pair(msg);
 	
-	//todo: next argument is a (variant) value of the property changed.
-	dbus_message_get_args(msg, error, DBUS_TYPE_STRING, &dev_addr, DBUS_TYPE_INVALID);
+	if(ret->value_type==DBUS_TYPE_STRING || ret->value_type == DBUS_TYPE_OBJECT_PATH) {
+		fprintf(stderr, "SIGNAL: PropertyChanged (%s == %s)\n", ret->key, ret->value.value_string);
+	} else if(ret->value_type==DBUS_TYPE_UINT32 || ret->value_type == DBUS_TYPE_BOOLEAN) {
+		fprintf(stderr, "SIGNAL: PropertyChanged (%s == %d)\n", ret->key, ret->value.value_int);
+	} else fprintf(stderr, "SIGNAL: PropertyChanged (%s == UNKNOWN)\n", ret->key);
 	
-	DBUSLOG(error);
-	
-	fprintf(stderr, "PROPERTY CHANGED SIGNAL: [%s]\n", dev_addr);
+	//dbus_dict_pair_debug(ret);
 	
 	/* TODO: finish handling here */
 	if(!data) bluez_get_local_device_info();

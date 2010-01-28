@@ -94,6 +94,6 @@ void bluez_agent_create() {
 	 e_dbus_interface_method_add(iface, "Release",
 	 "", "", bluez_agent_method_Release);
 	
-	//fixme: segfaults
+
 	bluez_register_agent("");
 }
