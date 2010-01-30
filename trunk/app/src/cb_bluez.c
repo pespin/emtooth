@@ -346,6 +346,7 @@ void cb_device_found (void *data, DBusMessage *msg) {
 		RemoteDevice* device = malloc(sizeof(RemoteDevice));
 		device->addr = dev_addr;
 		device->alias = NULL;
+		device->password = NULL; //set to null, used for pairing agent later.
 		DL->devices = eina_list_append(DL->devices, device);
 		/* Call  org.bluez.Adapter.CreateDevice xx:xx:xx:xx:xx:xx to get its path */
 		bluez_get_remote_device_path(device);
@@ -383,7 +384,10 @@ void cb_property_changed(void *data, DBusMessage *msg) {
 		fprintf(stderr, "SIGNAL: PropertyChanged (%s == %s)\n", ret->key, ret->value.value_string);
 	} else if(ret->value_type==DBUS_TYPE_UINT32 || ret->value_type == DBUS_TYPE_BOOLEAN) {
 		fprintf(stderr, "SIGNAL: PropertyChanged (%s == %d)\n", ret->key, ret->value.value_int);
-	} else fprintf(stderr, "SIGNAL: PropertyChanged (%s == UNKNOWN)\n", ret->key);
+	} else {
+		fprintf(stderr, "SIGNAL: PropertyChanged (%s == UNKNOWN)... returning\n", ret->key);
+		return;
+		}
 	
 	//dbus_dict_pair_debug(ret);
 	

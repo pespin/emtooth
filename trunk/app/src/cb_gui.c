@@ -146,3 +146,12 @@ void cb_remote_paired_changed(void *data, Evas_Object *obj, void *event_info) {
 	//else
 	//	bluez_remove_remote_device(device);
 }
+
+
+void cb_request_pin(void *data, Evas_Object *obj, void *event_info) {
+	
+	DialogCb* Dialog = (DialogCb*) data;
+	Dialog->device->password = strdup(elm_entry_entry_get(Dialog->entry));
+	evas_object_del(Dialog->win);
+	free(Dialog);
+}

@@ -33,4 +33,6 @@ void gui_settings_dialog_create();
 
 void gui_remote_device_info_create();
 
+void gui_request_pin_create(RemoteDevice* device);
+
 void gui_alert_create(const char *message);
