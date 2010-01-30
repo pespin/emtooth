@@ -54,11 +54,15 @@ DBusMessage* bluez_agent_method_RequestPinCode(E_DBus_Object *obj, DBusMessage *
 	fprintf(stderr, "AgentCb: someone requested PIN for device [%s]!\n", device->addr);
 
 	//here we we'll call a popup to get the pin
+	gui_request_pin_create(device);
+	
+	while(!device->password) {
+		ecore_main_loop_iterate();
+	}
 	
 	reply = dbus_message_new_method_return(msg);
-	const char* tmp_pin = "1234";
 	dbus_message_append_args(reply, 
-					DBUS_TYPE_STRING, &tmp_pin,
+					DBUS_TYPE_STRING, &device->password,
 					DBUS_TYPE_INVALID);
 					
 					

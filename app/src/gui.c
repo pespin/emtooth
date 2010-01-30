@@ -597,6 +597,60 @@ void gui_remote_device_info_create(RemoteDevice* device) {
 }
 
 
+void gui_request_pin_create(RemoteDevice* device)
+{
+	Evas_Object *win, *bg, *inwin, *vbox, *lb, *entry, *bt1;
+	
+	char buf[255];
+	snprintf(buf, 254, "pin-%s", device->addr);
+	win = elm_win_add(NULL, buf, ELM_WIN_DIALOG_BASIC);
+	elm_win_title_set(win, "Request Pin:");
+	elm_win_autodel_set(win, 1);
+
+	bg = elm_bg_add(win);
+	elm_win_resize_object_add(win, bg);
+	evas_object_size_hint_weight_set(bg, 1.0, 1.0);
+	evas_object_show(bg);
+
+	inwin = elm_win_inwin_add(win);
+	//elm_object_style_set(inwin, "minimal_vertical");
+	evas_object_show(inwin);
+
+	vbox = elm_box_add(win);
+	elm_win_inwin_content_set(inwin, vbox);
+	evas_object_show(vbox);
+	
+	snprintf(buf, 254, "Set the password for device %s and press the button below to proceed:", device->addr);
+	lb = elm_label_add(win);
+	elm_label_label_set(lb, buf);
+	elm_box_pack_end(vbox, lb);
+	evas_object_show(lb);
+	
+	entry = elm_entry_add(win);
+	elm_entry_single_line_set(entry, TRUE);
+	//sprintf(buf, "%d", ADAPTER->pairable_timeout);
+	elm_entry_entry_set(entry, "1234");
+	elm_box_pack_end(vbox, entry);
+	evas_object_show(entry);
+	
+	//add close button
+	bt1 = elm_button_add(win);
+	elm_button_label_set(bt1, "Ok");
+	evas_object_size_hint_weight_set(bt1, 1.0, 1.0);
+	evas_object_size_hint_align_set(bt1, -1.0, -1.0);
+	elm_box_pack_end(vbox, bt1);
+	evas_object_show(bt1);
+	
+	DialogCb* cb = (DialogCb*) malloc(sizeof(DialogCb));
+	cb->device = device;
+	cb->entry = entry;
+	cb->win = win;
+	evas_object_smart_callback_add(bt1, "clicked", cb_request_pin, cb);
+	
+	evas_object_resize(win, 320, 240);
+	evas_object_show(win);
+}
+
 
 
 void gui_alert_create(const char *message)

@@ -37,17 +37,6 @@ typedef struct _DeviceList {
 	Evas_Object* header;
 } DeviceList;
 
-typedef struct _ObjCb {
-	Evas_Object* obj;
-	Evas_Object* parent;
-} ObjCb;
-
-typedef struct _GuiCb {
-	char* property;
-	char* path;
-	char* interface;
-} GuiCb;
-
 typedef union _DbusReturn {
 	char* value_string;
 	int value_int;
@@ -69,6 +58,7 @@ typedef struct _RemoteDevice {
 	char* alias;
 	bool paired;
 	bool trusted;
+	char* password;
 } RemoteDevice;
 
 
@@ -94,6 +84,25 @@ typedef struct _DbusConn {
 	E_DBus_Signal_Handler* DeviceFound;
 	E_DBus_Signal_Handler* DeviceDissapeared;
 } DbusConn;
+
+
+
+typedef struct _ObjCb {
+	Evas_Object* obj;
+	Evas_Object* parent;
+} ObjCb;
+
+typedef struct _GuiCb {
+	char* property;
+	char* path;
+	char* interface;
+} GuiCb;
+
+typedef struct _DialogCb {
+	RemoteDevice* device;
+	Evas_Object* entry;
+	Evas_Object* win;
+} DialogCb;
 
 
 
