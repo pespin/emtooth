@@ -572,7 +572,8 @@ void gui_remote_device_info_create(RemoteDevice* device) {
 	elm_toggle_state_set(tg, device->trusted);
 	elm_box_pack_end(hbox, tg);
 	evas_object_show(tg);
-	//TODO: callback. on activate -> set trusted
+	evas_object_smart_callback_add(tg, "changed", cb_toggle_value_changed,
+										init_cb_struct("Trusted", device->path));
 	
 	//BOTTOM:
 	// add button hbox
