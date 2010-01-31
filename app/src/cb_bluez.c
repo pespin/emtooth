@@ -254,7 +254,8 @@ void cb_get_remote_device_info (void *data, DBusMessage *replymsg, DBusError *er
 	fprintf(stderr, "Updating remote device [%s][%s] info... ", device->addr, device->path);
 	
 	DBUSLOG(error);
-		
+	if(!replymsg) return;	
+	
 	DBusMessageIter array_iter, dict_iter;
 
 	//open dict:
@@ -316,15 +317,17 @@ void cb_create_remote_paired_device(void *data, DBusMessage *replymsg, DBusError
 	
 	DBUSLOG(error);
 	
-	char *path;
+	if(!replymsg) return;
 	
+	char *path;
+
 	dbus_message_get_args(replymsg, error,
 	                      DBUS_TYPE_OBJECT_PATH, &path, DBUS_TYPE_INVALID);
 	
 	DBUSLOG(error);
 
 	//device->path = strdup(path);
-	fprintf(stderr, "PAIRED PATH: {%s}", path); 
+	fprintf(stderr, "Paired to device [%s] successfully!\n", path); 
 
 }
 

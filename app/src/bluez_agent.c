@@ -23,36 +23,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "bluez_agent.h"
 #include "cb_bluez_agent.h"
 
-/*
-static DBusHandlerResult bluez_agent_message(DBusConnection *conn, DBusMessage *msg, void *data) {
-	if (dbus_message_is_method_call(msg, "org.bluez.Agent",
-							"RequestPinCode"))
-		return request_pincode_message(conn, msg, data);
-
-	if (dbus_message_is_method_call(msg, "org.bluez.Agent",
-							"RequestPasskey"))
-		return request_passkey_message(conn, msg, data);
-
-	if (dbus_message_is_method_call(msg, "org.bluez.Agent",
-							"RequestConfirmation"))
-		return request_confirmation_message(conn, msg, data);
-
-	if (dbus_message_is_method_call(msg, "org.bluez.Agent", "Authorize"))
-		return authorize_message(conn, msg, data);
-
-	if (dbus_message_is_method_call(msg, "org.bluez.Agent", "Cancel"))
-		return cancel_message(conn, msg, data);
-
-	if (dbus_message_is_method_call(msg, "org.bluez.Agent", "Release"))
-		return release_message(conn, msg, data);
-
-	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-}
-
-static const DBusObjectPathVTable agent_table = {
-	.message_function = bluez_agent_message,
-}; */
-
 void bluez_agent_create() {
 	
 	fprintf(stderr, "Creating bluez agent [%s]...\n", BLUEZ_AGENT_PATH);
