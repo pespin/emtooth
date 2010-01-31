@@ -614,7 +614,6 @@ void gui_request_pin_create(RemoteDevice* device)
 	evas_object_show(bg);
 
 	inwin = elm_win_inwin_add(win);
-	//elm_object_style_set(inwin, "minimal_vertical");
 	evas_object_show(inwin);
 
 	vbox = elm_box_add(win);
@@ -629,7 +628,6 @@ void gui_request_pin_create(RemoteDevice* device)
 	
 	entry = elm_entry_add(win);
 	elm_entry_single_line_set(entry, TRUE);
-	//sprintf(buf, "%d", ADAPTER->pairable_timeout);
 	elm_entry_entry_set(entry, "1234");
 	elm_box_pack_end(vbox, entry);
 	evas_object_show(entry);
@@ -668,7 +666,6 @@ void gui_alert_create(const char *message)
 	evas_object_show(bg);
 
 	inwin = elm_win_inwin_add(win);
-	elm_object_style_set(inwin, "minimal_vertical");
 	evas_object_show(inwin);
 
 	vbox = elm_box_add(win);
