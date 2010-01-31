@@ -43,20 +43,20 @@ DBusMessage* bluez_agent_method_RequestPinCode(E_DBus_Object *obj, DBusMessage *
 	
 	DBUSLOG(err);
 	dbus_error_free(err);
-	fprintf(stderr, "AgentCb: someone requested PIN for device [%s]!\n", device_path);
+	fprintf(stderr, "AgentCb: bluez requested PIN for device [%s]!\n", device_path);
 	
 	reply = dbus_message_new_method_return(msg);
 	
 	li = eina_list_search_unsorted_list(DL->devices, (Eina_Compare_Cb)cb_device_found_helper, device_path);
 	if(!li) {
-		fprintf(stderr, "AgentCb: someone requested PIN for device [NULL]! <<- ERR\n");
+		fprintf(stderr, "AgentCb: bluez requested PIN for device [NULL]! <<- ERR\n");
 		dbus_message_new_error(reply, "org.bluez.Error.Canceled", "Couldn't find device from object path");
 		return reply;
 	}
 	
 	device = eina_list_data_get(li);
 	
-	fprintf(stderr, "AgentCb: someone requested PIN for device [%s]!\n", device->addr);
+	fprintf(stderr, "AgentCb: bluez requested PIN for device [%s]!\n", device->addr);
 
 	gui_request_pin_create(device);
 	

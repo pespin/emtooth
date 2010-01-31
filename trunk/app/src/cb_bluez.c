@@ -138,6 +138,16 @@ void cb_get_remote_device_path (void *data, DBusMessage *replymsg, DBusError *er
 	cb_property_changed,
 	device);
 	
+	//Connect to DeviceRemoved signal:
+	e_dbus_signal_handler_add(
+	DBUSCONN->sysconn,
+	"org.bluez", 
+	device->path,
+	"org.bluez.Device",
+	"DeviceRemoved",
+	cb_device_removed,
+	device);
+	
 	
 	//get remote device info:
 	bluez_get_remote_device_info(device);
@@ -317,7 +327,12 @@ void cb_create_remote_paired_device(void *data, DBusMessage *replymsg, DBusError
 	
 	DBUSLOG(error);
 	
-	if(!replymsg) return;
+	if(!replymsg) {
+		char buf[512];
+		snprintf(buf, 511, "Pairing failed with error: %s - %s", error->name, error->message);
+		gui_alert_create(buf);	
+		return;
+	}
 	
 	char *path;
 
@@ -408,8 +423,8 @@ void cb_device_removed(void *data, DBusMessage *msg) {
 	
 	RemoteDevice* device = (RemoteDevice*) data;
 	
-	fprintf(stderr, "DeviceRemoved signal: [%s]\n", device->addr);
+	fprintf(stderr, "SIGNAL: DeviceRemoved: [%s]\n", device->addr);
 	
-	gui_device_list_remove(device);
+	//gui_device_list_remove(device);
 	
 }
