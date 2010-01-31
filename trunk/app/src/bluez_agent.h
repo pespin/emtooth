@@ -19,5 +19,4 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include "defines.h"
 
-E_DBus_Object* bluez_agent_create_object_path();
 void bluez_agent_create();

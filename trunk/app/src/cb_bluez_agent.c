@@ -40,38 +40,35 @@ DBusMessage* bluez_agent_method_RequestPinCode(E_DBus_Object *obj, DBusMessage *
 	 dbus_message_get_args(msg, err,
 						DBUS_TYPE_OBJECT_PATH, &device_path,                      
 	                    DBUS_TYPE_INVALID);
-	 
-	fprintf(stderr, "AgentCb: someone requested PIN for device [%s]!\n", device_path); 
+	
+	DBUSLOG(err);
+	dbus_error_free(err);
+	fprintf(stderr, "AgentCb: someone requested PIN for device [%s]!\n", device_path);
+	
+	reply = dbus_message_new_method_return(msg);
+	
 	li = eina_list_search_unsorted_list(DL->devices, (Eina_Compare_Cb)cb_device_found_helper, device_path);
 	if(!li) {
 		fprintf(stderr, "AgentCb: someone requested PIN for device [NULL]! <<- ERR\n");
-		//TODO: throw dbus error
-		return NULL;
+		dbus_message_new_error(reply, "org.bluez.Error.Canceled", "Couldn't find device from object path");
+		return reply;
 	}
 	
 	device = eina_list_data_get(li);
 	
 	fprintf(stderr, "AgentCb: someone requested PIN for device [%s]!\n", device->addr);
 
-	//here we we'll call a popup to get the pin
 	gui_request_pin_create(device);
 	
 	while(!device->password) {
 		ecore_main_loop_iterate();
 	}
 	
-	reply = dbus_message_new_method_return(msg);
 	dbus_message_append_args(reply, 
 					DBUS_TYPE_STRING, &device->password,
 					DBUS_TYPE_INVALID);
-					
-					
-	DBUSLOG(err);
-	dbus_error_free(err);
 	
 	return reply;
-	
-	//return NULL;
 }
 
 
