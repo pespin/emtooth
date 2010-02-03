@@ -33,6 +33,10 @@ void bluez_remove_remote_device(RemoteDevice* device);
 void bluez_get_local_device_info();
 void bluez_get_remote_device_info(RemoteDevice* device);
 
+void bluez_remote_device_input_connect(RemoteDevice* device);
+void bluez_remote_device_input_disconnect(RemoteDevice* device);
+void bluez_remote_device_attach_signals(RemoteDevice* device);
+
 void bluez_register_agent(const char *capabilities);
 
 void bluez_discovery_start();

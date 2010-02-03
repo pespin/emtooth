@@ -22,3 +22,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 void cb_dbus_generic(void *data, DBusMessage *replymsg, DBusError *error) {
 	DBUSLOG(error);
 }
+
+void cb_dbus_generic_remote_gui_alert(void *data, DBusMessage *replymsg, DBusError *error) {
+	
+	RemoteDevice* device = (RemoteDevice*) data;
+	
+	fprintf(stderr, "Cb: DbusGenericRemoteGuiAlert on device [%s]...\n", device->addr);
+	
+	DBUSLOG(error);
+	
+	if(!replymsg) {
+		char buf[512];
+		snprintf(buf, 511, "Last operation failed with error: %s - %s", error->name, error->message);
+		gui_alert_create(buf);
+	}
+	
+}

@@ -19,22 +19,53 @@ Foundation, Inc., 51 Franklin Stre et, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "defines.h"
 
 
-GuiCb* init_cb_struct(const char* property, const char* path) {
+GuiCb* init_cb_struct(const char* property, const char* path, const char* iface) {
 	
 		GuiCb* cb = malloc(sizeof(GuiCb));
-		
-		fprintf(stderr, "property: %s\n", property);
 		
 		cb->property = strdup(property);
 		
 		if(!path || path==ADAPTER->path) {
 			cb->path = ADAPTER->path;
-			cb->interface = strdup("org.bluez.Adapter");
-		} else { 
+			if(!iface) cb->interface = strdup("org.bluez.Adapter");
+			else cb->interface = strdup(iface);
+		} else {
 			cb->path = strdup(path);
-			cb->interface = strdup("org.bluez.Device");
+			cb->interface = strdup(iface);
 		}
 		
 		return cb;
 }
 
+RemoteDevice* remote_device_new(const char* addr) {
+	
+	RemoteDevice* device = malloc(sizeof(RemoteDevice));
+		device->path = NULL;
+		device->addr = strdup(addr);
+		device->name = NULL;
+		device->class = 0;
+		device->connected_device = 0;
+		device->connected_input = 0;
+		device->icon = NULL;
+		device->alias = NULL;
+		device->paired = 0;
+		device->trusted = 0;
+		device->password = NULL; //set to null, used for pairing agent later.
+		
+	return device;
+}
+
+
+
+bool struct_dbus_free(StructDbus* ret) {
+	if(!ret) return FALSE;
+	
+	free(ret->key);
+	
+	if(ret->value_type==DBUS_TYPE_STRING || ret->value_type == DBUS_TYPE_OBJECT_PATH) {
+		if(ret->value.value_string) free(ret->value.value_string);
+	}
+	free(ret);
+	
+	return TRUE;
+}
