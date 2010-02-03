@@ -140,13 +140,36 @@ void bluez_get_local_device_info() {
 
 void bluez_get_remote_device_info(RemoteDevice* device) {
 
+	bluez_get_remote_device_properties_device(device);
+	
+	/* TODO: check if service available before calling this: */
+	bluez_get_remote_device_properties_input(device);
+	
+}
+
+void bluez_get_remote_device_properties_device(RemoteDevice* device) {
+	
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
 		"org.bluez",
 		device->path,
 		"org.bluez.Device",
 		"GetProperties");
-	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_get_remote_device_info, -1, device);
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_get_remote_device_properties_device, -1, device);
+	dbus_message_unref(msg);
+	
+	
+}
+
+void bluez_get_remote_device_properties_input(RemoteDevice* device) {
+
+	DBusMessage *msg;
+	msg = dbus_message_new_method_call(
+		"org.bluez",
+		device->path,
+		"org.bluez.Input",
+		"GetProperties");
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_get_remote_device_properties_input, -1, device);
 	dbus_message_unref(msg);
 	
 }

@@ -26,7 +26,9 @@ void cb_get_remote_device_path(void *data, DBusMessage *replymsg, DBusError *err
 void cb_create_remote_paired_device(void *data, DBusMessage *replymsg, DBusError *error);
 
 void cb_get_local_device_info (void *data, DBusMessage *replymsg, DBusError *error);
-void cb_get_remote_device_info (void *data, DBusMessage *replymsg, DBusError *error);
+void cb_get_remote_device_properties_device(void *data, DBusMessage *replymsg, DBusError *error);
+void cb_get_remote_device_properties_input(void *data, DBusMessage *replymsg, DBusError *error);
+
 
 /* signals */
 void cb_device_disappeared(void *data, DBusMessage *msg);
