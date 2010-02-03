@@ -231,11 +231,11 @@ void cb_get_local_device_info (void *data, DBusMessage *replymsg, DBusError *err
 
 
 
-void cb_get_remote_device_info (void *data, DBusMessage *replymsg, DBusError *error) {
+void cb_get_remote_device_properties_device (void *data, DBusMessage *replymsg, DBusError *error) {
 	
 	RemoteDevice* device = (RemoteDevice*) data;
 	
-	fprintf(stderr, "Updating remote device [%s][%s] info... ", device->addr, device->path);
+	fprintf(stderr, "Updating remote device [%s][%s] Device info... ", device->addr, device->path);
 	
 	DBUSLOG(error);
 	if(!replymsg) return;	
@@ -292,6 +292,23 @@ void cb_get_remote_device_info (void *data, DBusMessage *replymsg, DBusError *er
 	
 	if(!li) gui_device_list_append(device);
 }
+
+void cb_get_remote_device_properties_input(void *data, DBusMessage *replymsg, DBusError *error) {
+	
+	RemoteDevice* device = (RemoteDevice*) data;
+	
+	fprintf(stderr, "Updating remote device [%s][%s] Input info... ", device->addr, device->path);
+	
+	DBUSLOG(error);
+	if(!replymsg) return;	
+	
+	StructDbus* ret = dbus_message_get_dict_pair(replymsg);
+	
+	device->connected_input = ret->value.value_int;
+	
+	struct_dbus_free(ret);
+}
+
 
 void cb_create_remote_paired_device(void *data, DBusMessage *replymsg, DBusError *error) {
 	
@@ -387,10 +404,10 @@ void cb_property_changed(void *data, DBusMessage *msg) {
 		 bluez_get_local_device_info();
 	} else {
 		RemoteDevice* device = (RemoteDevice*) data;
-		if(!strcmp(iface, "org.bluez.Adapter")) {
-			bluez_get_remote_device_info(device);
+		if(!strcmp(iface, "org.bluez.Device")) {
+			bluez_get_remote_device_properties_device(device);
 		} else { //org.bluez.Input
-			device->connected_input = ret->value_type;
+			bluez_get_remote_device_properties_input(device);
 		}
 	}
 	
