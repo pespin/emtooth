@@ -21,3 +21,5 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "defines.h"
 
 void cb_dbus_generic(void *data, DBusMessage *replymsg, DBusError *error);
+
+void cb_dbus_generic_remote_gui_alert(void *data, DBusMessage *replymsg, DBusError *error);

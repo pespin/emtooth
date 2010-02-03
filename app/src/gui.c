@@ -267,7 +267,7 @@ void gui_settings_dialog_create() {
 	elm_box_pack_end(hbox, entry);
 	evas_object_show(entry);
 	evas_object_smart_callback_add(entry, "changed", cb_entry_value_string_changed,
-									init_cb_struct("Name", NULL));
+									init_cb_struct("Name", NULL, NULL));
 	
 	// DISCOVERABLE TOGGLE + TIMEOUT:
 	// add a frame
@@ -302,7 +302,7 @@ void gui_settings_dialog_create() {
 	elm_box_pack_end(hbox, tg);
 	evas_object_show(tg);
 	evas_object_smart_callback_add(tg, "changed", cb_toggle_value_changed,
-								init_cb_struct("Discoverable", NULL));
+								init_cb_struct("Discoverable", NULL, NULL));
 	
 	//endl
 	
@@ -325,7 +325,7 @@ void gui_settings_dialog_create() {
 	elm_box_pack_end(hbox, entry);
 	evas_object_show(entry);
 	evas_object_smart_callback_add(entry, "changed", cb_entry_value_integer_changed, 
-										init_cb_struct("DiscoverableTimeout", NULL));
+										init_cb_struct("DiscoverableTimeout", NULL, NULL));
 	
 	
 	// PAIRABLE TOGGLE + TIMEOUT:
@@ -361,7 +361,7 @@ void gui_settings_dialog_create() {
 	elm_box_pack_end(hbox, tg);
 	evas_object_show(tg);
 	evas_object_smart_callback_add(tg, "changed", cb_toggle_value_changed,
-										init_cb_struct("Pairable", NULL));
+										init_cb_struct("Pairable", NULL, NULL));
 
 	//endl
 	
@@ -384,7 +384,7 @@ void gui_settings_dialog_create() {
 	elm_box_pack_end(hbox, entry);
 	evas_object_show(entry);
 	evas_object_smart_callback_add(entry, "changed", cb_entry_value_integer_changed,
-									init_cb_struct("PairableTimeout", NULL));
+									init_cb_struct("PairableTimeout", NULL, NULL));
 	
 	//BOTTOM:
 	// add button hbox
@@ -484,7 +484,7 @@ void gui_remote_device_info_create(RemoteDevice* device) {
 	elm_box_pack_end(hbox, entry);
 	evas_object_show(entry);
 	evas_object_smart_callback_add(entry, "changed", cb_entry_value_string_changed,
-									init_cb_struct("Alias", device->path));
+									init_cb_struct("Alias", device->path, "org.bluez.Device"));
 										
 	// CONNECTED TOGGLE
 	fr = elm_frame_add(win);
@@ -509,7 +509,7 @@ void gui_remote_device_info_create(RemoteDevice* device) {
 	
 	tg = elm_toggle_add(win);
 	elm_toggle_states_labels_set(tg, "Yes", "No");
-	elm_toggle_state_set(tg, device->connected);
+	elm_toggle_state_set(tg, device->connected_device);
 	elm_box_pack_end(hbox, tg);
 	elm_object_disabled_set(tg, TRUE);
 	evas_object_show(tg);
@@ -573,8 +573,38 @@ void gui_remote_device_info_create(RemoteDevice* device) {
 	elm_box_pack_end(hbox, tg);
 	evas_object_show(tg);
 	evas_object_smart_callback_add(tg, "changed", cb_toggle_value_changed,
-										init_cb_struct("Trusted", device->path));
+										init_cb_struct("Trusted", device->path, "org.bluez.Device"));
+										
 	
+	// InputConnect TOGGLE
+	fr = elm_frame_add(win);
+	elm_object_style_set(fr, "default");
+	evas_object_size_hint_weight_set(fr, 1.0, 0.0);
+	evas_object_size_hint_align_set(fr, -1.0, -1.0);
+	elm_box_pack_end(vbox_in, fr);
+	evas_object_show(fr);
+	
+	
+	hbox = elm_box_add(win);
+	elm_box_horizontal_set(hbox, 1);
+	evas_object_size_hint_weight_set(hbox, 1.0, 0.0);
+	evas_object_size_hint_align_set(hbox, -1.0, 0.0);
+	elm_frame_content_set(fr, hbox);
+	evas_object_show(hbox);
+	
+	lb = elm_label_add(win);
+	elm_label_label_set(lb, "<b>Connect Input:</b> ");
+	elm_box_pack_end(hbox, lb);
+	evas_object_show(lb);
+	
+	tg = elm_toggle_add(win);
+	elm_toggle_states_labels_set(tg, "Yes", "No");
+	elm_toggle_state_set(tg, device->connected_input);
+	elm_box_pack_end(hbox, tg);
+	evas_object_show(tg);
+	evas_object_smart_callback_add(tg, "changed", cb_toggle_input_connect,
+									device);
+									
 	//BOTTOM:
 	// add button hbox
 	hbox = elm_box_add(win);

@@ -152,6 +152,71 @@ void bluez_get_remote_device_info(RemoteDevice* device) {
 }
 
 
+
+void bluez_remote_device_input_connect(RemoteDevice* device) {
+	
+	DBusMessage *msg;
+	msg = dbus_message_new_method_call(
+		"org.bluez",
+		device->path,
+		"org.bluez.Input",
+		"Connect");
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_dbus_generic_remote_gui_alert, -1, device);
+	dbus_message_unref(msg);
+	
+	
+}
+
+
+void bluez_remote_device_input_disconnect(RemoteDevice* device) {
+	
+	DBusMessage *msg;
+	msg = dbus_message_new_method_call(
+		"org.bluez",
+		device->path,
+		"org.bluez.Input",
+		"Disconnect");
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_dbus_generic_remote_gui_alert, -1, device);
+	dbus_message_unref(msg);
+	
+	
+}
+
+void bluez_remote_device_attach_signals(RemoteDevice* device) {
+	
+	//Connect to PropertyChanged signal:
+	e_dbus_signal_handler_add(
+	DBUSCONN->sysconn,
+	"org.bluez", 
+	device->path,
+	"org.bluez.Device",
+	"PropertyChanged",
+	cb_property_changed,
+	device);
+	
+	e_dbus_signal_handler_add(
+	DBUSCONN->sysconn,
+	"org.bluez", 
+	device->path,
+	"org.bluez.Input",
+	"PropertyChanged",
+	cb_property_changed,
+	device);
+	
+	//Connect to DeviceRemoved signal:
+	e_dbus_signal_handler_add(
+	DBUSCONN->sysconn,
+	"org.bluez", 
+	device->path,
+	"org.bluez.Device",
+	"DeviceRemoved",
+	cb_device_removed,
+	device);
+	
+}
+
+
+
 void bluez_register_agent(const char *capabilities) {
 	
 	fprintf(stderr, "Registering bluez agent...\n");

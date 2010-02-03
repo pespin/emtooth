@@ -128,26 +128,8 @@ void cb_get_remote_device_path (void *data, DBusMessage *replymsg, DBusError *er
 	device->path = strdup(path);
 	fprintf(stderr, "Using path '%s' to connect to remote device [%s]...\n", device->path, device->addr);
 	
-	//Connect to PropertyChanged signal:
-	e_dbus_signal_handler_add(
-	DBUSCONN->sysconn,
-	"org.bluez", 
-	device->path,
-	"org.bluez.Device",
-	"PropertyChanged",
-	cb_property_changed,
-	device);
-	
-	//Connect to DeviceRemoved signal:
-	e_dbus_signal_handler_add(
-	DBUSCONN->sysconn,
-	"org.bluez", 
-	device->path,
-	"org.bluez.Device",
-	"DeviceRemoved",
-	cb_device_removed,
-	device);
-	
+	//attach signals:
+	bluez_remote_device_attach_signals(device);
 	
 	//get remote device info:
 	bluez_get_remote_device_info(device);
@@ -178,16 +160,8 @@ void cb_create_remote_device_path (void *data, DBusMessage *replymsg, DBusError 
 	fprintf(stderr, "Using path '%s' to connect to remote device [%s]...\n", device->path, device->addr);
 	
 	
-		//Connect to PropertyChanged signal:
-	e_dbus_signal_handler_add(
-	DBUSCONN->sysconn,
-	"org.bluez", 
-	device->path,
-	"org.bluez.Device",
-	"PropertyChanged",
-	cb_property_changed,
-	device);
-	
+	//attach signals:
+	bluez_remote_device_attach_signals(device);
 	
 	//get remote device info:
 	bluez_get_remote_device_info(device);
@@ -287,7 +261,7 @@ void cb_get_remote_device_info (void *data, DBusMessage *replymsg, DBusError *er
 			device->class = ret->value.value_int;
 			
 		} else if(!strcmp(ret->key,"Connected")) {
-			device->connected = ret->value.value_int;
+			device->connected_device = ret->value.value_int;
 			
 		} else if(!strcmp(ret->key,"Icon")) {
 			device->icon = ret->value.value_string;
@@ -361,10 +335,7 @@ void cb_device_found (void *data, DBusMessage *msg) {
 	/* see if the RemoteDevice is already in the list before adding */
 	Eina_List* li = eina_list_search_unsorted_list(DL->devices, (Eina_Compare_Cb)cb_device_found_helper, dev_addr);
 	if(!li) {
-		RemoteDevice* device = malloc(sizeof(RemoteDevice));
-		device->addr = dev_addr;
-		device->alias = NULL;
-		device->password = NULL; //set to null, used for pairing agent later.
+		RemoteDevice* device = remote_device_new(dev_addr);
 		DL->devices = eina_list_append(DL->devices, device);
 		/* Call  org.bluez.Adapter.CreateDevice xx:xx:xx:xx:xx:xx to get its path */
 		bluez_get_remote_device_path(device);
@@ -398,24 +369,32 @@ void cb_property_changed(void *data, DBusMessage *msg) {
 	
 	StructDbus* ret = dbus_message_get_dict_pair(msg);
 	
+	const char* iface = dbus_message_get_interface (msg);
+	
 	if(ret->value_type==DBUS_TYPE_STRING || ret->value_type == DBUS_TYPE_OBJECT_PATH) {
-		fprintf(stderr, "SIGNAL: PropertyChanged (%s == %s)\n", ret->key, ret->value.value_string);
+		fprintf(stderr, "SIGNAL: PropertyChanged (%s == %s) on interface %s\n", ret->key, ret->value.value_string, iface);
 	} else if(ret->value_type==DBUS_TYPE_UINT32 || ret->value_type == DBUS_TYPE_BOOLEAN) {
-		fprintf(stderr, "SIGNAL: PropertyChanged (%s == %d)\n", ret->key, ret->value.value_int);
+		fprintf(stderr, "SIGNAL: PropertyChanged (%s == %d) on interface %s\n", ret->key, ret->value.value_int, iface);
 	} else {
-		fprintf(stderr, "SIGNAL: PropertyChanged (%s == UNKNOWN)... returning\n", ret->key);
+		fprintf(stderr, "SIGNAL: PropertyChanged (%s == UNKNOWN)  on interface %s... returning\n", ret->key, iface);
 		return;
 		}
 	
 	//dbus_dict_pair_debug(ret);
 	
-	/* TODO: finish handling here */
-	if(!data) bluez_get_local_device_info();
-	else {
+	/* TODO: finish handling here: depending on interface (Input, Device) */
+	if(!data) {
+		 bluez_get_local_device_info();
+	} else {
 		RemoteDevice* device = (RemoteDevice*) data;
-		bluez_get_remote_device_info(device);
+		if(!strcmp(iface, "org.bluez.Adapter")) {
+			bluez_get_remote_device_info(device);
+		} else { //org.bluez.Input
+			device->connected_input = ret->value_type;
+		}
 	}
 	
+	struct_dbus_free(ret);
 }
 
 

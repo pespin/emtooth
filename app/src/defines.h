@@ -53,7 +53,8 @@ typedef struct _RemoteDevice {
 	char* addr;
 	char* name;
 	int class;
-	bool connected;
+	bool connected_device;
+	bool connected_input;
 	char* icon;
 	char* alias;
 	bool paired;
@@ -119,7 +120,10 @@ char* BLUEZ_AGENT_PATH;
 
 
 /* misc functions in defines.c */
-GuiCb* init_cb_struct(const char* property, const char* path);
+GuiCb* init_cb_struct(const char* property, const char* path, const char* iface);
 
+RemoteDevice* remote_device_new(const char* addr);
+
+bool struct_dbus_free(StructDbus* ret);
 
 #endif
