@@ -704,6 +704,9 @@ void gui_alert_create(const char *message)
 	
 	lb = elm_label_add(win);
 	elm_label_label_set(lb,message);
+	evas_object_size_hint_weight_set(bt1, 1.0, 1.0);
+	evas_object_size_hint_align_set(bt1, -1.0, -1.0);
+
 	elm_box_pack_end(vbox, lb);
 	evas_object_show(lb);
 	
@@ -716,6 +719,5 @@ void gui_alert_create(const char *message)
 	evas_object_show(bt1);
 	evas_object_smart_callback_add(bt1, "clicked", cb_close_win, win);
 	
-	evas_object_resize(win, 320, 240);
 	evas_object_show(win);
 }
