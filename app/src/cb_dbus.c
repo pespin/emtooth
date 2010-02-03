@@ -33,7 +33,7 @@ void cb_dbus_generic_remote_gui_alert(void *data, DBusMessage *replymsg, DBusErr
 	
 	if(!replymsg) {
 		char buf[512];
-		snprintf(buf, 511, "Last operation failed with error: %s - %s", error->name, error->message);
+		snprintf(buf, 511, "<b>Last operation failed with error:</b><br><br>%s<br>%s", error->name, error->message);
 		gui_alert_create(buf);
 	}
 	

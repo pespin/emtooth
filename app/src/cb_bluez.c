@@ -54,7 +54,7 @@ void cb_get_default_adapter(void *data, DBusMessage *replymsg, DBusError *error)
 		if(bluez_error_counter<6) {
 			if(bluez_error_counter==0)
 					gui_alert_create("Sorry, it seems bluez dbus interface is not" \
-					"running at the moment. Retrying some more times before exiting...");
+					"running at the moment.<br>Retrying some more times before exiting...");
 			bluez_error_counter++;
 			sleep(2);					
 			bluez_get_default_adapter();
@@ -303,7 +303,7 @@ void cb_create_remote_paired_device(void *data, DBusMessage *replymsg, DBusError
 	
 	if(!replymsg) {
 		char buf[512];
-		snprintf(buf, 511, "Pairing failed with error: %s - %s", error->name, error->message);
+		snprintf(buf, 511, "<b>Pairing failed with error:</b><br><br>%s<br>%s", error->name, error->message);
 		gui_alert_create(buf);	
 		return;
 	}
