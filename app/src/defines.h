@@ -67,6 +67,9 @@ typedef struct _RemoteDevice {
 	//org.bluez.Input iface:
 	bool connected_input;
 	
+	//org.bluez.Audio iface:
+	bool connected_audio;
+	
 	//internal
 	char* password;
 } RemoteDevice;

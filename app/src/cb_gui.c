@@ -162,6 +162,20 @@ void cb_toggle_input_connect(void *data, Evas_Object *obj, void *event_info) {
 	
 }
 
+void cb_toggle_audio_connect(void *data, Evas_Object *obj, void *event_info) {
+	
+	RemoteDevice* device = (RemoteDevice*) data;
+	
+	fprintf(stderr, "Callback: AudioConnect change ->  value=%d\n", elm_toggle_state_get(obj));
+	
+	if(elm_toggle_state_get(obj)) {
+		bluez_remote_device_audio_connect(device);
+	} else {
+		bluez_remote_device_audio_disconnect(device);
+	}
+	
+}
+
 
 void cb_request_pin(void *data, Evas_Object *obj, void *event_info) {
 	

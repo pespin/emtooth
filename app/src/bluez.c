@@ -142,6 +142,7 @@ void bluez_get_local_device_info() {
 void bluez_get_remote_device_info(RemoteDevice* device) {
 
 	bluez_get_remote_device_properties_device(device);
+	bluez_get_remote_device_properties_audio(device);
 	
 	if(bluez_remote_device_has_input_services(device))
 		bluez_get_remote_device_properties_input(device);
@@ -176,13 +177,26 @@ void bluez_get_remote_device_properties_input(RemoteDevice* device) {
 }
 
 
+void bluez_get_remote_device_properties_audio(RemoteDevice* device) {
+
+	DBusMessage *msg;
+	msg = dbus_message_new_method_call(
+		"org.bluez",
+		device->path,
+		"org.bluez.Audio",
+		"GetProperties");
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_get_remote_device_properties_audio, -1, device);
+	dbus_message_unref(msg);
+	
+}
+
 bool bluez_remote_device_has_input_services(RemoteDevice* device) {
 	
 	if(!device->UUIDs) { 
 	/* This can happen when discovering a device, since we first 
 	 * need to fetch data from Device iface to have UUIDs list*/
-		fprintf(stderr, "UUIDs list for device [%s] is not set, waiting \
-		 to display Input info...\n", device->addr);
+		fprintf(stderr, "UUIDs list for device [%s] is not set, waiting" \
+		 " to display Input info...\n", device->addr);
 		return FALSE;
 	}
 	int i = 0;
@@ -205,9 +219,7 @@ void bluez_remote_device_input_connect(RemoteDevice* device) {
 	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_dbus_generic_remote_gui_alert, -1, device);
 	dbus_message_unref(msg);
 	
-	
 }
-
 
 void bluez_remote_device_input_disconnect(RemoteDevice* device) {
 	
@@ -220,6 +232,32 @@ void bluez_remote_device_input_disconnect(RemoteDevice* device) {
 	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_dbus_generic_remote_gui_alert, -1, device);
 	dbus_message_unref(msg);
 	
+}
+
+
+void bluez_remote_device_audio_connect(RemoteDevice* device) {
+	
+	DBusMessage *msg;
+	msg = dbus_message_new_method_call(
+		"org.bluez",
+		device->path,
+		"org.bluez.Audio",
+		"Connect");
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_dbus_generic_remote_gui_alert, -1, device);
+	dbus_message_unref(msg);
+	
+}
+
+void bluez_remote_device_audio_disconnect(RemoteDevice* device) {
+	
+	DBusMessage *msg;
+	msg = dbus_message_new_method_call(
+		"org.bluez",
+		device->path,
+		"org.bluez.Audio",
+		"Disconnect");
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_dbus_generic_remote_gui_alert, -1, device);
+	dbus_message_unref(msg);
 	
 }
 
@@ -336,7 +374,6 @@ void bluez_discovery_stop() {
 	
 	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_dbus_generic, -1, NULL);
 	dbus_message_unref(msg);
-	
 }
 
 

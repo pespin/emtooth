@@ -28,6 +28,7 @@ void cb_create_remote_paired_device(void *data, DBusMessage *replymsg, DBusError
 void cb_get_local_device_info (void *data, DBusMessage *replymsg, DBusError *error);
 void cb_get_remote_device_properties_device(void *data, DBusMessage *replymsg, DBusError *error);
 void cb_get_remote_device_properties_input(void *data, DBusMessage *replymsg, DBusError *error);
+void cb_get_remote_device_properties_audio(void *data, DBusMessage *replymsg, DBusError *error);
 
 
 /* signals */
