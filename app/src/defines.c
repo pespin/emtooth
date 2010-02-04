@@ -40,16 +40,23 @@ GuiCb* init_cb_struct(const char* property, const char* path, const char* iface)
 RemoteDevice* remote_device_new(const char* addr) {
 	
 	RemoteDevice* device = malloc(sizeof(RemoteDevice));
+		//org.bluez.Device iface:
 		device->path = NULL;
 		device->addr = strdup(addr);
 		device->name = NULL;
 		device->class = 0;
 		device->connected_device = 0;
-		device->connected_input = 0;
 		device->icon = NULL;
 		device->alias = NULL;
 		device->paired = 0;
 		device->trusted = 0;
+		device->UUIDs = NULL;
+		
+		//org.bluez.Input iface:
+		device->connected_input = 0;
+		
+		
+		//internal:
 		device->password = NULL; //set to null, used for pairing agent later.
 		
 	return device;
@@ -69,3 +76,17 @@ bool struct_dbus_free(StructDbus* ret) {
 	
 	return TRUE;
 }
+
+bool array_free(char** array) {
+	
+	if(!array) return FALSE;
+	int i = 0;
+	while(array[i]) {
+		free(array[i]);
+		i++;
+	}
+	free(array);
+	
+	return TRUE;
+}
+

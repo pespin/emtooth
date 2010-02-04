@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "gui.h"
 #include "cb_dbus.h"
 #include "cb_bluez.h"
+#include "bluez.h"
 
 void bluez_get_default_adapter() {
 	
@@ -142,8 +143,8 @@ void bluez_get_remote_device_info(RemoteDevice* device) {
 
 	bluez_get_remote_device_properties_device(device);
 	
-	/* TODO: check if service available before calling this: */
-	bluez_get_remote_device_properties_input(device);
+	if(bluez_remote_device_has_input_services(device))
+		bluez_get_remote_device_properties_input(device);
 	
 }
 
@@ -174,6 +175,23 @@ void bluez_get_remote_device_properties_input(RemoteDevice* device) {
 	
 }
 
+
+bool bluez_remote_device_has_input_services(RemoteDevice* device) {
+	
+	if(!device->UUIDs) { 
+	/* This can happen when discovering a device, since we first 
+	 * need to fetch data from Device iface to have UUIDs list*/
+		fprintf(stderr, "UUIDs list for device [%s] is not set, waiting \
+		 to display Input info...\n", device->addr);
+		return FALSE;
+	}
+	int i = 0;
+	while(device->UUIDs[i] != NULL) {
+		if(!strcmp(device->UUIDs[i], HID_UUID)) return TRUE;
+		i++;
+	}
+	return FALSE;
+}
 
 
 void bluez_remote_device_input_connect(RemoteDevice* device) {

@@ -36,6 +36,8 @@ void bluez_get_remote_device_info(RemoteDevice* device);
 void bluez_get_remote_device_properties_device(RemoteDevice* device);
 void bluez_get_remote_device_properties_input(RemoteDevice* device);
 
+bool bluez_remote_device_has_input_services(RemoteDevice* device);
+
 void bluez_remote_device_input_connect(RemoteDevice* device);
 void bluez_remote_device_input_disconnect(RemoteDevice* device);
 void bluez_remote_device_attach_signals(RemoteDevice* device);

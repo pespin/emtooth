@@ -27,6 +27,9 @@ void dbus_dict_pair_debug(StructDbus* ret);
 StructDbus* dbus_message_iter_get_dict_pair(DBusMessageIter *key_iter);
 StructDbus* dbus_message_get_dict_pair(DBusMessage *msg);
 
+int dbus_message_iter_get_array_size(DBusMessageIter* array_iter);
+char** dbus_message_iter_get_array(DBusMessageIter* array_iter, int size);
+
 StructDbus* dbus_get_next_struct_in_dict(DBusMessageIter *dict_iter);
 void dbus_message_get_variant(DBusMessageIter* iter, StructDbus* ret);
 

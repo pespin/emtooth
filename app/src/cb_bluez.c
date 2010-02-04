@@ -249,6 +249,8 @@ void cb_get_remote_device_properties_device (void *data, DBusMessage *replymsg, 
 	StructDbus* ret;
 	int type = dbus_message_iter_get_arg_type (&dict_iter);
 	
+	bool can_free = TRUE; //used for dynamic types as strings and arrays
+	
 	//foreach pair...:
 	while (type != DBUS_TYPE_INVALID) {
 		ret = dbus_get_next_struct_in_dict(&dict_iter);
@@ -274,11 +276,17 @@ void cb_get_remote_device_properties_device (void *data, DBusMessage *replymsg, 
 			
 		} else if(!strcmp(ret->key,"Trusted")) {
 			device->trusted = ret->value.value_int;
+			
+		} else if(!strcmp(ret->key,"UUIDs")) {
+			char** tmp = device->UUIDs; 
+			device->UUIDs = ret->value.value_array;
+			array_free(tmp);
+			can_free = FALSE;
 		}
 		
 		//free stuff: key, as we are not using it, and struct.
 		if(ret->key) free(ret->key);
-		if(ret) free(ret);
+		if(ret && can_free) free(ret);
 		
 		dbus_message_iter_next (&dict_iter);
 		type = dbus_message_iter_get_arg_type (&dict_iter);
