@@ -55,6 +55,8 @@ RemoteDevice* remote_device_new(const char* addr) {
 		//org.bluez.Input iface:
 		device->connected_input = 0;
 		
+		//org.bluez.Audio iface:
+		device->connected_audio = 0;
 		
 		//internal:
 		device->password = NULL; //set to null, used for pairing agent later.

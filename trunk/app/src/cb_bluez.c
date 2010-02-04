@@ -310,9 +310,40 @@ void cb_get_remote_device_properties_input(void *data, DBusMessage *replymsg, DB
 	DBUSLOG(error);
 	if(!replymsg) return;	
 	
-	StructDbus* ret = dbus_message_get_dict_pair(replymsg);
+	//open dict:
+	DBusMessageIter array_iter, dict_iter, key_iter;
+	dbus_message_iter_init(replymsg, &array_iter);
+	dbus_message_iter_recurse(&array_iter, &dict_iter);
+	dbus_message_iter_recurse(&dict_iter, &key_iter);
+	StructDbus* ret = dbus_message_iter_get_dict_pair(&key_iter);
 	
 	device->connected_input = ret->value.value_int;
+	
+	struct_dbus_free(ret);
+}
+
+
+void cb_get_remote_device_properties_audio(void *data, DBusMessage *replymsg, DBusError *error) {
+	
+	RemoteDevice* device = (RemoteDevice*) data;
+	
+	fprintf(stderr, "Updating remote device [%s][%s] Audio info... ", device->addr, device->path);
+	
+	DBUSLOG(error);
+	if(!replymsg) return;
+		
+	//open dict:
+	DBusMessageIter array_iter, dict_iter, key_iter;
+	dbus_message_iter_init(replymsg, &array_iter);
+	dbus_message_iter_recurse(&array_iter, &dict_iter);
+	dbus_message_iter_recurse(&dict_iter, &key_iter);
+	StructDbus* ret = dbus_message_iter_get_dict_pair(&key_iter);
+	
+	if(!strcmp(ret->value.value_string, "connected")) {
+		device->connected_audio = TRUE;
+	} else {
+		device->connected_audio = FALSE;
+	}
 	
 	struct_dbus_free(ret);
 }
@@ -321,8 +352,6 @@ void cb_get_remote_device_properties_input(void *data, DBusMessage *replymsg, DB
 void cb_create_remote_paired_device(void *data, DBusMessage *replymsg, DBusError *error) {
 	
 	RemoteDevice* device = (RemoteDevice*) data;
-	
-	//fprintf(stderr, "Pairing to device [%s]...\n", device->addr);
 	
 	DBUSLOG(error);
 	
@@ -414,6 +443,8 @@ void cb_property_changed(void *data, DBusMessage *msg) {
 		RemoteDevice* device = (RemoteDevice*) data;
 		if(!strcmp(iface, "org.bluez.Device")) {
 			bluez_get_remote_device_properties_device(device);
+		} else if(!strcmp(iface, "org.bluez.Audio")) {
+			bluez_get_remote_device_properties_audio(device);
 		} else { //org.bluez.Input
 			bluez_get_remote_device_properties_input(device);
 		}
