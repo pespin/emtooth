@@ -113,6 +113,50 @@ void dbus_dict_pair_debug(StructDbus* ret) {
 
 
 
+int dbus_message_iter_get_array_size(DBusMessageIter* array_iter) {
+	
+	DBusMessageIter elem_iter;
+	int type;
+	int n = 0;
+		
+	/*TODO: returns number of elements in array */
+	dbus_message_iter_recurse(array_iter, &elem_iter);
+	
+	type = dbus_message_iter_get_arg_type (&elem_iter);
+	
+	while (type != DBUS_TYPE_INVALID) {
+		n++;
+		dbus_message_iter_next (&elem_iter);
+		type = dbus_message_iter_get_arg_type (&elem_iter);
+	}
+	
+	return n;
+}
+
+char** dbus_message_iter_get_array(DBusMessageIter* array_iter, int size) {
+	
+	//Creates a NULL terminated array
+	
+	DBusMessageIter elem_iter;
+	char** array = (char**) malloc(sizeof(char*) * (size+1));
+	char* str;
+	int i;
+	
+	dbus_message_iter_recurse(array_iter, &elem_iter);
+	
+	for(i=0; i<size; i++) {
+		dbus_message_iter_get_basic(&elem_iter, &str);
+		array[i] = strdup(str);
+		//fprintf(stderr, "Populating array[%d] = %s\n", i, array[i]);
+		dbus_message_iter_next (&elem_iter);
+	}
+	
+	array[size] = NULL;
+	
+	return array;
+}
+
+
 void dbus_message_get_variant(DBusMessageIter* iter, StructDbus* ret) {
 	
 	DBusMessageIter value_iter;
@@ -129,7 +173,12 @@ void dbus_message_get_variant(DBusMessageIter* iter, StructDbus* ret) {
 	else if(ret->value_type == DBUS_TYPE_UINT32 || ret->value_type == DBUS_TYPE_BOOLEAN) {
 		dbus_message_iter_get_basic(&value_iter, &tmp);
 		ret->value.value_int = tmp;
-	} /*else { here comes array types, no need to handle them
+	} 
+	else if(ret->value_type == DBUS_TYPE_ARRAY) {
+		int size = dbus_message_iter_get_array_size(&value_iter);
+		ret->value.value_array = dbus_message_iter_get_array(&value_iter, size);
+	}
+	/*else { here comes array types, no need to handle them
 			 fprintf(stderr, "\n\nUNKNOWN VALUE RECEIVED fROM DBUS: int:%d; char:%c;\n\n", ret->value_type, ret->value_type);
 		} */
 	

@@ -24,6 +24,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 /* defines */
 
+#define HID_UUID	"00001124-0000-1000-8000-00805f9b34fb"
+
 #define DBUSLOG(error) if (error && dbus_error_is_set(error)) fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
 
 
@@ -40,6 +42,7 @@ typedef struct _DeviceList {
 typedef union _DbusReturn {
 	char* value_string;
 	int value_int;
+	char** value_array;
 } DbusReturn;
 
 typedef struct _StructDbus {
@@ -49,20 +52,24 @@ typedef struct _StructDbus {
 } StructDbus;
 
 typedef struct _RemoteDevice {
+	//org.bluez.Device iface:
 	char* path;
 	char* addr;
 	char* name;
 	int class;
 	bool connected_device;
-	bool connected_input;
 	char* icon;
 	char* alias;
 	bool paired;
 	bool trusted;
+	char** UUIDs;
+	
+	//org.bluez.Input iface:
+	bool connected_input;
+	
+	//internal
 	char* password;
 } RemoteDevice;
-
-
 
 
 typedef struct _LocalDevice {
@@ -125,5 +132,7 @@ GuiCb* init_cb_struct(const char* property, const char* path, const char* iface)
 RemoteDevice* remote_device_new(const char* addr);
 
 bool struct_dbus_free(StructDbus* ret);
+
+bool array_free(char** array);
 
 #endif
