@@ -67,6 +67,9 @@ DBusMessage* bluez_agent_method_RequestPinCode(E_DBus_Object *obj, DBusMessage *
 	dbus_message_append_args(reply, 
 					DBUS_TYPE_STRING, &device->password,
 					DBUS_TYPE_INVALID);
+					
+	free(device->password);
+	device->password = NULL;
 	
 	return reply;
 }
