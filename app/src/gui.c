@@ -131,6 +131,7 @@ void gui_device_list_remove(RemoteDevice* device) {
 	
 	/* TODO: just remove one item instead of rewriting all the list */
 	elm_list_clear(DL->li);
+	remote_device_free(device);
 	gui_device_list_populate();
 	
 }

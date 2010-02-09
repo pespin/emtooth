@@ -460,6 +460,4 @@ void cb_device_removed(void *data, DBusMessage *msg) {
 	
 	fprintf(stderr, "SIGNAL: DeviceRemoved: [%s]\n", device->addr);
 	
-	//gui_device_list_remove(device);
-	
 }

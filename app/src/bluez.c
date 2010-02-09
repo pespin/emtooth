@@ -264,6 +264,7 @@ void bluez_remote_device_audio_disconnect(RemoteDevice* device) {
 void bluez_remote_device_attach_signals(RemoteDevice* device) {
 	
 	//Connect to PropertyChanged signal:
+	device->signal_PropertyChanged_device = 
 	e_dbus_signal_handler_add(
 	DBUSCONN->sysconn,
 	"org.bluez", 
@@ -273,16 +274,31 @@ void bluez_remote_device_attach_signals(RemoteDevice* device) {
 	cb_property_changed,
 	device);
 	
+	if(bluez_remote_device_has_input_services(device)) {
+		device->signal_PropertyChanged_input =
+		e_dbus_signal_handler_add(
+		DBUSCONN->sysconn,
+		"org.bluez", 
+		device->path,
+		"org.bluez.Input",
+		"PropertyChanged",
+		cb_property_changed,
+		device);
+	}
+	
+	//Connect to PropertyChanged signal:
+	device->signal_PropertyChanged_audio = 
 	e_dbus_signal_handler_add(
 	DBUSCONN->sysconn,
 	"org.bluez", 
 	device->path,
-	"org.bluez.Input",
+	"org.bluez.Audio",
 	"PropertyChanged",
 	cb_property_changed,
 	device);
 	
 	//Connect to DeviceRemoved signal:
+	device->signal_DeviceRemoved =
 	e_dbus_signal_handler_add(
 	DBUSCONN->sysconn,
 	"org.bluez", 

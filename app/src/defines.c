@@ -51,19 +51,49 @@ RemoteDevice* remote_device_new(const char* addr) {
 		device->paired = 0;
 		device->trusted = 0;
 		device->UUIDs = NULL;
+		device->signal_PropertyChanged_device = NULL;
+		device->signal_DeviceRemoved = NULL;
 		
 		//org.bluez.Input iface:
 		device->connected_input = 0;
+		device->signal_PropertyChanged_input = NULL;
 		
 		//org.bluez.Audio iface:
 		device->connected_audio = 0;
-		
+		device->signal_PropertyChanged_audio = NULL;
+				
 		//internal:
 		device->password = NULL; //set to null, used for pairing agent later.
 		
 	return device;
 }
 
+
+
+bool remote_device_free(RemoteDevice* device) {
+	
+	if(!device) return FALSE;
+	
+	if(device->path) 		free(device->path);
+	if(device->addr) 		free(device->addr);
+	if(device->name) 		free(device->name);
+	if(device->icon) 		free(device->icon);
+	if(device->alias) 		free(device->alias);
+	if(device->password)	free(device->password);
+	
+	array_free(device->UUIDs);
+	
+	if(device->signal_DeviceRemoved)
+		e_dbus_signal_handler_del(DBUSCONN->sysconn, device->signal_DeviceRemoved);
+	if(device->signal_PropertyChanged_device)
+		e_dbus_signal_handler_del(DBUSCONN->sysconn, device->signal_PropertyChanged_device);
+	if(device->signal_PropertyChanged_input)
+		e_dbus_signal_handler_del(DBUSCONN->sysconn, device->signal_PropertyChanged_input);
+	if(device->signal_PropertyChanged_audio)
+		e_dbus_signal_handler_del(DBUSCONN->sysconn, device->signal_PropertyChanged_audio);
+	
+	return TRUE;	
+}
 
 
 bool struct_dbus_free(StructDbus* ret) {
