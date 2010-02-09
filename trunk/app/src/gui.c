@@ -468,11 +468,23 @@ void gui_remote_device_info_create(RemoteDevice* device) {
 	evas_object_size_hint_align_set(fr, 0.5, 0.5);
 	elm_box_pack_end(vbox_in, fr);
 	evas_object_show(fr);
+	
+	vbox_fr = elm_box_add(win);
+	evas_object_size_hint_align_set(vbox_fr, -1.0, -1.0);
+	evas_object_size_hint_weight_set(vbox_fr, 1.0, 1.0);
+	elm_frame_content_set(fr, vbox_fr);
+	evas_object_show(vbox_fr);
 
-	snprintf(buf, 255, "[%s] %s", device->addr, device->name);
+	snprintf(buf, 255, "<b>MAC Adress:</b> %s", device->addr);
 	lb = elm_label_add(win);
 	elm_label_label_set(lb, buf);
-	elm_frame_content_set(fr, lb);
+	elm_box_pack_end(vbox_fr, lb);
+	evas_object_show(lb);
+	
+	snprintf(buf, 255, "<b>Name:</b> %s", device->name);
+	lb = elm_label_add(win);
+	elm_label_label_set(lb, buf);
+	elm_box_pack_end(vbox_fr, lb);
 	evas_object_show(lb);
 
 	// ALIAS:
@@ -621,7 +633,6 @@ void gui_remote_device_info_create(RemoteDevice* device) {
 	evas_object_show(tg);
 	evas_object_smart_callback_add(tg, "changed", cb_toggle_audio_connect,
 									device);
-
 	
 	// InputConnect TOGGLE
 	if(bluez_remote_device_has_input_services(device)) {
@@ -652,7 +663,18 @@ void gui_remote_device_info_create(RemoteDevice* device) {
 		evas_object_show(tg);
 		evas_object_smart_callback_add(tg, "changed", cb_toggle_input_connect,
 										device);
-	}								
+	}	
+	
+	//add Remove Button
+	bt = elm_button_add(win);
+	elm_button_label_set(bt, "Reset/Remove Device");
+	evas_object_size_hint_weight_set(bt, 0, 0);
+	evas_object_size_hint_align_set(bt, -1.0, -1.0);
+	elm_box_pack_end(vbox_in, bt);
+	evas_object_show(bt);
+	evas_object_smart_callback_add(bt, "clicked", cb_close_win, win);
+	evas_object_smart_callback_add(bt, "clicked", cb_remove_device_clicked, device);
+							
 	//BOTTOM:
 	// add button hbox
 	hbox = elm_box_add(win);
