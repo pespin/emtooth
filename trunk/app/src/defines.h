@@ -63,12 +63,16 @@ typedef struct _RemoteDevice {
 	bool paired;
 	bool trusted;
 	char** UUIDs;
+	E_DBus_Signal_Handler* signal_PropertyChanged_device;
+	E_DBus_Signal_Handler* signal_DeviceRemoved;
 	
 	//org.bluez.Input iface:
 	bool connected_input;
+	E_DBus_Signal_Handler* signal_PropertyChanged_input;
 	
 	//org.bluez.Audio iface:
 	bool connected_audio;
+	E_DBus_Signal_Handler* signal_PropertyChanged_audio;
 	
 	//internal
 	char* password;
@@ -133,6 +137,8 @@ char* BLUEZ_AGENT_PATH;
 GuiCb* init_cb_struct(const char* property, const char* path, const char* iface);
 
 RemoteDevice* remote_device_new(const char* addr);
+
+bool remote_device_free(RemoteDevice* device);
 
 bool struct_dbus_free(StructDbus* ret);
 
