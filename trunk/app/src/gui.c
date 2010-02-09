@@ -198,7 +198,7 @@ void gui_settings_dialog_create() {
 
 	char buf[255];
 
-   Evas_Object *win, *bg, *vbox, *vbox_in, *vbox_fr, *fr, *lb, *hbox, *bt, *entry, *tg;
+   Evas_Object *win, *bg, *vbox, *sc, *vbox_in, *vbox_fr, *fr, *lb, *hbox, *bt, *entry, *tg;
 
    win = elm_win_add(NULL, "settings_dialog", ELM_WIN_BASIC);
    elm_win_title_set(win, "emtooth - Settings");
@@ -209,36 +209,45 @@ void gui_settings_dialog_create() {
    elm_win_resize_object_add(win, bg);
    evas_object_show(bg);
    
-   	evas_object_resize(win, 480, 600);	
-   
+   	evas_object_resize(win, 480, 600);
+   	   
    	//add vbox
 	vbox = elm_box_add(win);
 	elm_win_resize_object_add(win, vbox);
 	evas_object_size_hint_weight_set(vbox, 1.0, 1.0);
 	evas_object_show(vbox);
+	
+	//HERE STARTS ALL THE OPTIONS LIST:
+	
+	
+   	sc = elm_scroller_add(win);
+   	evas_object_size_hint_weight_set(sc, 1, 1);
+	evas_object_size_hint_align_set(sc, -1, -1);
+	elm_scroller_bounce_set(sc, 0 ,1);
+	elm_box_pack_end(vbox, sc);
+	evas_object_show(sc);	
 
+	
+	vbox_in = elm_box_add(win);
+	evas_object_size_hint_align_set(vbox_in, -1.0, -1.0);
+	evas_object_size_hint_weight_set(vbox_in, 1.0, 1.0);
+	elm_scroller_content_set(sc, vbox_in);
+	evas_object_show(vbox_in);
+	
+	//ADDRESS	
 	// add a frame
 	fr = elm_frame_add(win);
 	elm_object_style_set(fr, "outdent_top");
 	evas_object_size_hint_weight_set(fr, 0.0, 0.0);
 	evas_object_size_hint_align_set(fr, 0.5, 0.5);
-	elm_box_pack_end(vbox, fr);
+	elm_box_pack_end(vbox_in, fr);
 	evas_object_show(fr);
 
-	//ADDRESS
 	sprintf(buf, "<b>Address:</b> %s", ADAPTER->addr);
 	lb = elm_label_add(win);
 	elm_label_label_set(lb, buf);
 	elm_frame_content_set(fr, lb);
 	evas_object_show(lb);
-	
-	//HERE STARTS ALL THE OPTIONS LIST:
-	
-	vbox_in = elm_box_add(win);
-	evas_object_size_hint_align_set(vbox_in, -1.0, 0.0);
-	evas_object_size_hint_weight_set(vbox_in, 1.0, 1.0);
-	elm_box_pack_end(vbox, vbox_in);
-	evas_object_show(vbox_in);
 
 	// NAME:
 	// add a frame
@@ -414,7 +423,7 @@ void gui_remote_device_info_create(RemoteDevice* device) {
 
 	char buf[255];
 
-   Evas_Object *win, *bg, *vbox, *vbox_in, *vbox_fr, *fr, *lb, *hbox, *bt, *entry, *tg;
+   Evas_Object *win, *bg, *vbox, *sc, *vbox_in, *vbox_fr, *fr, *lb, *hbox, *bt, *entry, *tg;
 
    snprintf(buf, 255, "emtooth - %s", device->name);
    win = elm_win_add(NULL, "remote_device", ELM_WIN_BASIC);
@@ -426,36 +435,45 @@ void gui_remote_device_info_create(RemoteDevice* device) {
    elm_win_resize_object_add(win, bg);
    evas_object_show(bg);
    
-   	evas_object_resize(win, 480, 600);	
+   	evas_object_resize(win, 480, 600);
    
    	//add vbox
 	vbox = elm_box_add(win);
 	elm_win_resize_object_add(win, vbox);
 	evas_object_size_hint_weight_set(vbox, 1.0, 1.0);
 	evas_object_show(vbox);
+	
+	//HERE STARTS ALL THE OPTIONS LIST:
+	
+	
+   	sc = elm_scroller_add(win);
+   	evas_object_size_hint_weight_set(sc, 1, 1);
+	evas_object_size_hint_align_set(sc, -1, -1);
+	elm_scroller_bounce_set(sc, 0 ,1);
+	elm_box_pack_end(vbox, sc);
+	evas_object_show(sc);	
 
+	
+	vbox_in = elm_box_add(win);
+	evas_object_size_hint_align_set(vbox_in, -1.0, -1.0);
+	evas_object_size_hint_weight_set(vbox_in, 1.0, 1.0);
+	elm_scroller_content_set(sc, vbox_in);
+	evas_object_show(vbox_in);
+	
+	//ADDRESS:
 	// add a frame
 	fr = elm_frame_add(win);
 	elm_object_style_set(fr, "outdent_top");
 	evas_object_size_hint_weight_set(fr, 0.0, 0.0);
 	evas_object_size_hint_align_set(fr, 0.5, 0.5);
-	elm_box_pack_end(vbox, fr);
+	elm_box_pack_end(vbox_in, fr);
 	evas_object_show(fr);
 
-	//ADDRESS
 	snprintf(buf, 255, "[%s] %s", device->addr, device->name);
 	lb = elm_label_add(win);
 	elm_label_label_set(lb, buf);
 	elm_frame_content_set(fr, lb);
 	evas_object_show(lb);
-	
-	//HERE STARTS ALL THE OPTIONS LIST:
-	
-	vbox_in = elm_box_add(win);
-	evas_object_size_hint_align_set(vbox_in, -1.0, 0.0);
-	evas_object_size_hint_weight_set(vbox_in, 1.0, 1.0);
-	elm_box_pack_end(vbox, vbox_in);
-	evas_object_show(vbox_in);
 
 	// ALIAS:
 	// add a frame
