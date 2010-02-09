@@ -176,6 +176,18 @@ void cb_toggle_audio_connect(void *data, Evas_Object *obj, void *event_info) {
 	
 }
 
+void cb_remove_device_clicked(void *data, Evas_Object *obj, void *event_info) {
+	 
+	RemoteDevice* device = (RemoteDevice*) data;
+	
+	fprintf(stderr, "Callback: RemoveDevice button on device [%s]\n", device->addr);
+		 
+	bluez_remote_device_remove(device);
+	gui_device_list_remove(device);
+	/* TODO: free device */
+
+}
+
 
 void cb_request_pin(void *data, Evas_Object *obj, void *event_info) {
 	
