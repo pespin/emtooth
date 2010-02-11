@@ -39,6 +39,8 @@ GuiCb* init_cb_struct(const char* property, const char* path, const char* iface)
 
 RemoteDevice* remote_device_new(const char* addr) {
 	
+	fprintf(stderr, "Func remote_device_new() called on device [%s]\n", addr);
+	
 	RemoteDevice* device = malloc(sizeof(RemoteDevice));
 		//org.bluez.Device iface:
 		device->path = NULL;
