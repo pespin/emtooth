@@ -54,7 +54,6 @@ RemoteDevice* remote_device_new(const char* addr) {
 		device->trusted = 0;
 		device->UUIDs = NULL;
 		device->signal_PropertyChanged_device = NULL;
-		device->signal_DeviceRemoved = NULL;
 		
 		//org.bluez.Input iface:
 		device->connected_input = 0;
@@ -66,6 +65,7 @@ RemoteDevice* remote_device_new(const char* addr) {
 				
 		//internal:
 		device->password = NULL; //set to null, used for pairing agent later.
+		device->valid = FALSE; //set to true when we have minimal info
 		
 	return device;
 }
@@ -85,8 +85,6 @@ bool remote_device_free(RemoteDevice* device) {
 	
 	array_free(device->UUIDs);
 	
-	if(device->signal_DeviceRemoved)
-		e_dbus_signal_handler_del(DBUSCONN->sysconn, device->signal_DeviceRemoved);
 	if(device->signal_PropertyChanged_device)
 		e_dbus_signal_handler_del(DBUSCONN->sysconn, device->signal_PropertyChanged_device);
 	if(device->signal_PropertyChanged_input)

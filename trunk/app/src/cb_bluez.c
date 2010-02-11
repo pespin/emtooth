@@ -29,11 +29,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 /* Auxiliar functions used below: */
 
- static  int cb_device_found_helper_path(RemoteDevice *s, const char *new_RemoteDevice) {
-	if (!s) return -1;
-	return strcmp(s->path, new_RemoteDevice);
-}
- 
  static  int cb_device_found_helper_addr(RemoteDevice *s, const char *new_RemoteDevice) {
 	if (!s) return -1;
 	return strcmp(s->addr, new_RemoteDevice);
@@ -480,22 +475,23 @@ void cb_device_created(void *data, DBusMessage *msg) {
 	
 	fprintf(stderr, "SIGNAL: DeviceCreated --> [%s]\n", path);
 
-	/* see if the RemoteDevice is already in the list before adding */
-/*	Eina_List* li = eina_list_search_unsorted_list(DL->devices, (Eina_Compare_Cb)cb_device_found_helper_path, path);
-	if(!li) {
-		RemoteDevice* device = remote_device_new(dev_addr);
-		DL->devices = eina_list_append(DL->devices, device);
-*/		/* Call  org.bluez.Adapter.CreateDevice xx:xx:xx:xx:xx:xx to get its path */
-/*		bluez_get_remote_device_path(device);
-	}
-*/	free(path);
+	free(path);
 }
 
 
 void cb_device_removed(void *data, DBusMessage *msg) {
 	
-	RemoteDevice* device = (RemoteDevice*) data;
+	char *path=NULL;
+	DBusError *error=NULL;
 	
-	fprintf(stderr, "SIGNAL: DeviceRemoved: [%s]\n", device->addr);
+	dbus_message_get_args(msg, error,
+	                      DBUS_TYPE_OBJECT_PATH, &path, DBUS_TYPE_INVALID);
 	
+	DBUSLOG(error);
+	if(path) {
+		path = strdup(path);
+	} else return;
+	
+	fprintf(stderr, "SIGNAL: DeviceRemoved --> [%s]\n", path);
+	free(path);
 }

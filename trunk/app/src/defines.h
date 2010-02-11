@@ -64,7 +64,6 @@ typedef struct _RemoteDevice {
 	bool trusted;
 	char** UUIDs;
 	E_DBus_Signal_Handler* signal_PropertyChanged_device;
-	E_DBus_Signal_Handler* signal_DeviceRemoved;
 	
 	//org.bluez.Input iface:
 	bool connected_input;
@@ -76,6 +75,8 @@ typedef struct _RemoteDevice {
 	
 	//internal
 	char* password;
+	bool valid;
+	
 } RemoteDevice;
 
 

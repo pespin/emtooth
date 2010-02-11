@@ -296,18 +296,6 @@ void bluez_remote_device_attach_signals(RemoteDevice* device) {
 	"PropertyChanged",
 	cb_property_changed,
 	device);
-	
-	//Connect to DeviceRemoved signal:
-	device->signal_DeviceRemoved =
-	e_dbus_signal_handler_add(
-	DBUSCONN->sysconn,
-	"org.bluez", 
-	device->path,
-	"org.bluez.Device",
-	"DeviceRemoved",
-	cb_device_removed,
-	device);
-	
 }
 
 void bluez_remote_device_remove(RemoteDevice* device) {
@@ -374,7 +362,7 @@ void bluez_discovery_start() {
 	cb_device_disappeared,
 	NULL);
 	
-		ADAPTER->DeviceCreated = e_dbus_signal_handler_add(
+	ADAPTER->DeviceCreated = e_dbus_signal_handler_add(
     DBUSCONN->sysconn,
 	"org.bluez",
 	ADAPTER->path,

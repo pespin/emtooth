@@ -141,6 +141,8 @@ void gui_device_list_append(RemoteDevice* device) {
 
 	fprintf(stderr, "Adding RemoteDevice %s to list...\n", device->addr);
 	
+	device->valid = TRUE;
+	
 	char buf[255];
 	if(device->path) snprintf(buf, 255, "[%s] %s", device->addr, device->alias);
 	else snprintf(buf, 255, "[%s] (unknown)", device->addr); 
@@ -167,6 +169,8 @@ void gui_device_list_populate() {
 	Eina_List* cur;
 	
 	EINA_LIST_FOREACH(DL->devices, cur, device) {
+		if(!device->valid) continue;
+		
 		if(device->path) snprintf(buf, 255, "[%s] %s", device->addr, device->alias);
 		else snprintf(buf, 255, "[%s] (unknown)", device->addr); 
 		ic = elm_icon_add(DL->li);
