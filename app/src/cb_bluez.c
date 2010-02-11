@@ -49,11 +49,11 @@ void cb_get_default_adapter(void *data, DBusMessage *replymsg, DBusError *error)
 	DBUSLOG(error);
 	
 	if(!replymsg) { /* no org.bluez, fso still loading it [fso bug] */
-		fprintf(stderr, "ERROR ON BLUEZ-DBUS!\n");
+		fprintf(stderr, "ERROR: there's no org.bluez service!!! (probably fso hasn't loaded it yet).\n");
 		
 		if(bluez_error_counter<6) {
 			if(bluez_error_counter==0)
-					gui_alert_create("Sorry, it seems bluez dbus interface is not" \
+					gui_alert_create("Sorry, it seems bluez dbus interface is not<br>" \
 					"running at the moment.<br>Retrying some more times before exiting...");
 			bluez_error_counter++;
 			sleep(2);					
@@ -143,6 +143,7 @@ void cb_create_remote_device_path (void *data, DBusMessage *replymsg, DBusError 
 	fprintf(stderr, "Creating remote device [%s] dbus path...\n", device->addr);
 	
 	DBUSLOG(error);
+	if(!replymsg) return;
 	
 	char *path = NULL;
 	
@@ -383,6 +384,9 @@ void cb_device_found (void *data, DBusMessage *msg) {
 	                      DBUS_TYPE_STRING, &dev_addr, DBUS_TYPE_INVALID);
 	
 	DBUSLOG(error);
+	if(dev_addr) {
+		dev_addr = strdup(dev_addr);
+	} else return;
 	
 	fprintf(stderr, "SIGNAL: DeviceFound --> %s\n", dev_addr);
 	
@@ -394,6 +398,7 @@ void cb_device_found (void *data, DBusMessage *msg) {
 		/* Call  org.bluez.Adapter.CreateDevice xx:xx:xx:xx:xx:xx to get its path */
 		bluez_get_remote_device_path(device);
 	}
+	free(dev_addr);
 	
 }
 
