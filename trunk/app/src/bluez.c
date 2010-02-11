@@ -356,7 +356,7 @@ void bluez_discovery_start() {
 
 /* now connect to signals and send StartDiscovery message */
 
-	DBUSCONN->DeviceFound = e_dbus_signal_handler_add(
+	ADAPTER->DeviceFound = e_dbus_signal_handler_add(
     DBUSCONN->sysconn,
 	"org.bluez",
 	ADAPTER->path,
@@ -365,13 +365,31 @@ void bluez_discovery_start() {
 	cb_device_found,
 	NULL);
 	
-	DBUSCONN->DeviceDissapeared = e_dbus_signal_handler_add(
+	ADAPTER->DeviceDissapeared = e_dbus_signal_handler_add(
 	DBUSCONN->sysconn,
 	"org.bluez", 
 	ADAPTER->path,
 	"org.bluez.Adapter",
 	"DeviceDisappeared",
 	cb_device_disappeared,
+	NULL);
+	
+		ADAPTER->DeviceCreated = e_dbus_signal_handler_add(
+    DBUSCONN->sysconn,
+	"org.bluez",
+	ADAPTER->path,
+	"org.bluez.Adapter",
+	"DeviceCreated",
+	cb_device_created,
+	NULL);
+	
+	ADAPTER->DeviceRemoved = e_dbus_signal_handler_add(
+	DBUSCONN->sysconn,
+	"org.bluez", 
+	ADAPTER->path,
+	"org.bluez.Adapter",
+	"DeviceRemoved",
+	cb_device_removed,
 	NULL);
 	
 	/* send start message */
@@ -392,8 +410,10 @@ void bluez_discovery_start() {
 void bluez_discovery_stop() {
 	
 	/* disconnect from discovery signals, as other apps can be discovering too */
-	e_dbus_signal_handler_del(DBUSCONN->sysconn, DBUSCONN->DeviceFound);
-	e_dbus_signal_handler_del(DBUSCONN->sysconn, DBUSCONN->DeviceDissapeared);
+	e_dbus_signal_handler_del(DBUSCONN->sysconn, ADAPTER->DeviceFound);
+	e_dbus_signal_handler_del(DBUSCONN->sysconn, ADAPTER->DeviceDissapeared);
+	e_dbus_signal_handler_del(DBUSCONN->sysconn, ADAPTER->DeviceCreated);
+	e_dbus_signal_handler_del(DBUSCONN->sysconn, ADAPTER->DeviceRemoved);
 	
 	/* send stop message */
 	DBusMessage *msg;

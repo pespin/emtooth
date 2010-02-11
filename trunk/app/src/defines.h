@@ -90,14 +90,16 @@ typedef struct _LocalDevice {
 	bool pairable;
 	int pairable_timeout;
 	bool powered;
+	E_DBus_Signal_Handler* DeviceFound;
+	E_DBus_Signal_Handler* DeviceDissapeared;
+	E_DBus_Signal_Handler* DeviceCreated;
+	E_DBus_Signal_Handler* DeviceRemoved;
 } LocalDevice;
 
 
 typedef struct _DbusConn {
 	E_DBus_Connection* sysconn;
 	E_DBus_Connection* sessionconn;
-	E_DBus_Signal_Handler* DeviceFound;
-	E_DBus_Signal_Handler* DeviceDissapeared;
 } DbusConn;
 
 
