@@ -28,16 +28,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 /* Auxiliar functions used below: */
+
+ static  int cb_device_found_helper_path(RemoteDevice *s, const char *new_RemoteDevice) {
+	if (!s) return -1;
+	return strcmp(s->path, new_RemoteDevice);
+}
  
- static  int cb_device_found_helper(RemoteDevice *s, const char *new_RemoteDevice) {
+ static  int cb_device_found_helper_addr(RemoteDevice *s, const char *new_RemoteDevice) {
 	if (!s) return -1;
 	return strcmp(s->addr, new_RemoteDevice);
 }
  
- static  int cb_device_found_helper2(Elm_List_Item* s, const char *new_RemoteDevice) {
+ static  int cb_device_found_helper_device(Elm_List_Item* s, const char *new_RemoteDevice) {
 	if (!s) return -1;
 	RemoteDevice* device = (RemoteDevice*) elm_list_item_data_get(s);
-	return cb_device_found_helper(device, new_RemoteDevice);
+	return cb_device_found_helper_addr(device, new_RemoteDevice);
 }
  
 
@@ -297,7 +302,7 @@ void cb_get_remote_device_properties_device (void *data, DBusMessage *replymsg, 
 	
 	/* Now we have all info, append device to device GUI list if necessary */
 	const Eina_List* li = elm_list_items_get(DL->li);
-	li = eina_list_search_unsorted_list(li, (Eina_Compare_Cb)cb_device_found_helper2, device->addr);
+	li = eina_list_search_unsorted_list(li, (Eina_Compare_Cb)cb_device_found_helper_device, device->addr);
 	
 	if(!li) gui_device_list_append(device);
 }
@@ -391,7 +396,7 @@ void cb_device_found (void *data, DBusMessage *msg) {
 	fprintf(stderr, "SIGNAL: DeviceFound --> %s\n", dev_addr);
 	
 	/* see if the RemoteDevice is already in the list before adding */
-	Eina_List* li = eina_list_search_unsorted_list(DL->devices, (Eina_Compare_Cb)cb_device_found_helper, dev_addr);
+	Eina_List* li = eina_list_search_unsorted_list(DL->devices, (Eina_Compare_Cb)cb_device_found_helper_addr, dev_addr);
 	if(!li) {
 		RemoteDevice* device = remote_device_new(dev_addr);
 		DL->devices = eina_list_append(DL->devices, device);
@@ -415,10 +420,10 @@ void cb_device_disappeared (void *data, DBusMessage *msg) {
 	
 	fprintf(stderr, "SIGNAL: DeviceDissapeared --> %s\n", dev_addr);
 	
-	li = eina_list_search_unsorted_list(DL->devices, (Eina_Compare_Cb)cb_device_found_helper, dev_addr);
+	li = eina_list_search_unsorted_list(DL->devices, (Eina_Compare_Cb)cb_device_found_helper_addr, dev_addr);
 	if(li) {
 		RemoteDevice* device = eina_list_data_get(li);
-		fprintf(stderr, "\nRemoving device [%s] from list\n", device->addr);
+		fprintf(stderr, "Removing device [%s] from list\n", device->addr);
 		gui_device_list_remove(device);
 	}
 	
@@ -456,6 +461,34 @@ void cb_property_changed(void *data, DBusMessage *msg) {
 	}
 	
 	struct_dbus_free(ret);
+}
+
+
+
+void cb_device_created(void *data, DBusMessage *msg) {
+	
+	char *path=NULL;
+	DBusError *error=NULL;
+	
+	dbus_message_get_args(msg, error,
+	                      DBUS_TYPE_OBJECT_PATH, &path, DBUS_TYPE_INVALID);
+	
+	DBUSLOG(error);
+	if(path) {
+		path = strdup(path);
+	} else return;
+	
+	fprintf(stderr, "SIGNAL: DeviceCreated --> [%s]\n", path);
+
+	/* see if the RemoteDevice is already in the list before adding */
+/*	Eina_List* li = eina_list_search_unsorted_list(DL->devices, (Eina_Compare_Cb)cb_device_found_helper_path, path);
+	if(!li) {
+		RemoteDevice* device = remote_device_new(dev_addr);
+		DL->devices = eina_list_append(DL->devices, device);
+*/		/* Call  org.bluez.Adapter.CreateDevice xx:xx:xx:xx:xx:xx to get its path */
+/*		bluez_get_remote_device_path(device);
+	}
+*/	free(path);
 }
 
 

@@ -35,5 +35,6 @@ void cb_get_remote_device_properties_audio(void *data, DBusMessage *replymsg, DB
 void cb_device_disappeared(void *data, DBusMessage *msg);
 void cb_device_found(void *data, DBusMessage *msg);
 void cb_property_changed(void *data, DBusMessage *msg);
+void cb_device_created(void *data, DBusMessage *msg);
 void cb_device_removed(void *data, DBusMessage *msg);
 
