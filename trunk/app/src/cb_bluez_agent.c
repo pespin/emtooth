@@ -177,6 +177,8 @@ DBusMessage* bluez_agent_method_Cancel(E_DBus_Object *obj, DBusMessage *msg) {
 	
 	 fprintf(stderr, "AgentCb: Cancel()!\n");
 	 
+	 gui_alert_create("Last action from remote<br>device has been canceled!");
+	 
 	return dbus_message_new_method_return(msg);
 }
 

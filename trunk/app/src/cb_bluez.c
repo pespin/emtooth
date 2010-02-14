@@ -355,9 +355,9 @@ void cb_create_remote_paired_device(void *data, DBusMessage *replymsg, DBusError
 	RemoteDevice* device = (RemoteDevice*) data;
 	
 	DBUSLOG(error);
+	char buf[512];
 	
 	if(!replymsg) {
-		char buf[512];
 		snprintf(buf, 511, "<b>Pairing failed with error:</b><br><br>%s<br>%s", error->name, error->message);
 		gui_alert_create(buf);	
 		return;
@@ -371,7 +371,10 @@ void cb_create_remote_paired_device(void *data, DBusMessage *replymsg, DBusError
 	DBUSLOG(error);
 
 	//device->path = strdup(path);
-	fprintf(stderr, "Paired to device [%s] successfully!\n", path); 
+	fprintf(stderr, "Paired to device [%s] successfully!\n", path);
+	
+	sprintf(buf, "Paired to device %s successfully!\n", device->addr);
+	gui_alert_create(buf);
 
 }
 
