@@ -37,7 +37,8 @@ void bluez_get_remote_device_properties_device(RemoteDevice* device);
 void bluez_get_remote_device_properties_input(RemoteDevice* device);
 void bluez_get_remote_device_properties_audio(RemoteDevice* device);
 
-bool bluez_remote_device_has_input_services(RemoteDevice* device);
+bool bluez_remote_device_has_service_input(RemoteDevice* device);
+bool bluez_remote_device_has_service_audio(RemoteDevice* device);
 
 void bluez_remote_device_input_connect(RemoteDevice* device);
 void bluez_remote_device_input_disconnect(RemoteDevice* device);
