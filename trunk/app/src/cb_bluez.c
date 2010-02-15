@@ -140,10 +140,10 @@ void cb_create_remote_device_path (void *data, DBusMessage *replymsg, DBusError 
 
 	RemoteDevice* device = (RemoteDevice*) data;
 	
-	fprintf(stderr, "Creating remote device [%s] dbus path...\n", device->addr);
-	
 	DBUSLOG(error);
 	if(!replymsg) return;
+	
+	fprintf(stderr, "Creating remote device [%s] dbus path...\n", device->addr);
 	
 	char *path = NULL;
 	

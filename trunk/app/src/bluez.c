@@ -142,9 +142,11 @@ void bluez_get_local_device_info() {
 void bluez_get_remote_device_info(RemoteDevice* device) {
 
 	bluez_get_remote_device_properties_device(device);
-	bluez_get_remote_device_properties_audio(device);
 	
-	if(bluez_remote_device_has_input_services(device))
+	if(bluez_remote_device_has_service_audio(device))
+		bluez_get_remote_device_properties_audio(device);
+	
+	if(bluez_remote_device_has_service_input(device))
 		bluez_get_remote_device_properties_input(device);
 	
 }
@@ -190,7 +192,7 @@ void bluez_get_remote_device_properties_audio(RemoteDevice* device) {
 	
 }
 
-bool bluez_remote_device_has_input_services(RemoteDevice* device) {
+bool bluez_remote_device_has_service_input(RemoteDevice* device) {
 	
 	if(!device->UUIDs) { 
 	/* This can happen when discovering a device, since we first 
@@ -202,6 +204,33 @@ bool bluez_remote_device_has_input_services(RemoteDevice* device) {
 	int i = 0;
 	while(device->UUIDs[i] != NULL) {
 		if(!strcmp(device->UUIDs[i], HID_UUID)) return TRUE;
+		i++;
+	}
+	return FALSE;
+}
+
+bool bluez_remote_device_has_service_audio(RemoteDevice* device) {
+	
+	if(!device->UUIDs) { 
+	/* This can happen when discovering a device, since we first 
+	 * need to fetch data from Device iface to have UUIDs list*/
+		fprintf(stderr, "UUIDs list for device [%s] is not set, waiting" \
+		 " to display Audio info...\n", device->addr);
+		return FALSE;
+	}
+	int i = 0;
+	while(device->UUIDs[i] != NULL) {
+		if(!strcmp(device->UUIDs[i], HSP_HS_UUID) || 
+			!strcmp(device->UUIDs[i], HSP_AG_UUID) ||
+			!strcmp(device->UUIDs[i], HFP_HS_UUID) ||
+			!strcmp(device->UUIDs[i], HFP_AG_UUID) ||
+			!strcmp(device->UUIDs[i], A2DP_SOURCE_UUID) ||
+			!strcmp(device->UUIDs[i], A2DP_SINK_UUID) ||
+			!strcmp(device->UUIDs[i], AVRCP_TARGET_UUID)
+		) {
+			return TRUE;
+		}
+
 		i++;
 	}
 	return FALSE;
@@ -274,7 +303,6 @@ void bluez_remote_device_attach_signals(RemoteDevice* device) {
 	cb_property_changed,
 	device);
 	
-	if(bluez_remote_device_has_input_services(device)) {
 		device->signal_PropertyChanged_input =
 		e_dbus_signal_handler_add(
 		DBUSCONN->sysconn,
@@ -284,7 +312,7 @@ void bluez_remote_device_attach_signals(RemoteDevice* device) {
 		"PropertyChanged",
 		cb_property_changed,
 		device);
-	}
+	
 	
 	//Connect to PropertyChanged signal:
 	device->signal_PropertyChanged_audio = 
