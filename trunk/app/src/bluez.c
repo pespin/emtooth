@@ -203,7 +203,7 @@ bool bluez_remote_device_has_service_input(RemoteDevice* device) {
 	}
 	int i = 0;
 	while(device->UUIDs[i] != NULL) {
-		if(!strcmp(device->UUIDs[i], HID_UUID)) return TRUE;
+		if(!strcasecmp(device->UUIDs[i], HID_UUID)) return TRUE;
 		i++;
 	}
 	return FALSE;
@@ -220,13 +220,13 @@ bool bluez_remote_device_has_service_audio(RemoteDevice* device) {
 	}
 	int i = 0;
 	while(device->UUIDs[i] != NULL) {
-		if(!strcmp(device->UUIDs[i], HSP_HS_UUID) || 
-			!strcmp(device->UUIDs[i], HSP_AG_UUID) ||
-			!strcmp(device->UUIDs[i], HFP_HS_UUID) ||
-			!strcmp(device->UUIDs[i], HFP_AG_UUID) ||
-			!strcmp(device->UUIDs[i], A2DP_SOURCE_UUID) ||
-			!strcmp(device->UUIDs[i], A2DP_SINK_UUID) ||
-			!strcmp(device->UUIDs[i], AVRCP_TARGET_UUID)
+		if(!strcasecmp(device->UUIDs[i], HSP_HS_UUID) || 
+			!strcasecmp(device->UUIDs[i], HSP_AG_UUID) ||
+			!strcasecmp(device->UUIDs[i], HFP_HS_UUID) ||
+			!strcasecmp(device->UUIDs[i], HFP_AG_UUID) ||
+			!strcasecmp(device->UUIDs[i], A2DP_SOURCE_UUID) ||
+			!strcasecmp(device->UUIDs[i], A2DP_SINK_UUID) ||
+			!strcasecmp(device->UUIDs[i], AVRCP_TARGET_UUID)
 		) {
 			return TRUE;
 		}
