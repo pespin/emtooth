@@ -28,7 +28,7 @@ void bluez_get_remote_device_path(RemoteDevice* device);
 void bluez_create_remote_device_path(RemoteDevice* device);
 
 void bluez_create_remote_paired_device(RemoteDevice* device);
-void bluez_remove_remote_device(RemoteDevice* device);
+void bluez_adapter_remove_remote_device(RemoteDevice* device);
 
 void bluez_get_local_device_info();
 void bluez_get_remote_device_info(RemoteDevice* device);
@@ -47,7 +47,6 @@ void bluez_remote_device_audio_connect(RemoteDevice* device);
 void bluez_remote_device_audio_disconnect(RemoteDevice* device);
 
 void bluez_remote_device_attach_signals(RemoteDevice* device);
-void bluez_remote_device_remove(RemoteDevice* device);
 
 void bluez_register_agent(const char *capabilities);
 
