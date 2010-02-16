@@ -421,8 +421,10 @@ void cb_device_disappeared (void *data, DBusMessage *msg) {
 	li = eina_list_search_unsorted_list(DL->devices, (Eina_Compare_Cb)cb_device_found_helper_addr, dev_addr);
 	if(li) {
 		RemoteDevice* device = eina_list_data_get(li);
-		fprintf(stderr, "Removing device [%s] from list\n", device->addr);
-		gui_device_list_remove(device);
+		if(!device->paired) {
+			fprintf(stderr, "Removing device [%s] from list\n", device->addr);
+			gui_device_list_remove(device);
+		}
 	}
 	
 }
