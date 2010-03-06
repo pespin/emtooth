@@ -14,35 +14,30 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Stre et, Fifth Floor, Boston, MA  02110-1301, USA.
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+
+
+
 #include <E_DBus.h>
-#include "cb_dbus.h"
-#include "cb_obex.h"
-#include "obex.h"
+#include <stdio.h>
+#include "defines.h"
 
+DBusMessage* obex_agent_method_Authorize(E_DBus_Object *obj, DBusMessage *msg) {
 
-void obex_register_agent() {
 	
-	fprintf(stderr, "Registering obex agent...\n");
+	fprintf(stderr, "AgentCb: Authorization method !!!!\n");
+	return dbus_message_new_method_return(msg);
+}
+
+
+
+DBusMessage* obex_agent_method_Cancel(E_DBus_Object *obj, DBusMessage *msg) {
 	
-	DBusMessage *msg;
-
-	msg = dbus_message_new_method_call(
-	"org.openobex", 
-	"/",
-	"org.openobex.Manager", 
-	"RegisterAgent");
-
-	char* tmp = strdup(OBEX_AGENT_PATH);
-	dbus_message_append_args(msg, 
-					DBUS_TYPE_OBJECT_PATH, &tmp,
-					DBUS_TYPE_INVALID);
-	free(tmp);			
-				
-	e_dbus_message_send(DBUSCONN->sessionconn, msg, cb_dbus_generic, -1, NULL);
-
-	dbus_message_unref(msg);
-
+	 fprintf(stderr, "AgentCb: Cancel()!\n");
+	 
+	 gui_alert_create("Last action from remote<br>device has been canceled!");
+	 
+	return dbus_message_new_method_return(msg);
 }

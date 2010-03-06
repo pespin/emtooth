@@ -14,35 +14,39 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Stre et, Fifth Floor, Boston, MA  02110-1301, USA.
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+
+#include <stdio.h>
 #include <E_DBus.h>
 #include "cb_dbus.h"
-#include "cb_obex.h"
-#include "obex.h"
+#include "obex_agent.h"
+#include "cb_obex_agent.h"
 
-
-void obex_register_agent() {
+void obex_agent_create() {
 	
-	fprintf(stderr, "Registering obex agent...\n");
+	fprintf(stderr, "Creating obex agent [%s]...\n", OBEX_AGENT_PATH);
 	
-	DBusMessage *msg;
+	E_DBus_Object* obj;
+	E_DBus_Interface* iface;
+	
+	
+	obj = e_dbus_object_add(DBUSCONN->sessionconn, "/org/emtooth/mehe", NULL);
+	iface = e_dbus_interface_new("org.mehe");
+	if(!iface || !obj) {
+		fprintf(stderr, "ERROR: obex agent creation: iface or obj == NULL\n");
+		return;
+	}
+	
+	e_dbus_object_interface_attach(obj, iface);
+	
+	
+	e_dbus_interface_method_add(iface, "Authorize",
+	 "osssuu", "s", obex_agent_method_Authorize);
+	 
+	e_dbus_interface_method_add(iface, "Cancel",
+	 "", "", obex_agent_method_Cancel);
 
-	msg = dbus_message_new_method_call(
-	"org.openobex", 
-	"/",
-	"org.openobex.Manager", 
-	"RegisterAgent");
-
-	char* tmp = strdup(OBEX_AGENT_PATH);
-	dbus_message_append_args(msg, 
-					DBUS_TYPE_OBJECT_PATH, &tmp,
-					DBUS_TYPE_INVALID);
-	free(tmp);			
-				
-	e_dbus_message_send(DBUSCONN->sessionconn, msg, cb_dbus_generic, -1, NULL);
-
-	dbus_message_unref(msg);
-
+	obex_register_agent();
 }

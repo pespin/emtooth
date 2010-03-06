@@ -32,9 +32,9 @@ void bluez_agent_create() {
 	
 	
 	obj = e_dbus_object_add(DBUSCONN->sysconn, BLUEZ_AGENT_PATH, NULL);
-	iface = e_dbus_interface_new("org.bluez.Agent");
+	iface = e_dbus_interface_new(BLUEZ_AGENT_IFACE);
 	if(!iface || !obj) {
-		fprintf(stderr, "ERROR: bluez agent creation: iface or obj == NULL\n", BLUEZ_AGENT_PATH);
+		fprintf(stderr, "ERROR: bluez agent creation: iface or obj == NULL\n");
 		return;
 	}
 	
