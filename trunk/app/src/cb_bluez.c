@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "gui.h"
 #include "cb_bluez.h"
 #include "dbus.h"
+#include "obex_agent.h"
 
 
 
@@ -91,6 +92,7 @@ void cb_get_default_adapter(void *data, DBusMessage *replymsg, DBusError *error)
 	get local device info, register agent and start signals on that interface: */
 	
 	bluez_agent_create();
+	obex_agent_create();
 
 	bluez_get_local_device_info();
 	bluez_discovery_start();

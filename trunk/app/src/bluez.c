@@ -338,13 +338,15 @@ void bluez_register_agent(const char *capabilities) {
 	"org.bluez.Adapter", 
 	"RegisterAgent");
 
+	char* tmp = strdup(BLUEZ_AGENT_PATH);
 	dbus_message_append_args(msg, 
-					DBUS_TYPE_OBJECT_PATH, &BLUEZ_AGENT_PATH,
+					DBUS_TYPE_OBJECT_PATH, &tmp,
 					DBUS_TYPE_STRING, &capabilities,
 					DBUS_TYPE_INVALID);
-				
+	free(tmp);
+	
 	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_dbus_generic, -1, NULL);
-
+	
 	dbus_message_unref(msg);
 
 }

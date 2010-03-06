@@ -19,6 +19,8 @@ emtooth_SOURCES = \
 	src/cb_gui.h \
 	src/cb_obex.c \
 	src/cb_obex.h \
+	src/cb_obex_agent.c \
+	src/cb_obex_agent.h \
 	src/bluez.c \
 	src/bluez.h \
 	src/bluez_agent.c \
@@ -30,7 +32,9 @@ emtooth_SOURCES = \
 	src/gui.c \
 	src/gui.h \
 	src/obex.c \
-	src/obex.h
+	src/obex.h \
+	src/obex_agent.c \
+	src/obex_agent.h
 emtooth_LDADD = @ELEMENTARY_LIBS@
 emtooth_CFLAGS =
 

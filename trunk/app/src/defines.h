@@ -24,17 +24,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 /* defines */
 
+#define BLUEZ_AGENT_PATH 	"/org/emtooth/bluez/agent"
+#define BLUEZ_AGENT_IFACE	"org.bluez.Agent"
+
+#define OBEX_AGENT_PATH 	"/org/emtooth/obex/agent"
+#define OBEX_AGENT_IFACE	"org.obex.Agent"
+
+
 //Input:
-#define HID_UUID	"00001124-0000-1000-8000-00805f9b34fb"
+#define HID_UUID			"00001124-0000-1000-8000-00805f9b34fb"
 
 //Audio:
-#define HSP_HS_UUID		"00001108-0000-1000-8000-00805f9b34fb"
-#define HSP_AG_UUID		"00001112-0000-1000-8000-00805f9b34fb"
-#define HFP_HS_UUID		"0000111e-0000-1000-8000-00805f9b34fb"
-#define HFP_AG_UUID		"0000111f-0000-1000-8000-00805f9b34fb"
+#define HSP_HS_UUID			"00001108-0000-1000-8000-00805f9b34fb"
+#define HSP_AG_UUID			"00001112-0000-1000-8000-00805f9b34fb"
+#define HFP_HS_UUID			"0000111e-0000-1000-8000-00805f9b34fb"
+#define HFP_AG_UUID			"0000111f-0000-1000-8000-00805f9b34fb"
 #define A2DP_SOURCE_UUID	"0000110a-0000-1000-8000-00805f9b34fb"
 #define A2DP_SINK_UUID		"0000110b-0000-1000-8000-00805f9b34fb"
-#define AVRCP_TARGET_UUID "0000110c-0000-1000-8000-00805f9b34fb"
+#define AVRCP_TARGET_UUID 	"0000110c-0000-1000-8000-00805f9b34fb"
 		
 
 #define DBUSLOG(error) if (error && dbus_error_is_set(error)) fprintf(stderr, "Error: %s - %s\n", error->name, error->message);
@@ -142,10 +149,6 @@ int bluez_error_counter; //times tried to acces bluez (while fso still loading)
 LocalDevice* ADAPTER;
 DbusConn* DBUSCONN;
 DeviceList* DL;
-
-char* BLUEZ_AGENT_PATH;
-
-
 
 /* misc functions in defines.c */
 GuiCb* init_cb_struct(const char* property, const char* path, const char* iface);
