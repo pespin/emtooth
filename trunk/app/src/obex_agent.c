@@ -32,8 +32,8 @@ void obex_agent_create() {
 	E_DBus_Interface* iface;
 	
 	
-	obj = e_dbus_object_add(DBUSCONN->sessionconn, "/org/emtooth/mehe", NULL);
-	iface = e_dbus_interface_new("org.mehe");
+	obj = e_dbus_object_add(DBUSCONN->sessionconn, OBEX_AGENT_PATH, NULL);
+	iface = e_dbus_interface_new(OBEX_AGENT_IFACE);
 	if(!iface || !obj) {
 		fprintf(stderr, "ERROR: obex agent creation: iface or obj == NULL\n");
 		return;
