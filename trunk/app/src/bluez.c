@@ -326,6 +326,20 @@ void bluez_remote_device_attach_signals(RemoteDevice* device) {
 	device);
 }
 
+int bluez_remote_device_list_count() {
+	
+	RemoteDevice* device;
+	Eina_List* cur;
+	
+	int n = 0;
+	EINA_LIST_FOREACH(DL->devices, cur, device) {
+		if(device->valid) n++;
+	}
+	
+	return n;
+}
+
+
 void bluez_register_agent(const char *capabilities) {
 	
 	fprintf(stderr, "Registering bluez agent...\n");

@@ -61,7 +61,7 @@ void cb_discovery_stop_clicked(void *data, Evas_Object *obj, void *event_info) {
 	elm_box_pack_start(Cb->parent, Cb->obj);
 	evas_object_show(Cb->obj);
 	
-	sprintf(buf, "%d Devices Found:", eina_list_count(DL->devices));
+	sprintf(buf, "%d Devices Found:", bluez_remote_device_list_count());
 	elm_label_label_set(DL->header, buf);
 	
 	bluez_discovery_stop();
