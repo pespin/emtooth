@@ -48,6 +48,8 @@ void bluez_remote_device_audio_disconnect(RemoteDevice* device);
 
 void bluez_remote_device_attach_signals(RemoteDevice* device);
 
+int bluez_remote_device_list_count();
+
 void bluez_register_agent(const char *capabilities);
 
 void bluez_discovery_start();
