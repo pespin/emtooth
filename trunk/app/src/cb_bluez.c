@@ -91,9 +91,10 @@ void cb_get_default_adapter(void *data, DBusMessage *replymsg, DBusError *error)
 	/* Now we have adapter path,
 	get local device info, register agent and start signals on that interface: */
 	
-	bluez_agent_create();
 	obex_agent_create();
-
+	obex_manager_attach_signals();
+	
+	bluez_agent_create();
 	bluez_get_local_device_info();
 	bluez_discovery_start();
 }

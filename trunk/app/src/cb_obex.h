@@ -16,3 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+
+
+/* signals */
+
+void cb_obex_manager_SessionCreated(void *data, DBusMessage *msg);
+
+void cb_obex_manager_SessionRemoved(void *data, DBusMessage *msg);
+
+void cb_obex_manager_TransferStarted(void *data, DBusMessage *msg);
+
+void cb_obex_manager_TransferCompleted(void *data, DBusMessage *msg);
+
+
