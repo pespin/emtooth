@@ -20,6 +20,8 @@ Foundation, Inc., 51 Franklin Stre et, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <E_DBus.h>
 #include "cb_dbus.h"
 #include "cb_obex.h"
+#include "dbus.h"
+#include "defines.h"
 #include "obex.h"
 
 
@@ -88,3 +90,37 @@ void obex_manager_attach_signals() {
 		
 }
 
+
+/* client */
+
+void obex_client_SendFiles(RemoteDevice* device, const char** files_array) {
+	
+	DBusMessageIter iter, sub;
+	
+	DBusMessage *msg;
+	msg = dbus_message_new_method_call(
+		"org.openobex.client",
+		"/",
+		"org.openobex.Client",
+		"SendFiles");
+	
+	//start with args:
+	dbus_message_iter_init_append(msg, &iter); 	
+	
+	DbusReturn ret;
+	ret.value_string = device->addr;
+	dbus_append_pair_to_dict(&iter, "Destination", DBUS_TYPE_STRING, ret);
+	
+	//TODO: implement this:
+	dbus_message_iter_append_array(&iter, files_array);
+	
+	dbus_message_append_args (msg,
+	DBUS_TYPE_STRING, OBEX_AGENT_PATH,
+	DBUS_TYPE_INVALID);
+
+	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_dbus_generic, -1, NULL);
+	dbus_message_unref(msg);
+	
+	//array_free(files_array);
+	
+}
