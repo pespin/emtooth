@@ -176,6 +176,23 @@ void cb_toggle_audio_connect(void *data, Evas_Object *obj, void *event_info) {
 	
 }
 
+void cb_send_files_clicked(void *data, Evas_Object *obj, void *event_info) {
+	RemoteDevice* device = (RemoteDevice*) data;
+	
+	/*TODO: here show a FileManager to get files. */
+	/*ATM: hardcoded */
+	int max = 4; //max 4 files atm
+	char** array = (char**) malloc(sizeof(char*)*max);
+	
+	int i;
+	for(i=0; i<max; i++) array[i] = NULL;
+	array[0] = strdup("/home/pespin/file.txt");
+	array[1] = strdup("/tmp/file.txt");
+	
+	obex_client_SendFiles(device, array);
+	array_free(array);
+}
+
 void cb_remove_device_clicked(void *data, Evas_Object *obj, void *event_info) {
 	 
 	RemoteDevice* device = (RemoteDevice*) data;

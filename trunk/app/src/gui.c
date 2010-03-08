@@ -672,6 +672,16 @@ void gui_remote_device_info_create(RemoteDevice* device) {
 										device);
 	}	
 	
+	//add SendFiles button.
+	bt = elm_button_add(win);
+	elm_button_label_set(bt, "Send Files [NOT IMPLEMENTED]");
+	evas_object_size_hint_weight_set(bt, 0, 0);
+	evas_object_size_hint_align_set(bt, -1.0, -1.0);
+	elm_box_pack_end(vbox_in, bt);
+	evas_object_show(bt);
+	evas_object_smart_callback_add(bt, "clicked", cb_send_files_clicked, device);
+		
+	
 	//add Remove Button
 	bt = elm_button_add(win);
 	elm_button_label_set(bt, "Reset/Remove Device");
