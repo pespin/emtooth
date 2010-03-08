@@ -164,19 +164,21 @@ void dbus_message_iter_append_array(DBusMessageIter* array_iter, const char** ar
 	
 	DBusMessageIter sub;
 	
-	//char* buf = malloc(64);
-	//sprintf(buf, "%c", value_type);
+	char* buf = malloc(64);
+	sprintf(buf, "%c", DBUS_TYPE_STRING);
 	
 	dbus_message_iter_open_container(array_iter,
 		DBUS_TYPE_ARRAY,
-		"s",
+		buf,
 		&sub);
 		
 	int i = 0;
 	while(array[i]!=NULL) {
-		dbus_message_iter_append_basic(&sub, DBUS_TYPE_ARRAY, array[i]);
+		fprintf(stderr, "MEHEEEE[%d]\n", i);
+		dbus_message_iter_append_basic(&sub, DBUS_TYPE_STRING, &array[i]);
+		i++;
 	}
-	
+			fprintf(stderr, "MEHEEEE OUT OF BUCLE\n", i);
 	dbus_message_iter_close_container(array_iter, &sub); 	
 	
 }

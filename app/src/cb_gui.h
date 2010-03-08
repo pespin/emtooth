@@ -38,6 +38,7 @@ void cb_toggle_value_changed(void *data, Evas_Object *obj, void *event_info);
 void cb_remote_paired_changed(void *data, Evas_Object *obj, void *event_info);
 void cb_toggle_input_connect(void *data, Evas_Object *obj, void *event_info);
 void cb_toggle_audio_connect(void *data, Evas_Object *obj, void *event_info);
+void cb_send_files_clicked(void *data, Evas_Object *obj, void *event_info);
 void cb_remove_device_clicked(void *data, Evas_Object *obj, void *event_info);
 
 void cb_request_pin(void *data, Evas_Object *obj, void *event_info);

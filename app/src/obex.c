@@ -113,14 +113,17 @@ void obex_client_SendFiles(RemoteDevice* device, const char** files_array) {
 	
 	//TODO: implement this:
 	dbus_message_iter_append_array(&iter, files_array);
+	fprintf(stderr, "FINISHED appending array\n");
 	
+	char* tmp = strdup(OBEX_AGENT_PATH);
 	dbus_message_append_args (msg,
-	DBUS_TYPE_STRING, OBEX_AGENT_PATH,
+	DBUS_TYPE_STRING, &tmp,
 	DBUS_TYPE_INVALID);
+	free(tmp);
+	
+		fprintf(stderr, "FINISHED appending all args\n");
 
 	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_dbus_generic, -1, NULL);
 	dbus_message_unref(msg);
-	
-	//array_free(files_array);
 	
 }
