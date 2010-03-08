@@ -19,3 +19,5 @@ Foundation, Inc., 51 Franklin Stre et, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 void obex_register_agent();
+
+void obex_manager_attach_signals();

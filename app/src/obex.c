@@ -46,3 +46,45 @@ void obex_register_agent() {
 	dbus_message_unref(msg);
 
 }
+
+
+void obex_manager_attach_signals() {
+	
+	e_dbus_signal_handler_add(
+	DBUSCONN->sessionconn,
+	"org.openobex", 
+	"/",
+	"org.openobex.Manager",
+	"SessionCreated",
+	cb_obex_manager_SessionCreated,
+	NULL);
+	
+	e_dbus_signal_handler_add(
+    DBUSCONN->sessionconn,
+	"org.openobex",
+	"/",
+	"org.openobex.Manager",
+	"SessionRemoved",
+	cb_obex_manager_SessionRemoved,
+	NULL);
+	
+	e_dbus_signal_handler_add(
+	DBUSCONN->sessionconn,
+	"org.openobex", 
+	"/",
+	"org.openobex.Manager",
+	"TransferStarted",
+	cb_obex_manager_TransferStarted,
+	NULL);
+	
+	e_dbus_signal_handler_add(
+    DBUSCONN->sessionconn,
+	"org.openobex",
+	"/",
+	"org.openobex.Manager",
+	"TransferCompleted",
+	cb_obex_manager_TransferCompleted,
+	NULL);
+		
+}
+
