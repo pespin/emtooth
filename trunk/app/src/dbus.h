@@ -29,6 +29,7 @@ StructDbus* dbus_message_get_dict_pair(DBusMessage *msg);
 
 int dbus_message_iter_get_array_size(DBusMessageIter* array_iter);
 char** dbus_message_iter_get_array(DBusMessageIter* array_iter, int size);
+void dbus_message_iter_append_array(DBusMessageIter* array_iter, const char** array);
 
 StructDbus* dbus_get_next_struct_in_dict(DBusMessageIter *dict_iter);
 void dbus_message_get_variant(DBusMessageIter* iter, StructDbus* ret);

@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define BLUEZ_AGENT_IFACE	"org.bluez.Agent"
 
 #define OBEX_AGENT_PATH 	"/org/emtooth/obex/agent"
-#define OBEX_AGENT_IFACE	"org.obex.Agent"
+#define OBEX_AGENT_IFACE	"org.openobex.Agent"
 
 
 //Input:

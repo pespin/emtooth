@@ -157,6 +157,31 @@ char** dbus_message_iter_get_array(DBusMessageIter* array_iter, int size) {
 }
 
 
+void dbus_message_iter_append_array(DBusMessageIter* array_iter, const char** array) {
+	
+	/* TODO: TO BE DONE! */
+	fprintf(stderr, "dbus_message_iter_append_array() still not coded!!!\n");
+	
+	DBusMessageIter sub;
+	
+	//char* buf = malloc(64);
+	//sprintf(buf, "%c", value_type);
+	
+	dbus_message_iter_open_container(array_iter,
+		DBUS_TYPE_ARRAY,
+		"s",
+		&sub);
+		
+	int i = 0;
+	while(array[i]!=NULL) {
+		dbus_message_iter_append_basic(&sub, DBUS_TYPE_ARRAY, array[i]);
+	}
+	
+	dbus_message_iter_close_container(array_iter, &sub); 	
+	
+}
+
+
 void dbus_message_get_variant(DBusMessageIter* iter, StructDbus* ret) {
 	
 	DBusMessageIter value_iter;
