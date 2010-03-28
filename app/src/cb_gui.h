@@ -42,3 +42,5 @@ void cb_send_files_clicked(void *data, Evas_Object *obj, void *event_info);
 void cb_remove_device_clicked(void *data, Evas_Object *obj, void *event_info);
 
 void cb_request_pin(void *data, Evas_Object *obj, void *event_info);
+
+void cb_fileselector_send_file(void *data, Evas_Object *obj, void *event_info);

@@ -177,20 +177,7 @@ void cb_toggle_audio_connect(void *data, Evas_Object *obj, void *event_info) {
 }
 
 void cb_send_files_clicked(void *data, Evas_Object *obj, void *event_info) {
-	RemoteDevice* device = (RemoteDevice*) data;
-	
-	/*TODO: here show a FileManager to get files. */
-	/*ATM: hardcoded */
-	int max = 4; //max 4 files atm
-	char** array = (char**) malloc(sizeof(char*)*max);
-	
-	int i;
-	for(i=0; i<max; i++) array[i] = NULL;
-	array[0] = strdup("/home/pespin/file.txt");
-	array[1] = strdup("/tmp/file.txt");
-	
-	obex_client_SendFiles(device, array);
-	array_free(array);
+	gui_request_file_path_create(data, cb_fileselector_send_file);
 }
 
 void cb_remove_device_clicked(void *data, Evas_Object *obj, void *event_info) {
@@ -211,4 +198,28 @@ void cb_request_pin(void *data, Evas_Object *obj, void *event_info) {
 	Dialog->device->password = strdup(elm_entry_entry_get(Dialog->entry));
 	evas_object_del(Dialog->win);
 	free(Dialog);
+}
+
+
+
+void cb_fileselector_send_file(void *data, Evas_Object *obj, void *event_info) {
+	   /* event_info conatin the full path of the selected file
+    * or NULL if none is selected or cancel is pressed */
+   const char *selected = event_info;
+  
+	Evas_Object* parent = elm_object_parent_widget_get(obj); //vbox
+	parent = parent = elm_object_parent_widget_get(parent);
+	evas_object_del(parent);
+	
+   if (selected) {
+		fprintf(stderr,"Selected file: %s\n", selected);
+
+		char** array = (char**) malloc(sizeof(char*)*2);
+		
+		array[0] = strdup(selected);
+		array[1] = NULL;
+		
+		obex_client_SendFiles(data, array);
+		array_free(array);
+	}	
 }
