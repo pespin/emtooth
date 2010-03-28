@@ -780,9 +780,11 @@ void gui_request_pin_create(RemoteDevice* device)
 	elm_win_inwin_content_set(inwin, vbox);
 	evas_object_show(vbox);
 	
-	snprintf(buf, 254, "Set the password for device %s and press the button below to proceed:", device->addr);
+	snprintf(buf, 254, "Set the password for device %s<br>and press the button below to proceed:", device->addr);
 	lb = elm_label_add(win);
 	elm_label_label_set(lb, buf);
+	evas_object_size_hint_weight_set(bt1, 1.0, 1.0);
+	evas_object_size_hint_align_set(bt1, -1.0, -1.0);
 	elm_box_pack_end(vbox, lb);
 	evas_object_show(lb);
 	
@@ -806,7 +808,6 @@ void gui_request_pin_create(RemoteDevice* device)
 	cb->win = win;
 	evas_object_smart_callback_add(bt1, "clicked", cb_request_pin, cb);
 	
-	evas_object_resize(win, 320, 240);
 	evas_object_show(win);
 }
 
@@ -836,7 +837,6 @@ void gui_alert_create(const char *message)
 	elm_label_label_set(lb,message);
 	evas_object_size_hint_weight_set(bt1, 1.0, 1.0);
 	evas_object_size_hint_align_set(bt1, -1.0, -1.0);
-
 	elm_box_pack_end(vbox, lb);
 	evas_object_show(lb);
 	
