@@ -91,7 +91,7 @@ void cb_toggle_value_changed(void *data, Evas_Object *obj, void *event_info) {
 	
 	GuiCb* cb = (GuiCb*) data;
 	
-	StructDbus* info = malloc(sizeof(StructDbus));
+	DictEntry* info = malloc(sizeof(DictEntry));
 	
 	info->key = cb->property;
 	info->value_type=DBUS_TYPE_BOOLEAN;
@@ -107,7 +107,7 @@ void cb_entry_value_integer_changed(void *data, Evas_Object *obj, void *event_in
 	
 	GuiCb* cb = (GuiCb*) data;
 	
-	StructDbus* info = malloc(sizeof(StructDbus));
+	DictEntry* info = malloc(sizeof(DictEntry));
 	
 	info->key = cb->property;
 	info->value_type=DBUS_TYPE_UINT32;
@@ -122,7 +122,7 @@ void cb_entry_value_string_changed(void *data, Evas_Object *obj, void *event_inf
 	
 	GuiCb* cb = (GuiCb*) data;
 	
-	StructDbus* info = (StructDbus*) malloc(sizeof(StructDbus));
+	DictEntry* info = (DictEntry*) malloc(sizeof(DictEntry));
 	
 	info->key = cb->property;
 	info->value_type=DBUS_TYPE_STRING;

@@ -96,7 +96,7 @@ bool remote_device_free(RemoteDevice* device) {
 }
 
 
-bool struct_dbus_free(StructDbus* ret) {
+bool dict_entry_free(DictEntry* ret) {
 	if(!ret) return FALSE;
 	
 	free(ret->key);

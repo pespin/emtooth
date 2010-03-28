@@ -112,7 +112,7 @@ void obex_client_SendFiles(RemoteDevice* device, const char** files_array) {
 	/* 1s arg: a{sv} */
 	dbus_message_iter_open_container(&iter,
 		DBUS_TYPE_ARRAY,
-		DBUS_TYPE_DICT_ENTRY_AS_STRING, //"{sv}"
+		"{sv}",
 		&sub);
 	dbus_message_iter_open_container(&sub,
 		DBUS_TYPE_DICT_ENTRY,

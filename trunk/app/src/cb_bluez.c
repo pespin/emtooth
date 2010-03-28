@@ -185,7 +185,7 @@ void cb_get_local_device_info (void *data, DBusMessage *replymsg, DBusError *err
 	dbus_message_iter_init(replymsg, &array_iter);
 	dbus_message_iter_recurse(&array_iter, &dict_iter);
 	
-	StructDbus* ret;
+	DictEntry* ret;
 	int type = dbus_message_iter_get_arg_type (&dict_iter);
 	
 	//foreach pair...:
@@ -250,7 +250,7 @@ void cb_get_remote_device_properties_device (void *data, DBusMessage *replymsg, 
 	dbus_message_iter_init(replymsg, &array_iter);
 	dbus_message_iter_recurse(&array_iter, &dict_iter);
 	
-	StructDbus* ret;
+	DictEntry* ret;
 	int type = dbus_message_iter_get_arg_type (&dict_iter);
 	
 	bool can_free = TRUE; //used for dynamic types as strings and arrays
@@ -319,11 +319,11 @@ void cb_get_remote_device_properties_input(void *data, DBusMessage *replymsg, DB
 	dbus_message_iter_init(replymsg, &array_iter);
 	dbus_message_iter_recurse(&array_iter, &dict_iter);
 	dbus_message_iter_recurse(&dict_iter, &key_iter);
-	StructDbus* ret = dbus_message_iter_get_dict_pair(&key_iter);
+	DictEntry* ret = dbus_message_iter_get_dict_pair(&key_iter);
 	
 	device->connected_input = ret->value.value_int;
 	
-	struct_dbus_free(ret);
+	dict_entry_free(ret);
 }
 
 
@@ -341,7 +341,7 @@ void cb_get_remote_device_properties_audio(void *data, DBusMessage *replymsg, DB
 	dbus_message_iter_init(replymsg, &array_iter);
 	dbus_message_iter_recurse(&array_iter, &dict_iter);
 	dbus_message_iter_recurse(&dict_iter, &key_iter);
-	StructDbus* ret = dbus_message_iter_get_dict_pair(&key_iter);
+	DictEntry* ret = dbus_message_iter_get_dict_pair(&key_iter);
 	
 	if(!strcmp(ret->value.value_string, "connected")) {
 		device->connected_audio = TRUE;
@@ -349,7 +349,7 @@ void cb_get_remote_device_properties_audio(void *data, DBusMessage *replymsg, DB
 		device->connected_audio = FALSE;
 	}
 	
-	struct_dbus_free(ret);
+	dict_entry_free(ret);
 }
 
 
@@ -434,7 +434,7 @@ void cb_device_disappeared (void *data, DBusMessage *msg) {
 
 void cb_property_changed(void *data, DBusMessage *msg) {
 	
-	StructDbus* ret = dbus_message_get_dict_pair(msg);
+	DictEntry* ret = dbus_message_get_dict_pair(msg);
 	
 	const char* iface = dbus_message_get_interface (msg);
 	
@@ -463,7 +463,7 @@ void cb_property_changed(void *data, DBusMessage *msg) {
 		}
 	}
 	
-	struct_dbus_free(ret);
+	dict_entry_free(ret);
 }
 
 

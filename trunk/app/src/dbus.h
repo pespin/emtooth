@@ -22,18 +22,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 void dbus_init_session();
 
-void dbus_dict_pair_debug(StructDbus* ret);
+void dbus_dict_pair_debug(DictEntry* ret);
 
-StructDbus* dbus_message_iter_get_dict_pair(DBusMessageIter *key_iter);
-StructDbus* dbus_message_get_dict_pair(DBusMessage *msg);
+DictEntry* dbus_message_iter_get_dict_pair(DBusMessageIter *key_iter);
+DictEntry* dbus_message_get_dict_pair(DBusMessage *msg);
 
 int dbus_message_iter_get_array_size(DBusMessageIter* array_iter);
 char** dbus_message_iter_get_array(DBusMessageIter* array_iter, int size);
 void dbus_message_iter_append_array(DBusMessageIter* array_iter, const char** array);
 
-StructDbus* dbus_get_next_struct_in_dict(DBusMessageIter *dict_iter);
-void dbus_message_get_variant(DBusMessageIter* iter, StructDbus* ret);
+DictEntry* dbus_get_next_struct_in_dict(DBusMessageIter *dict_iter);
+void dbus_message_get_variant(DBusMessageIter* iter, DictEntry* ret);
 
-void dbus_append_variant(DBusMessageIter* iter, int value_type, DbusReturn value);
-void dbus_append_pair_to_dict(DBusMessageIter* iter, char* key, int value_type, DbusReturn value);
+void dbus_append_variant(DBusMessageIter* iter, int value_type, Variant value);
+void dbus_append_pair_to_dict(DBusMessageIter* iter, char* key, int value_type, Variant value);
 
