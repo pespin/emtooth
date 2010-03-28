@@ -57,17 +57,17 @@ typedef struct _DeviceList {
 	Evas_Object* header;
 } DeviceList;
 
-typedef union _DbusReturn {
+typedef union _Variant {
 	char* value_string;
 	int value_int;
 	char** value_array;
-} DbusReturn;
+} Variant;
 
-typedef struct _StructDbus {
+typedef struct _DictEntry {
 	char* key;
 	int value_type;
-	DbusReturn value;
-} StructDbus;
+	Variant value;
+} DictEntry;
 
 typedef struct _RemoteDevice {
 	//org.bluez.Device iface:
@@ -157,7 +157,7 @@ RemoteDevice* remote_device_new(const char* addr);
 
 bool remote_device_free(RemoteDevice* device);
 
-bool struct_dbus_free(StructDbus* ret);
+bool dict_entry_free(DictEntry* ret);
 
 bool array_free(char** array);
 

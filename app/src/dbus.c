@@ -99,7 +99,7 @@ void dbus_init_session() {
 }
 
 
-void dbus_dict_pair_debug(StructDbus* ret) {
+void dbus_dict_pair_debug(DictEntry* ret) {
 	
 	fprintf(stderr, "DICTIONARY STRUCT READ: %c\n", ret->value_type);
 	if(ret->value_type==DBUS_TYPE_STRING || ret->value_type == DBUS_TYPE_OBJECT_PATH) {
@@ -176,7 +176,7 @@ void dbus_message_iter_append_array(DBusMessageIter* array_iter, const char** ar
 }
 
 
-void dbus_message_get_variant(DBusMessageIter* iter, StructDbus* ret) {
+void dbus_message_get_variant(DBusMessageIter* iter, DictEntry* ret) {
 	
 	DBusMessageIter value_iter;
 	
@@ -204,9 +204,9 @@ void dbus_message_get_variant(DBusMessageIter* iter, StructDbus* ret) {
 }
 
 
-StructDbus* dbus_message_iter_get_dict_pair(DBusMessageIter *key_iter) {
+DictEntry* dbus_message_iter_get_dict_pair(DBusMessageIter *key_iter) {
 	
-	StructDbus* ret = malloc(sizeof(StructDbus));
+	DictEntry* ret = malloc(sizeof(DictEntry));
 	ret->value.value_int=0;
 	ret->value.value_string=NULL;
 	int tmp = DBUS_TYPE_INVALID;
@@ -225,7 +225,7 @@ StructDbus* dbus_message_iter_get_dict_pair(DBusMessageIter *key_iter) {
 }
 
 
-StructDbus* dbus_message_get_dict_pair(DBusMessage *msg) {
+DictEntry* dbus_message_get_dict_pair(DBusMessage *msg) {
 	
 	DBusMessageIter key_iter;
 	
@@ -235,7 +235,7 @@ StructDbus* dbus_message_get_dict_pair(DBusMessage *msg) {
 }
 
 
-StructDbus* dbus_get_next_struct_in_dict(DBusMessageIter *dict_iter) {
+DictEntry* dbus_get_next_struct_in_dict(DBusMessageIter *dict_iter) {
 		DBusMessageIter key_iter;
 		
 		dbus_message_iter_recurse(dict_iter, &key_iter);
@@ -244,7 +244,7 @@ StructDbus* dbus_get_next_struct_in_dict(DBusMessageIter *dict_iter) {
 }
 
 
-void dbus_append_variant(DBusMessageIter* iter, int value_type, DbusReturn value) {
+void dbus_append_variant(DBusMessageIter* iter, int value_type, Variant value) {
 	
 	DBusMessageIter sub;
 	
@@ -272,7 +272,7 @@ void dbus_append_variant(DBusMessageIter* iter, int value_type, DbusReturn value
 	
 }
 
-void dbus_append_pair_to_dict(DBusMessageIter* iter, char* key, int value_type, DbusReturn value) {
+void dbus_append_pair_to_dict(DBusMessageIter* iter, char* key, int value_type, Variant value) {
 
 	dbus_message_iter_append_basic(iter, DBUS_TYPE_STRING, &key);
 	

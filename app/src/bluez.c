@@ -443,7 +443,7 @@ void bluez_discovery_stop() {
 }
 
 
-void bluez_set_property(StructDbus* info, const char* path, const char* interface) {
+void bluez_set_property(DictEntry* info, const char* path, const char* interface) {
 	
 	DBusMessageIter iter;
 	
