@@ -445,7 +445,7 @@ void bluez_discovery_stop() {
 
 void bluez_set_property(StructDbus* info, const char* path, const char* interface) {
 	
-	DBusMessageIter iter, sub;
+	DBusMessageIter iter;
 	
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(

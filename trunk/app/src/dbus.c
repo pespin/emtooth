@@ -159,26 +159,18 @@ char** dbus_message_iter_get_array(DBusMessageIter* array_iter, int size) {
 
 void dbus_message_iter_append_array(DBusMessageIter* array_iter, const char** array) {
 	
-	/* TODO: TO BE DONE! */
-	fprintf(stderr, "dbus_message_iter_append_array() still not coded!!!\n");
-	
 	DBusMessageIter sub;
-	
-	char* buf = malloc(64);
-	sprintf(buf, "%c", DBUS_TYPE_STRING);
 	
 	dbus_message_iter_open_container(array_iter,
 		DBUS_TYPE_ARRAY,
-		buf,
+		DBUS_TYPE_STRING_AS_STRING,
 		&sub);
 		
 	int i = 0;
 	while(array[i]!=NULL) {
-		fprintf(stderr, "MEHEEEE[%d]\n", i);
 		dbus_message_iter_append_basic(&sub, DBUS_TYPE_STRING, &array[i]);
 		i++;
 	}
-			fprintf(stderr, "MEHEEEE OUT OF BUCLE\n", i);
 	dbus_message_iter_close_container(array_iter, &sub); 	
 	
 }
@@ -256,9 +248,8 @@ void dbus_append_variant(DBusMessageIter* iter, int value_type, DbusReturn value
 	
 	DBusMessageIter sub;
 	
-	char* buf = malloc(64);
+	char buf[64];
 	sprintf(buf, "%c", value_type);
-	
 	dbus_message_iter_open_container(iter,
 		DBUS_TYPE_VARIANT,
 		buf,
@@ -284,9 +275,6 @@ void dbus_append_variant(DBusMessageIter* iter, int value_type, DbusReturn value
 void dbus_append_pair_to_dict(DBusMessageIter* iter, char* key, int value_type, DbusReturn value) {
 
 	dbus_message_iter_append_basic(iter, DBUS_TYPE_STRING, &key);
-	
-	char* buf = malloc(64);
-	sprintf(buf, "%c", value_type);
 	
 	dbus_append_variant(iter, value_type, value);
 

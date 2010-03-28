@@ -95,7 +95,8 @@ void obex_manager_attach_signals() {
 
 void obex_client_SendFiles(RemoteDevice* device, const char** files_array) {
 	
-	DBusMessageIter iter, sub;
+	DBusMessageIter iter, sub, pair, variant;
+	char buf[PATH_MAX];
 	
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
@@ -103,27 +104,49 @@ void obex_client_SendFiles(RemoteDevice* device, const char** files_array) {
 		"/",
 		"org.openobex.Client",
 		"SendFiles");
+	fprintf(stderr, "Trying to send file '%s'", files_array[0]); 
 	
 	//start with args:
 	dbus_message_iter_init_append(msg, &iter); 	
 	
-	DbusReturn ret;
-	ret.value_string = device->addr;
-	dbus_append_pair_to_dict(&iter, "Destination", DBUS_TYPE_STRING, ret);
+	/* 1s arg: a{sv} */
+	dbus_message_iter_open_container(&iter,
+		DBUS_TYPE_ARRAY,
+		DBUS_TYPE_DICT_ENTRY_AS_STRING, //"{sv}"
+		&sub);
+	dbus_message_iter_open_container(&sub,
+		DBUS_TYPE_DICT_ENTRY,
+		0,
+		&pair);
+	//dict entry key:
+	char* key = strdup("Destination");
+	dbus_message_iter_append_basic(&pair, DBUS_TYPE_STRING, &key);
+		
+	//dict entry variant:
+	dbus_message_iter_open_container(&pair,
+		DBUS_TYPE_VARIANT,
+		DBUS_TYPE_STRING_AS_STRING,
+		&variant);
+	dbus_message_iter_append_basic(&variant, DBUS_TYPE_STRING, &device->addr);
+	dbus_message_iter_close_container(&pair, &variant); 
+	dbus_message_iter_close_container(&sub, &pair); 
+	dbus_message_iter_close_container(&iter, &sub); 
 	
-	//TODO: implement this:
+	fprintf(stderr, "FINISHED appending array of dict entries\n"); 
+	
+	/* 2nd arg: a{s} */
 	dbus_message_iter_append_array(&iter, files_array);
-	fprintf(stderr, "FINISHED appending array\n");
+	fprintf(stderr, "FINISHED appending array\n"); 
 	
-	char* tmp = strdup(OBEX_AGENT_PATH);
+	/* 3rd arg: o */
+	sprintf(buf, "%s", OBEX_AGENT_PATH);
 	dbus_message_append_args (msg,
-	DBUS_TYPE_STRING, &tmp,
+	DBUS_TYPE_OBJECT_PATH, &buf,
 	DBUS_TYPE_INVALID);
-	free(tmp);
 	
 		fprintf(stderr, "FINISHED appending all args\n");
 
-	e_dbus_message_send(DBUSCONN->sysconn, msg, cb_dbus_generic, -1, NULL);
+	e_dbus_message_send(DBUSCONN->sessionconn, msg, cb_dbus_generic, -1, NULL);
 	dbus_message_unref(msg);
 	
 }

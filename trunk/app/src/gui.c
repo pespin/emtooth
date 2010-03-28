@@ -715,6 +715,49 @@ void gui_remote_device_info_create(RemoteDevice* device) {
 }
 
 
+
+void gui_request_file_path_create(RemoteDevice* device, Evas_Smart_Cb cb_file_selector_done) {
+	
+	Evas_Object *win, *fs, *bg, *vbox;
+	
+	char buf[255];
+	snprintf(buf, 255, "Select File - %s", device->name);
+	win = elm_win_add(NULL, "remote_device_file_selector", ELM_WIN_BASIC);
+	elm_win_title_set(win, buf);
+	elm_win_autodel_set(win, TRUE);
+
+	bg = elm_bg_add(win);
+	evas_object_size_hint_weight_set(bg, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	elm_win_resize_object_add(win, bg);
+	evas_object_show(bg);
+
+	evas_object_resize(win, 480, 600);
+
+	//add vbox
+	vbox = elm_box_add(win);
+	elm_win_resize_object_add(win, vbox);
+	evas_object_size_hint_weight_set(bg, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_show(vbox);
+	
+	fs = elm_fileselector_add(win);
+   /* enable the fs file name entry */
+   elm_fileselector_is_save_set(fs, EINA_TRUE);
+   /* make the file list a tree with dir expandable in place */
+   elm_fileselector_expandable_set(fs, EINA_FALSE);
+   /* start the fileselector in the home dir */
+   elm_fileselector_path_set(fs, getenv("HOME"));
+   /* allow fs to expand in x & y */
+   evas_object_size_hint_weight_set(fs, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+   evas_object_size_hint_align_set(fs, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   elm_box_pack_end(vbox, fs);
+   evas_object_show(fs);
+	
+	evas_object_smart_callback_add(fs, "done", cb_file_selector_done, device);
+	
+	 evas_object_show(win);
+}
+
+
 void gui_request_pin_create(RemoteDevice* device)
 {
 	Evas_Object *win, *bg, *inwin, *vbox, *lb, *entry, *bt1;

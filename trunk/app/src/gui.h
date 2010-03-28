@@ -33,6 +33,8 @@ void gui_settings_dialog_create();
 
 void gui_remote_device_info_create();
 
+void gui_request_file_path_create(RemoteDevice* device, Evas_Smart_Cb cb_file_selector_done);
+
 void gui_request_pin_create(RemoteDevice* device);
 
 void gui_alert_create(const char *message);
