@@ -34,7 +34,7 @@ void gui_create() {
    elm_win_resize_object_add(win, bg);
    evas_object_show(bg);
    
-   	evas_object_resize(win, 480, 600);	
+   	evas_object_resize(win, DISPLAY_WIDTH, DISPLAY_HEIGHT);	
    
    	//add vbox 4
 	vbox = elm_box_add(win);
@@ -214,7 +214,7 @@ void gui_settings_dialog_create() {
    elm_win_resize_object_add(win, bg);
    evas_object_show(bg);
    
-   	evas_object_resize(win, 480, 600);
+   	evas_object_resize(win, DISPLAY_WIDTH, DISPLAY_HEIGHT);
    	   
    	//add vbox
 	vbox = elm_box_add(win);
@@ -440,7 +440,7 @@ void gui_remote_device_info_create(RemoteDevice* device) {
    elm_win_resize_object_add(win, bg);
    evas_object_show(bg);
    
-   	evas_object_resize(win, 480, 600);
+   	evas_object_resize(win, DISPLAY_WIDTH, DISPLAY_HEIGHT);
    
    	//add vbox
 	vbox = elm_box_add(win);
@@ -731,7 +731,7 @@ void gui_request_file_path_create(RemoteDevice* device, Evas_Smart_Cb cb_file_se
 	elm_win_resize_object_add(win, bg);
 	evas_object_show(bg);
 
-	evas_object_resize(win, 480, 600);
+	evas_object_resize(win, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
 	//add vbox
 	vbox = elm_box_add(win);
