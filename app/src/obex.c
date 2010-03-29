@@ -96,7 +96,6 @@ void obex_manager_attach_signals() {
 void obex_client_SendFiles(RemoteDevice* device, const char** files_array) {
 	
 	DBusMessageIter iter, sub, pair, variant;
-	char buf[PATH_MAX];
 	
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(
@@ -104,7 +103,7 @@ void obex_client_SendFiles(RemoteDevice* device, const char** files_array) {
 		"/",
 		"org.openobex.Client",
 		"SendFiles");
-	fprintf(stderr, "Trying to send file '%s'", files_array[0]); 
+	fprintf(stderr, "Trying to send file '%s'\n", files_array[0]); 
 	
 	//start with args:
 	dbus_message_iter_init_append(msg, &iter); 	
@@ -139,14 +138,15 @@ void obex_client_SendFiles(RemoteDevice* device, const char** files_array) {
 	fprintf(stderr, "FINISHED appending array\n"); 
 	
 	/* 3rd arg: o */
-	sprintf(buf, "%s", OBEX_AGENT_PATH);
+	char* tmp = strdup(OBEX_AGENT_PATH);
+	
 	dbus_message_append_args (msg,
-	DBUS_TYPE_OBJECT_PATH, &buf,
+	DBUS_TYPE_OBJECT_PATH, &tmp,
 	DBUS_TYPE_INVALID);
 	
-		fprintf(stderr, "FINISHED appending all args\n");
-
+	fprintf(stderr, "FINISHED appending all args\n");
+	
 	e_dbus_message_send(DBUSCONN->sessionconn, msg, cb_dbus_generic, -1, NULL);
 	dbus_message_unref(msg);
-	
+	free(tmp);
 }
