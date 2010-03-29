@@ -22,7 +22,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef _EMTOOTH_DEFINES_H
 #define _EMTOOTH_DEFINES_H       1
 
-/* defines */
+/* DEFINES */
+
+#define DISPLAY_WIDTH		480
+#define DISPLAY_HEIGHT		600
 
 #define BLUEZ_AGENT_PATH 	"/org/emtooth/bluez/agent"
 #define BLUEZ_AGENT_IFACE	"org.bluez.Agent"
