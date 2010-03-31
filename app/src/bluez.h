@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "cb_bluez.h"
 #include "dbus.h"
 
+void bluez_wait_until_service_is_up(Evas_Object* dialog);
 void bluez_get_default_adapter();
 
 void bluez_get_remote_device_path(RemoteDevice* device);

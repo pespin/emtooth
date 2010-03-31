@@ -46,12 +46,14 @@ elm_main(int argc, char **argv)
 	 * 4- Start device discovery + TODO: create openobex server to receive files
 	 */
 	//start the dbus thread
-	int ret;
-	pthread_t t_id;
-	ret = pthread_create(&t_id, NULL, (void *)dbus_init_session, NULL);
+	//int ret;
+	//pthread_t t_id;
+	//ret = pthread_create(&t_id, NULL, (void *)dbus_init_session, NULL);
    
    //start the GUI:
-   gui_create();
+   Evas_Object *win = gui_create();
+   dbus_init_session();
+   evas_object_show(win);
   
    elm_run();
    //cb_safe_exit() is called on close main win

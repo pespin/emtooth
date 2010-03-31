@@ -23,9 +23,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "cb_bluez.h"
 #include "bluez.h"
 
-void bluez_get_default_adapter() {
+
+
+void bluez_wait_until_service_is_up(Evas_Object* dialog) {
 	
-	fprintf(stderr, "Getting default bluetooth adapter from bluez...\n");
+	e_dbus_name_has_owner(DBUSCONN->sysconn, "org.bluez",
+					       cb_bluez_wait_until_service_is_up,
+					       dialog);
+	
+}
+
+void bluez_get_default_adapter() {
 	
 	DBusMessage *msg;
 	msg = dbus_message_new_method_call(

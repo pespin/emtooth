@@ -45,35 +45,52 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  
 /* CALLBACK FUNCTIONS */
 
+
+
+void cb_bluez_wait_until_service_is_up(void *data, DBusMessage *replymsg, DBusError *error) {
+	
+	Evas_Object *dialog = (Evas_Object*) data;
+	
+	if(!replymsg) {
+		ecore_main_loop_iterate();
+		bluez_wait_until_service_is_up(dialog);
+		return;
+		}
+	
+	bool is_up;
+	dbus_message_get_args(replymsg, error,
+	                      DBUS_TYPE_BOOLEAN, &is_up, DBUS_TYPE_INVALID);
+	                      
+	 if(!is_up) {
+		 bluez_wait_until_service_is_up(dialog);
+		 return;
+	}
+	fprintf(stderr, "BLUEZ IS UP!\n"); 
+	evas_object_del(dialog);
+	bluez_get_default_adapter();       
+}
+
 void cb_get_default_adapter(void *data, DBusMessage *replymsg, DBusError *error) {
 	
-	DBUSLOG(error);
-	
-	if(!replymsg) { /* no org.bluez, fso still loading it [fso bug] */
-		fprintf(stderr, "ERROR: there's no org.bluez service!!! (probably fso hasn't loaded it yet).\n");
-		
-		if(bluez_error_counter<6) {
-			if(bluez_error_counter==0)
-					gui_alert_create("Sorry, it seems bluez dbus interface is not<br>" \
-					"running at the moment.<br>Retrying some more times before exiting...");
-			bluez_error_counter++;
-			sleep(2);					
-			bluez_get_default_adapter();
-			return;
-		} else exit(EXIT_FAILURE);
+	if(!replymsg) { /* org.bluez is up but still doesn't send good responses */
+		ecore_main_loop_iterate();
+		bluez_get_default_adapter();
+		return;
 	}
+	
 	char *path = NULL;
 	dbus_message_get_args(replymsg, error,
 	                      DBUS_TYPE_OBJECT_PATH, &path, DBUS_TYPE_INVALID);
 	
-	DBUSLOG(error);
-	
-	if(!path) {
-		fprintf(stderr, "Could not get bluez dbus device path. EXIT NOW!\n");
-		gui_alert_create("Could not get bluez dbus device path. Exiting...\n");
-		sleep(5);
+	if(!path) { /* org.bluez is up but still doesn't send good responses */
+		ecore_main_loop_iterate();
+		bluez_get_default_adapter();
 		return;
 	}
+	
+	DBUSLOG(error);
+	
+	fprintf(stderr, "Getting default bluetooth adapter from bluez...\n");
 	
 	ADAPTER->path = strdup(path);
 	fprintf(stderr, "Using path '%s' to connect to bluez dbus daemon...\n", ADAPTER->path);

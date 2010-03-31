@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "dbus.h"
 #include "cb_dbus.h"
 #include "bluez.h"
+#include "gui.h"
 
 static DBusMessage* dbus_emtooth_method_Up(E_DBus_Object *obj, DBusMessage *msg)
 {
@@ -94,7 +95,10 @@ void dbus_init_session() {
 					     
 	//run intermediate pass to request bluetooth resource
 	fso_enable_bluetooth();
-
+	
+	fprintf(stderr, "Waiting for org.bluez to become avilable...\n");
+	Evas_Object *dialog = gui_alert_create("Loading bluetooth, please wait...");
+	bluez_wait_until_service_is_up(dialog);
 		
 }
 
