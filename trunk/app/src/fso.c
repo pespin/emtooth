@@ -28,8 +28,6 @@ void cb_fso_enable_bluetooth(void *data, DBusMessage *replymsg, DBusError *error
 	fprintf(stderr, "Request sent to frameworkd to enable bluetooth resource.\n");
 	
 	DBUSLOG(error);
-
-	bluez_get_default_adapter();
 	
 }
 

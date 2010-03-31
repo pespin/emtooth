@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include "gui.h"
 
-void gui_create() {
+Evas_Object* gui_create() {
 
    Evas_Object *win, *bg, *vbox, *fr, *hbox, *hbox1, *bt, *bt_start, *bt_stop;
 
@@ -118,8 +118,7 @@ void gui_create() {
 	elm_box_pack_end(hbox1, bt);
 	evas_object_show(bt);
 	evas_object_smart_callback_add(bt, "clicked", cb_settings_dialog, DL);
-  
-   evas_object_show(win);
+  return win;
 	
 }
 
@@ -813,7 +812,7 @@ void gui_request_pin_create(RemoteDevice* device)
 
 
 
-void gui_alert_create(const char *message)
+Evas_Object* gui_alert_create(const char *message)
 {
 	Evas_Object *win, *bg, *inwin, *vbox, *lb, *bt1;
 
@@ -850,4 +849,5 @@ void gui_alert_create(const char *message)
 	evas_object_smart_callback_add(bt1, "clicked", cb_close_win, win);
 	
 	evas_object_show(win);
+	return win;
 }

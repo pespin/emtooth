@@ -16,10 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+
 #include "defines.h"
 #include "cb_gui.h"
 
-void gui_create();
+Evas_Object* gui_create();
 
 void gui_device_list_remove(RemoteDevice* device);
 
@@ -37,4 +38,4 @@ void gui_request_file_path_create(RemoteDevice* device, Evas_Smart_Cb cb_file_se
 
 void gui_request_pin_create(RemoteDevice* device);
 
-void gui_alert_create(const char *message);
+Evas_Object* gui_alert_create(const char *message);

@@ -19,6 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <E_DBus.h>
 #include "defines.h"
 
+void cb_bluez_wait_until_service_is_up(void *data, DBusMessage *replymsg, DBusError *error);
+
 void cb_get_default_adapter(void *data, DBusMessage *replymsg, DBusError *error);
 void cb_create_remote_device_path(void *data, DBusMessage *replymsg, DBusError *error);
 void cb_get_remote_device_path(void *data, DBusMessage *replymsg, DBusError *error);
