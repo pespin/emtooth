@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=emtooth
+Comment=A bluetooth manager designed for embedded devices
+Type=Application
+Version=0.1
+Exec=emtooth
+Icon=emtooth
+Terminal=false
+Categories=Application;Utility;
+StartupNotify=true
