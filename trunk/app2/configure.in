@@ -1,0 +1,30 @@
+AC_INIT(emtooth, 0.0.2, pespin.shar@gmail.com)
+AC_PREREQ(2.52)
+AC_CONFIG_SRCDIR(configure.in)
+
+AM_INIT_AUTOMAKE(1.11 dist-bzip2)
+AM_CONFIG_HEADER(config.h)
+
+AC_C_BIGENDIAN
+AC_ISC_POSIX
+AC_PROG_CC
+AM_PROG_CC_STDC
+AC_HEADER_STDC
+AC_C_CONST
+
+AM_PROG_VALAC ([0.8.1])
+
+EMTOOTH_PACKAGES="--pkg dbus-glib-1 --pkg eina --pkg evas --pkg ecore --pkg elm"
+
+PKG_CHECK_MODULES(EMTOOTH,	glib-2.0 >= 2.14.0
+							gobject-2.0
+							dbus-glib-1
+							elementary
+							eina
+							dbus-1)
+
+AC_SUBST(EMTOOTH_LIBS)
+AC_SUBST(EMTOOTH_CFLAGS)
+AC_SUBST(EMTOOTH_PACKAGES)
+
+AC_OUTPUT(Makefile)
