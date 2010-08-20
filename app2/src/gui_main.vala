@@ -108,7 +108,7 @@ public class EmtoothUI {
 		bt.size_hint_align_set( -1.0, -1.0 );
 		hbox1.pack_end(bt);
 		bt.show();
-		//bt.smart_callback_add( "clicked", cb_settings_dialog );
+		bt.smart_callback_add( "clicked", cb_bt_settings_clicked );
 	
 
 	}
@@ -152,6 +152,14 @@ public class EmtoothUI {
 		ADAPTER.stop_discovery();
 	}
 	
+	
+		private void cb_bt_settings_clicked() {
+		stdout.printf("Settings button pressed.\n");
+		
+		settings_ui = new SettingsUI();
+		settings_ui.create();
+		settings_ui.show();
+	}
 	
 	
 	public void main_show() {
