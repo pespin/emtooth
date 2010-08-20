@@ -10,7 +10,8 @@ emtooth_SOURCES = \
 	src/shared.vala \
 	src/bluez_adapter.vala \
 	src/bluez_rdevice.vala \
-	src/gui.vala \
+	src/gui_main.vala \
+	src/gui_settings.vala \
 	src/org-bluez.vala
 	
 emtooth_LDADD = @EMTOOTH_LIBS@
