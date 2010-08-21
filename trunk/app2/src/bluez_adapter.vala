@@ -62,6 +62,16 @@ public class BluezAdapter : Object {
 		}
 	}
 	
+	public void set_property_(string name, GLib.Value val) {
+		stdout.printf("Setting property "+name+" to "+val.strdup_contents()+"\n");
+		try {
+			dbus_obj.set_property_(name, val);
+		} catch (DBus.Error err) {
+			stderr.printf("ERR: Could not stop device discovery: %s\n", err.message);
+		}
+		
+	}
+	
 	
 	public void update_properties() {
 		stdout.printf("Updating properties for local adapter %s...\n", this.path);

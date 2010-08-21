@@ -102,7 +102,19 @@ public class SettingsUI {
 		entry.single_line_set(true);
 		entry.entry_set(ADAPTER.name);
 		hbox.pack_end(entry);
-		entry.show(); 
+		entry.show();
+		
+		ADAPTER.set_property_("Name", "hello");
+		/* entry.smart_callback_add("changed", () => {GLib.Value val;
+													stdout.printf("HEY! %s\n", entry.entry_get());
+													val = entry.entry_get();
+													ADAPTER.set_property_("Name", val);
+													}); */
+		entry.smart_callback_add("changed", () => {GLib.Value val;
+													stdout.printf("HEYYA! %s\n", entry.entry_get());
+													val = (uint) entry.entry_get().to_int();
+													ADAPTER.set_property_("Discoverable", val);
+													});
 		//TODO: add callback
 		
 		// DISCOVERABLE TOGGLE + TIMEOUT:
@@ -163,6 +175,7 @@ public class SettingsUI {
 		entry.entry_set(ADAPTER.discoverable_timeout.to_string());
 		hbox.pack_end(entry);
 		entry.show(); 
+	
 		
 		// PAIRABLE TOGGLE + TIMEOUT:
 		// add a frame
@@ -254,5 +267,7 @@ public class SettingsUI {
 		win.del();
 	}
 	
+
+
 
 }
