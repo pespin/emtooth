@@ -22,12 +22,15 @@ int main(string[] args) {
     
     
 	try {
-		var conn = DBus.Bus.get (DBus.BusType.SYSTEM);
-		var root_manager = (Manager) conn.get_object ("org.bluez", "/");
+		//var conn = DBus.Bus.get (DBus.BusType.SYSTEM);
+		//var root_manager = (Manager) conn.get_object ("org.bluez", "/");
+		Manager root_manager = Bus.get_proxy_sync (BusType.SYSTEM, "org.example.Demo",
+                                                         "/org/example/demo");
+
 		var adapter_path = root_manager.default_adapter();
 		stdout.printf("Default adapter path -> %s\n", adapter_path);
 		ADAPTER = new BluezAdapter(adapter_path);
-	} catch (DBus.Error e) {
+	} catch (IOError e) {
 		stderr.printf ("Could not get access to org.bluez: %s\n", e.message);
 		return 1;
 	} 

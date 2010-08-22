@@ -19,10 +19,13 @@ public class SettingsUI {
 		private Elm.Box vbox_fr;
 		private Elm.Frame fr;
 		private Elm.Box hbox;
-		private Elm.Entry entry;
-		private Elm.Toggle tg;
+		private Elm.Entry entry_name;
+		private Elm.Entry entry_disc;
+		private Elm.Entry entry_pair;
+		private Elm.Toggle tg_disc;
+		private Elm.Toggle tg_pair;
 		
-		private Elm.Button bt;
+		private Elm.Button bt_close;
 		
 	public void create() {
 		
@@ -98,24 +101,16 @@ public class SettingsUI {
 		hbox.pack_end(lb);
 		lb.show();
 		
-		entry = new Elm.Entry(win);
-		entry.single_line_set(true);
-		entry.entry_set(ADAPTER.name);
-		hbox.pack_end(entry);
-		entry.show();
+		entry_name = new Elm.Entry(win);
+		entry_name.single_line_set(true);
+		entry_name.entry_set(ADAPTER.name);
+		hbox.pack_end(entry_name);
+		entry_name.show();
 		
-		ADAPTER.set_property_("Name", "hello");
-		/* entry.smart_callback_add("changed", () => {GLib.Value val;
-													stdout.printf("HEY! %s\n", entry.entry_get());
-													val = entry.entry_get();
+		entry_name.smart_callback_add("changed", () => {GLib.Variant val;
+													val = entry_name.entry_get();
 													ADAPTER.set_property_("Name", val);
-													}); */
-		entry.smart_callback_add("changed", () => {GLib.Value val;
-													stdout.printf("HEYYA! %s\n", entry.entry_get());
-													val = (uint) entry.entry_get().to_int();
-													ADAPTER.set_property_("Discoverable", val);
 													});
-		//TODO: add callback
 		
 		// DISCOVERABLE TOGGLE + TIMEOUT:
 		// add a frame
@@ -147,12 +142,15 @@ public class SettingsUI {
 		hbox.pack_end(lb);
 		lb.show();
 		
-		tg = new Elm.Toggle(win);
-		tg.states_labels_set("On", "Off");
-		tg.state_set(ADAPTER.discoverable);
-		hbox.pack_end(tg);
-		tg.show();
-		
+		tg_disc = new Elm.Toggle(win);
+		tg_disc.states_labels_set("On", "Off");
+		tg_disc.state_set(ADAPTER.discoverable);
+		hbox.pack_end(tg_disc);
+		tg_disc.show();
+		tg_disc.smart_callback_add("changed", () => {GLib.Variant val;
+											val = tg_disc.state_get();
+											ADAPTER.set_property_("Discoverable", val);
+											});
 		//endl
 		
 		gui_container += (owned) hbox;
@@ -169,12 +167,15 @@ public class SettingsUI {
 		hbox.pack_end(lb);
 		lb.show();
 		
-		gui_container += (owned) entry;
-		entry = new Elm.Entry(win);
-		entry.single_line_set(true);
-		entry.entry_set(ADAPTER.discoverable_timeout.to_string());
-		hbox.pack_end(entry);
-		entry.show(); 
+		entry_disc = new Elm.Entry(win);
+		entry_disc.single_line_set(true);
+		entry_disc.entry_set(ADAPTER.discoverable_timeout.to_string());
+		hbox.pack_end(entry_disc);
+		entry_disc.show(); 
+		entry_disc.smart_callback_add("changed", () => {GLib.Variant val;
+									val = (uint) entry_disc.entry_get().to_int();
+									ADAPTER.set_property_("DiscoverableTimeout", val);
+									});
 	
 		
 		// PAIRABLE TOGGLE + TIMEOUT:
@@ -208,12 +209,15 @@ public class SettingsUI {
 		hbox.pack_end(lb);
 		lb.show();
 		
-		gui_container += (owned) tg;
-		tg = new Elm.Toggle(win);
-		tg.states_labels_set("On", "Off");
-		tg.state_set(ADAPTER.pairable);
-		hbox.pack_end(tg);
-		tg.show();
+		tg_pair = new Elm.Toggle(win);
+		tg_pair.states_labels_set("On", "Off");
+		tg_pair.state_set(ADAPTER.pairable);
+		hbox.pack_end(tg_pair);
+		tg_pair.show();
+		tg_pair.smart_callback_add("changed", () => {GLib.Variant val;
+									val = tg_pair.state_get();
+									ADAPTER.set_property_("Pairable", val);
+									});
 		
 		//endl
 		
@@ -230,31 +234,35 @@ public class SettingsUI {
 		lb.label_set("<b>Pairing timeout:</b> ");
 		hbox.pack_end(lb);
 		lb.show();
-		
-		gui_container += (owned) entry;
-		entry = new Elm.Entry(win);
-		entry.single_line_set(true);
-		entry.entry_set(ADAPTER.pairable_timeout.to_string());
-		hbox.pack_end(entry);
-		entry.show();
+
+
+		entry_pair = new Elm.Entry(win);
+		entry_pair.single_line_set(true);
+		entry_pair.entry_set(ADAPTER.pairable_timeout.to_string());
+		hbox.pack_end(entry_pair);
+		entry_pair.show();
+		entry_pair.smart_callback_add("changed", () => {GLib.Variant val;
+												val = (uint) entry_pair.entry_get().to_int();
+												ADAPTER.set_property_("PairableTimeout", val);
+												});
 		
 		//BOTTOM:
 		
 		gui_container += (owned) hbox;
 		hbox = new Elm.Box(win);
 		hbox.horizontal_set(true);
-		hbox.size_hint_align_set(1.0, 0.0);
-		hbox.size_hint_weight_set(-1.0, 0.0);
+		hbox.size_hint_weight_set(1.0, 0.0);
+		hbox.size_hint_align_set(-1.0, 0.0);
 		vbox.pack_end(hbox);
 		hbox.show();
 		
-		bt = new Elm.Button(win);
-		bt.label_set("Close");
-		bt.size_hint_align_set(1.0, 1.0);
-		bt.size_hint_weight_set(-1.0, -1.0);
-		hbox.pack_end(bt);
-		bt.show();
-		bt.smart_callback_add( "clicked", this.close );
+		bt_close = new Elm.Button(win);
+		bt_close.label_set("Close");
+		bt_close.size_hint_weight_set(1.0, 1.0);
+		bt_close.size_hint_align_set(-1.0, -1.0);
+		hbox.pack_end(bt_close);
+		bt_close.show();
+		bt_close.smart_callback_add( "clicked", this.close );
 
 	}
 

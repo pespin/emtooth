@@ -5,7 +5,7 @@ using bluez;
 
 public class BluezRemoteDevice : Object {
 	
-	public string path {get; private set; default="unkown";}
+	public string path {get; set; default="unkown";}
 	public string addr {get; set; default="unkown";}
 	public string name {get; set; default="unkown";}
 	public string alias {get; set; default="unkown";}
@@ -18,6 +18,8 @@ public class BluezRemoteDevice : Object {
 	public bool blocked {get; set; default=false;}
 	public bool connected {get; set; default=false;}
 	
+	public bool online {get; set; default=false;}
+	
 	//TODO: handle UUIDS
 	
 	
@@ -28,20 +30,19 @@ public class BluezRemoteDevice : Object {
 	
 	private Device dbus_device;
 	
-	public BluezRemoteDevice(DBus.ObjectPath obj_path) {
+	public BluezRemoteDevice(GLib.ObjectPath obj_path) {
 		
 		this.path = obj_path;
 		try {
-			var conn = DBus.Bus.get (DBus.BusType.SYSTEM);
-			dbus_device = get_device_proxy(conn, "org.bluez", obj_path);
-		} catch (DBus.Error err) {
+			dbus_device = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", obj_path);
+		} catch (IOError err) {
 			stderr.printf("ERR: Could not get remote device with path %s: %s\n", obj_path, err.message);
 			return;
 		}
 		
 		
 		dbus_device.property_changed.connect(property_changed_sig);
-		dbus_device.property_changed.connect(disconnect_requested_sig);
+		dbus_device.disconnect_requested.connect(disconnect_requested_sig);
 		
 		
 		stdout.printf("Remote device (%s) created successfully.\n", obj_path);
@@ -60,13 +61,13 @@ public class BluezRemoteDevice : Object {
 			this.alias = hash.lookup("Alias").dup_string();
 			this.adapter = hash.lookup("Adapter").dup_string();
 			this.icon = hash.lookup("Icon").dup_string();
-			this.klass = hash.lookup("Class").get_uint();
-			this.paired = hash.lookup("Paired").get_boolean();
-			this.trusted = hash.lookup("Trusted").get_boolean();
-			this.blocked = hash.lookup("Blocked").get_boolean();
-			this.connected = hash.lookup("Connected").get_boolean();
+			this.klass = (uint) hash.lookup("Class");
+			this.paired = (bool) hash.lookup("Paired");
+			this.trusted = (bool)hash.lookup("Trusted");
+			this.blocked = (bool) hash.lookup("Blocked");
+			this.connected = (bool) hash.lookup("Connected");
 			
-		} catch (DBus.Error err) {
+		} catch (IOError err) {
 			stderr.printf("ERR: Could not get properties from remote device %s: %s\n", this.path, err.message);
 		}
 
@@ -94,8 +95,8 @@ public class BluezRemoteDevice : Object {
 	 * 
 	 */
 	 
-	 private void property_changed_sig(string name, GLib.Value val) {
-		 stdout.printf("SIGNAL: Property changed on remote device %s: %s = %s;\n", path, name, val.strdup_contents());
+	 private void property_changed_sig(string name, GLib.Variant val) {
+		 stdout.printf("SIGNAL: Property changed on remote device %s: %s = %s;\n", path, name, (string) val);
 	}
 
 	 private void disconnect_requested_sig() {

@@ -12,6 +12,7 @@ emtooth_SOURCES = \
 	src/bluez_rdevice.vala \
 	src/gui_main.vala \
 	src/gui_settings.vala \
+	src/gui_rdevice.vala \
 	src/org-bluez.vala
 	
 emtooth_LDADD = @EMTOOTH_LIBS@

@@ -21,6 +21,13 @@ public class EmtoothUI {
 		private Elm.Button bt_stop;
 		private Elm.Button bt;
 		
+		public HashTable<string,BluezRemoteDeviceUI> hash;
+		
+		
+		
+		public EmtoothUI() {
+				hash = new HashTable<string,BluezRemoteDeviceUI>(str_hash, str_equal);
+		}
 		
 		//Elm.Icon ico;
 		//Elm.ListItem item;
@@ -117,13 +124,16 @@ public class EmtoothUI {
 	public void add_rdevice_to_list(BluezRemoteDevice rdevice) {
 		
 		
-		message("Adding rdevice " + rdevice.addr + " to ui-list");
+		message("Adding rdevice " + rdevice.path + " to ui-list");
 		string label = "["+ rdevice.addr + "] " + rdevice.alias;
 		
-		Elm.ListItem item = this.li.append(label, null, null, null);
+		var opener = new WinOpener(rdevice.path);
+		Elm.ListItem item = this.li.append(label, null, null, opener.go);
+		
 		item_container += (owned) item;
 		this.li.go();
 	}
+		
 	
 	
 	private void cb_bt_start_clicked() {
@@ -147,7 +157,7 @@ public class EmtoothUI {
 		hbox1.pack_start(bt_start);
 		bt_start.show();
 		
-		header.label_set(ADAPTER.num_devices_found().to_string()+" Devices Found:");
+		header.label_set(ADAPTER.num_devices_found.to_string()+" Devices Found:");
 		
 		ADAPTER.stop_discovery();
 	}
@@ -167,3 +177,43 @@ public class EmtoothUI {
 	} 
 
 }
+
+
+//we all love dirty hacks!
+//this is needed because of vala internals. It's necessary to pass an object to callback
+private class WinOpener : Object {
+	
+		public string path;
+		
+		public WinOpener(string str) {
+			this.ref();
+			path = str;
+		}
+		
+		
+		public void go () { 
+		stderr.printf ("PATH!=" + this.path + ";\n"); 
+		open_rdevice_win(this.path); 
+		//this.unref ();
+	}
+	
+		private void open_rdevice_win(string path) {
+			message("Opening win for rdevice "+path+"...\n");
+			unowned BluezRemoteDevice rdevice = ADAPTER.get_rdevice_by_path(path);
+			if(rdevice==null) {
+				warning("Trying to open NULL device!\n");
+				return;
+			}
+			
+			var device_ui = ui.hash.lookup(rdevice.path);
+			if( device_ui == null ) {
+				device_ui = new BluezRemoteDeviceUI(rdevice);
+				ui.hash.insert(rdevice.path, device_ui);
+				device_ui.create();
+			}
+				device_ui.show();
+		}
+		
+	
+}
+
