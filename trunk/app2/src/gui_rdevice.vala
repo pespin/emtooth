@@ -78,8 +78,11 @@ public class BluezRemoteDeviceUI {
 	}
 	
 	public void close() {
-		ui.hash.remove(rdevice.path);
+		stdout.printf("Clossing device window %s\n", rdevice.path);
 		win.del();
+		ui.hash.remove(rdevice.path); //this removes this object
+
+
 	}
 	
 

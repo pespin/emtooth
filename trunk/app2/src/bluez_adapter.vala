@@ -66,7 +66,7 @@ public class BluezAdapter : Object {
 	}
 	
 	public void set_property_(string name, GLib.Variant val) {
-		stdout.printf("Setting property "+name+" to "+(string) val +"\n");
+		stdout.printf("Setting property "+name+" to "+val.get_type_string() +"\n");
 		try {
 			dbus_obj.set_property_(name, val);
 		} catch (IOError err) {
@@ -82,8 +82,8 @@ public class BluezAdapter : Object {
 		try {
 			var hash = dbus_obj.get_properties();
 			
-			this.addr = hash.lookup("Address").dup_string();
-			this.name = hash.lookup("Name").dup_string();
+			this.addr = (string) hash.lookup("Address");
+			this.name = (string) hash.lookup("Name");
 			this.klass = (uint) hash.lookup("Class");
 			this.discoverable = (bool) hash.lookup("Discoverable");
 			this.discoverable_timeout = (uint) hash.lookup("DiscoverableTimeout");
@@ -134,13 +134,13 @@ public class BluezAdapter : Object {
 	
 	/* SIGNALS */
 	private void property_changed_sig(string name, GLib.Variant val) {
-		stdout.printf ("SIGNAL: Property changed on adapter %s -> %s = %s;\n", path,  name, (string) val);
+		stdout.printf ("SIGNAL: Property changed on adapter %s -> %s = %s;\n", path,  name, val.get_type_string());
 		switch(name) {
 			case "Address":
-				this.addr = val.dup_string();	
+				this.addr = (string) val;	
 				break;
 			case "Name":
-				this.name = val.dup_string();	
+				this.name = (string) val;	
 				break;
 			case "Class":
 				this.klass = (uint) val;	
