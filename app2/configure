@@ -5928,12 +5928,14 @@ if test -n "$EMTOOTH_CFLAGS"; then
     if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"glib-2.0 >= 2.14.0
 							gobject-2.0
+							gio-2.0
 							dbus-glib-1
 							elementary
 							eina
 							dbus-1\""; } >&5
   ($PKG_CONFIG --exists --print-errors "glib-2.0 >= 2.14.0
 							gobject-2.0
+							gio-2.0
 							dbus-glib-1
 							elementary
 							eina
@@ -5943,6 +5945,7 @@ if test -n "$EMTOOTH_CFLAGS"; then
   test $ac_status = 0; }; then
   pkg_cv_EMTOOTH_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= 2.14.0
 							gobject-2.0
+							gio-2.0
 							dbus-glib-1
 							elementary
 							eina
@@ -5959,12 +5962,14 @@ if test -n "$EMTOOTH_LIBS"; then
     if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"glib-2.0 >= 2.14.0
 							gobject-2.0
+							gio-2.0
 							dbus-glib-1
 							elementary
 							eina
 							dbus-1\""; } >&5
   ($PKG_CONFIG --exists --print-errors "glib-2.0 >= 2.14.0
 							gobject-2.0
+							gio-2.0
 							dbus-glib-1
 							elementary
 							eina
@@ -5974,6 +5979,7 @@ if test -n "$EMTOOTH_LIBS"; then
   test $ac_status = 0; }; then
   pkg_cv_EMTOOTH_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= 2.14.0
 							gobject-2.0
+							gio-2.0
 							dbus-glib-1
 							elementary
 							eina
@@ -5999,6 +6005,7 @@ fi
         if test $_pkg_short_errors_supported = yes; then
 	        EMTOOTH_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "glib-2.0 >= 2.14.0
 							gobject-2.0
+							gio-2.0
 							dbus-glib-1
 							elementary
 							eina
@@ -6006,6 +6013,7 @@ fi
         else
 	        EMTOOTH_PKG_ERRORS=`$PKG_CONFIG --print-errors "glib-2.0 >= 2.14.0
 							gobject-2.0
+							gio-2.0
 							dbus-glib-1
 							elementary
 							eina
@@ -6016,6 +6024,7 @@ fi
 
 	as_fn_error $? "Package requirements (glib-2.0 >= 2.14.0
 							gobject-2.0
+							gio-2.0
 							dbus-glib-1
 							elementary
 							eina

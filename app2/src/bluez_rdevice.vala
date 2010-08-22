@@ -56,11 +56,11 @@ public class BluezRemoteDevice : Object {
 		try {
 			var hash = dbus_device.get_properties();
 			
-			this.addr = hash.lookup("Address").dup_string();
-			this.name = hash.lookup("Name").dup_string();
-			this.alias = hash.lookup("Alias").dup_string();
-			this.adapter = hash.lookup("Adapter").dup_string();
-			this.icon = hash.lookup("Icon").dup_string();
+			this.addr = (string) hash.lookup("Address");
+			this.name = (string) hash.lookup("Name");
+			this.alias = (string) hash.lookup("Alias");
+			this.adapter = (string) hash.lookup("Adapter");
+			this.icon = (string) hash.lookup("Icon");
 			this.klass = (uint) hash.lookup("Class");
 			this.paired = (bool) hash.lookup("Paired");
 			this.trusted = (bool)hash.lookup("Trusted");

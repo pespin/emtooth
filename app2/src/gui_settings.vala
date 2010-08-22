@@ -107,8 +107,7 @@ public class SettingsUI {
 		hbox.pack_end(entry_name);
 		entry_name.show();
 		
-		entry_name.smart_callback_add("changed", () => {GLib.Variant val;
-													val = entry_name.entry_get();
+		entry_name.smart_callback_add("changed", () => {Variant val = entry_name.entry_get();
 													ADAPTER.set_property_("Name", val);
 													});
 		
@@ -147,10 +146,8 @@ public class SettingsUI {
 		tg_disc.state_set(ADAPTER.discoverable);
 		hbox.pack_end(tg_disc);
 		tg_disc.show();
-		tg_disc.smart_callback_add("changed", () => {GLib.Variant val;
-											val = tg_disc.state_get();
-											ADAPTER.set_property_("Discoverable", val);
-											});
+		tg_disc.smart_callback_add("changed", () => {Variant val = tg_disc.state_get();
+											ADAPTER.set_property_("Discoverable", val); });
 		//endl
 		
 		gui_container += (owned) hbox;
@@ -172,10 +169,8 @@ public class SettingsUI {
 		entry_disc.entry_set(ADAPTER.discoverable_timeout.to_string());
 		hbox.pack_end(entry_disc);
 		entry_disc.show(); 
-		entry_disc.smart_callback_add("changed", () => {GLib.Variant val;
-									val = (uint) entry_disc.entry_get().to_int();
-									ADAPTER.set_property_("DiscoverableTimeout", val);
-									});
+		entry_disc.smart_callback_add("changed", () => {Variant val = (uint) entry_disc.entry_get().to_int();
+									ADAPTER.set_property_("DiscoverableTimeout", val); });
 	
 		
 		// PAIRABLE TOGGLE + TIMEOUT:
@@ -214,10 +209,8 @@ public class SettingsUI {
 		tg_pair.state_set(ADAPTER.pairable);
 		hbox.pack_end(tg_pair);
 		tg_pair.show();
-		tg_pair.smart_callback_add("changed", () => {GLib.Variant val;
-									val = tg_pair.state_get();
-									ADAPTER.set_property_("Pairable", val);
-									});
+		tg_pair.smart_callback_add("changed", () => {Variant val = tg_pair.state_get();
+									ADAPTER.set_property_("Pairable", val); });
 		
 		//endl
 		
@@ -241,10 +234,8 @@ public class SettingsUI {
 		entry_pair.entry_set(ADAPTER.pairable_timeout.to_string());
 		hbox.pack_end(entry_pair);
 		entry_pair.show();
-		entry_pair.smart_callback_add("changed", () => {GLib.Variant val;
-												val = (uint) entry_pair.entry_get().to_int();
-												ADAPTER.set_property_("PairableTimeout", val);
-												});
+		entry_pair.smart_callback_add("changed", () => {Variant val = (uint) entry_pair.entry_get().to_int();
+												ADAPTER.set_property_("PairableTimeout", val); });
 		
 		//BOTTOM:
 		
