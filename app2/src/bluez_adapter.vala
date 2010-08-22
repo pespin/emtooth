@@ -16,21 +16,24 @@ public class BluezAdapter : Object {
 	public uint pairable_timeout {get; set; default=0;}
 	public bool powered {get; set; default=false;}
 	
-	private Adapter dbus_obj;
-	private List<BluezRemoteDevice> rdevices;
+	public uint num_devices_found {get; private set; default=0;}
 	
-	public BluezAdapter(DBus.ObjectPath obj_path) {
+	private Adapter dbus_obj;
+	
+	private HashTable<string,BluezRemoteDevice> hash;
+	
+	public BluezAdapter(GLib.ObjectPath obj_path) {
 		
 		this.path = obj_path;
 		try {
-			var conn = DBus.Bus.get (DBus.BusType.SYSTEM);
-			dbus_obj = (Adapter) conn.get_object ("org.bluez", obj_path);
-		} catch (DBus.Error err) {
+			dbus_obj = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", obj_path);
+
+		} catch (IOError err) {
 			stderr.printf("ERR: Could not get local adapter with path %s: %s\n", obj_path, err.message);
 			return;
 		}
 		
-		rdevices = new List<BluezRemoteDevice>();
+		hash = new HashTable<string,BluezRemoteDevice>(str_hash, str_equal);
 		
 		dbus_obj.device_found.connect (device_found_sig);
 		dbus_obj.device_disappeared.connect (device_disappeared_sig);
@@ -49,7 +52,7 @@ public class BluezAdapter : Object {
 	public void start_discovery() {
 		try {
 			dbus_obj.start_discovery();
-		} catch (DBus.Error err) {
+		} catch (IOError err) {
 			stderr.printf("ERR: Could not start device discovery: %s\n", err.message);
 		}
 	}
@@ -57,16 +60,16 @@ public class BluezAdapter : Object {
 	public void stop_discovery() {
 		try {
 			dbus_obj.stop_discovery();
-		} catch (DBus.Error err) {
+		} catch (IOError err) {
 			stderr.printf("ERR: Could not stop device discovery: %s\n", err.message);
 		}
 	}
 	
-	public void set_property_(string name, GLib.Value val) {
-		stdout.printf("Setting property "+name+" to "+val.strdup_contents()+"\n");
+	public void set_property_(string name, GLib.Variant val) {
+		stdout.printf("Setting property "+name+" to "+(string) val +"\n");
 		try {
 			dbus_obj.set_property_(name, val);
-		} catch (DBus.Error err) {
+		} catch (IOError err) {
 			stderr.printf("ERR: Could not stop device discovery: %s\n", err.message);
 		}
 		
@@ -81,15 +84,15 @@ public class BluezAdapter : Object {
 			
 			this.addr = hash.lookup("Address").dup_string();
 			this.name = hash.lookup("Name").dup_string();
-			this.klass = hash.lookup("Class").get_uint();
-			this.discoverable = hash.lookup("Discoverable").get_boolean();
-			this.discoverable_timeout = hash.lookup("DiscoverableTimeout").get_uint();
-			this.pairable = hash.lookup("Pairable").get_boolean();
-			this.pairable_timeout = hash.lookup("PairableTimeout").get_uint();
-			this.discovering = hash.lookup("Discovering").get_boolean();
-			this.powered = hash.lookup("Powered").get_boolean();
+			this.klass = (uint) hash.lookup("Class");
+			this.discoverable = (bool) hash.lookup("Discoverable");
+			this.discoverable_timeout = (uint) hash.lookup("DiscoverableTimeout");
+			this.pairable = (bool) hash.lookup("Pairable");
+			this.pairable_timeout = (uint) hash.lookup("PairableTimeout");
+			this.discovering = (bool) hash.lookup("Discovering");
+			this.powered = (bool) hash.lookup("Powered");
 
-		} catch (DBus.Error err) {
+		} catch (IOError err) {
 			stderr.printf("ERR: Could not get properties from device %s: %s\n", this.path, err.message);
 		}
 		//TODO: catch Devices:
@@ -113,14 +116,25 @@ public class BluezAdapter : Object {
 	}
 	
 	
-	public uint num_devices_found() {
-		return this.rdevices.length();
+	public unowned BluezRemoteDevice? get_rdevice_by_path(string path) {
+			return hash.lookup(path);
+	}
+	
+	public BluezRemoteDevice? get_rdevice_by_addr(string addr) {
+			List<BluezRemoteDevice> list;
+			list = this.hash.get_values();
+			foreach(var device in list) {
+				if(addr == device.addr) return device;
+			} 
+			return null;
 	}
 	
 	
+	
+	
 	/* SIGNALS */
-	private void property_changed_sig(string name, Value val) {
-		stdout.printf ("SIGNAL: Property changed on adapter %s -> %s = %s;\n", path,  name, val.strdup_contents());
+	private void property_changed_sig(string name, GLib.Variant val) {
+		stdout.printf ("SIGNAL: Property changed on adapter %s -> %s = %s;\n", path,  name, (string) val);
 		switch(name) {
 			case "Address":
 				this.addr = val.dup_string();	
@@ -129,25 +143,25 @@ public class BluezAdapter : Object {
 				this.name = val.dup_string();	
 				break;
 			case "Class":
-				this.klass = val.get_uint();	
+				this.klass = (uint) val;	
 				break;
 			case "Discoverable":
-				this.discoverable = val.get_boolean();	
+				this.discoverable = (bool) val;	
 				break;
 			case "DiscoverableTimeout":
-				this.discoverable_timeout = val.get_uint();	
+				this.discoverable_timeout = (uint) val;	
 				break;
 			case "Pairable":
-				this.pairable = val.get_boolean();	
+				this.pairable = (bool) val;	
 				break;
 			case "PairableTimeout":
-				this.pairable_timeout = val.get_uint();	
+				this.pairable_timeout = (uint) val;	
 				break;
 			case "Discovering":
-				this.discovering = val.get_boolean();	
+				this.discovering = (bool) val;	
 				break;
 			case "Powered":
-				this.powered = val.get_boolean();	
+				this.powered = (bool) val;	
 				break;
 			default:
 				stdout.printf("Unknown property %s\n", name);
@@ -168,18 +182,16 @@ public class BluezAdapter : Object {
 	private void device_found_sig (string address, HashTable<string, GLib.Value?> properties) {
 		stdout.printf ("SIGNAL: Remote device found (%s)\n",  address);
 		
-		DBus.ObjectPath path = null;
-		
-		//TODO: check in list wether we have this addr in list
-		
+		GLib.ObjectPath path = null;
 		
 		try {
 			path = dbus_obj.find_device(address);
-		} catch (DBus.Error err) {
+			
+		} catch (GLib.Error err) {
 			stderr.printf ("ERR: Could not find object path for device  %s: %s.\t Creating it\n", address, err.message);
 			try {
 				path = dbus_obj.create_device(address);
-			}  catch (DBus.Error err2) {
+			}  catch (IOError err2) {
 				stderr.printf ("ERR: Could not crete object path for device  %s: %s.\n", address, err2.message);
 				return;
 			}
@@ -187,13 +199,14 @@ public class BluezAdapter : Object {
 		
 		stdout.printf("Object path for device with addr %s is %s\n", address, path);
 		
-		var device = new BluezRemoteDevice(path);
-		
-		unowned List<BluezRemoteDevice> tmpli;
-		tmpli = rdevices.find_custom (device, (CompareFunc) sort_rdevices);
-		if(tmpli == null) {
+		unowned BluezRemoteDevice tmp;
+		tmp = hash.lookup(path);
+		if(tmp == null) {
+			var device = new BluezRemoteDevice(path);
 			device.update_properties();
-			this.rdevices.append(device);
+			this.hash.insert(device.path, device);
+			this.num_devices_found++;
+			device.online = true;
 			ui.add_rdevice_to_list(device);
 		}
 		
@@ -201,13 +214,12 @@ public class BluezAdapter : Object {
 
 	private void device_disappeared_sig (string address) {
 		stdout.printf ("Remote device disappeared (%s)\n", address);
+		
+		var device = get_rdevice_by_addr(address);
+		if(device!=null)
+			device.online = false;
+		
 	}
 	
-	
-}
-
-public int sort_rdevices(BluezRemoteDevice a, BluezRemoteDevice b) {
-	
-	return strcmp(a.path, b.path);
 	
 }
