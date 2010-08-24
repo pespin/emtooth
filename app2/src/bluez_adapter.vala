@@ -15,6 +15,8 @@ public class BluezAdapter : Object {
 	public bool pairable {get; set; default=false;}
 	public uint pairable_timeout {get; set; default=0;}
 	public bool powered {get; set; default=false;}
+	private string[] devices;
+	private string[] UUIDs;
 	
 	public uint num_devices_found {get; private set; default=0;}
 	
@@ -70,7 +72,7 @@ public class BluezAdapter : Object {
 		try {
 			dbus_obj.set_property_(name, val);
 		} catch (IOError err) {
-			stderr.printf("ERR: Could not stop device discovery: %s\n", err.message);
+			stderr.printf("ERR: Could not set property %s on local adapter %s: %s\n",name, this.path, err.message);
 		}
 		
 	}
@@ -103,6 +105,9 @@ public class BluezAdapter : Object {
 			this.pairable_timeout = (uint) hash.lookup("PairableTimeout");
 			this.discovering = (bool) hash.lookup("Discovering");
 			this.powered = (bool) hash.lookup("Powered");
+			
+			this.devices = get_dbus_array(hash.lookup("Devices"));
+			this.UUIDs = get_dbus_array(hash.lookup("UUIDs"));
 
 		} catch (IOError err) {
 			stderr.printf("ERR: Could not get properties from device %s: %s\n", this.path, err.message);
@@ -140,6 +145,7 @@ public class BluezAdapter : Object {
 			} 
 			return null;
 	}
+	
 	
 	
 	
@@ -215,7 +221,6 @@ public class BluezAdapter : Object {
 		tmp = hash.lookup(path);
 		if(tmp == null) {
 			var device = new BluezRemoteDevice(path);
-			device.update_properties();
 			this.hash.insert(device.path, device);
 			this.num_devices_found++;
 			device.online = true;

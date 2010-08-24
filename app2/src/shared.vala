@@ -5,3 +5,38 @@ public SettingsUI settings_ui;
 
 public Evas.Coord DISPLAY_WIDTH = 480;
 public Evas.Coord DISPLAY_HEIGHT = 600;
+
+
+//Input:
+const string HID_UUID = "00001124-0000-1000-8000-00805f9b34fb";
+
+//Audio:
+const string HSP_HS_UUID = "00001108-0000-1000-8000-00805f9b34fb";
+const string HSP_AG_UUID = "00001112-0000-1000-8000-00805f9b34fb";
+const string HFP_HS_UUID = "0000111e-0000-1000-8000-00805f9b34fb";
+const string HFP_AG_UUID = "0000111f-0000-1000-8000-00805f9b34fb";
+const string A2DP_SOURCE_UUID = "0000110a-0000-1000-8000-00805f9b34fb";
+const string A2DP_SINK_UUID = "0000110b-0000-1000-8000-00805f9b34fb";
+const string AVRCP_TARGET_UUID = "0000110c-0000-1000-8000-00805f9b34fb";
+
+
+
+
+
+public string[]? get_dbus_array(Variant bar) {
+	//stdout.printf("CREATING GLIST FROM DBUS...\n");
+	string[] list; 
+	if(bar.is_container()==false) return null;
+	
+		size_t max = bar.n_children();
+		list = new string[max];
+		
+		for(size_t i=0; i<max; i++) {
+			var item = (string) bar.get_child_value(i);
+					list[i] = item;
+					stdout.printf("ListAdded: %s;\n",(string) item);
+		}
+		
+		return list;
+	
+}
