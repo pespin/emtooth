@@ -5,9 +5,6 @@ using bluez;
 
 public class EmtoothUI {
 	
-		//used to take refs from list items... needs better solution
-		private Elm.ListItem[] item_container; 
-	
 		public Elm.Win win;
 		public Elm.Label header;
 		public Elm.List li;
@@ -21,12 +18,13 @@ public class EmtoothUI {
 		private Elm.Button bt_stop;
 		private Elm.Button bt;
 		
-		public HashTable<string,BluezRemoteDeviceUI> hash;
-		
+		public HashTable<string,BluezRemoteDeviceUI> opened_wins;
+		public HashTable<string,Elm.ListItem> rdevices_ui_list; 
 		
 		
 		public EmtoothUI() {
-				hash = new HashTable<string,BluezRemoteDeviceUI>(str_hash, str_equal);
+				opened_wins = new HashTable<string,BluezRemoteDeviceUI>(str_hash, str_equal);
+				rdevices_ui_list = new HashTable<string,Elm.ListItem>(str_hash, str_equal);
 		}
 		
 		//Elm.Icon ico;
@@ -121,19 +119,31 @@ public class EmtoothUI {
 	}
 	
 	
-	public void add_rdevice_to_list(BluezRemoteDevice rdevice) {
+	public void add_rdevice_to_ui(BluezRemoteDevice rdevice) {
 		
 		
 		message("Adding rdevice " + rdevice.path + " to ui-list");
 		string label = "["+ rdevice.addr + "] " + rdevice.alias;
 		
 		var opener = new WinOpener(rdevice.path);
-		Elm.ListItem item = this.li.append(label, null, null, opener.go);
+		Elm.ListItem item;
+		item = this.li.append(label, null, null, opener.go);
 		
-		item_container += (owned) item;
+		//item_container += (owned) item;
+		//owned item: this may not work.
+		rdevices_ui_list.insert(rdevice.path, (owned) item);
 		this.li.go();
 	}
+	
+	public void remove_rdevice_from_ui(string path) {
 		
+		
+		message("Removing rdevice " + path + " from ui-list");
+		rdevices_ui_list.remove(path);
+		
+		//TODO: redraw the elm.list here
+		//have to ask for void elm_list_clear(obj) inclusion in vala bindings
+	}
 	
 	
 	private void cb_bt_start_clicked() {
@@ -192,9 +202,10 @@ private class WinOpener : Object {
 		
 		
 		public void go () { 
-		stderr.printf ("PATH!=" + this.path + ";\n"); 
+		stderr.printf ("PATH=" + this.path + ";\n"); 
 		open_rdevice_win(this.path); 
 		//this.unref ();
+		//^ we don't want this to be unrefd, as it has to be kept alive to be called by clicked signal
 	}
 	
 		private void open_rdevice_win(string path) {
@@ -205,13 +216,13 @@ private class WinOpener : Object {
 				return;
 			}
 			
-			var device_ui = ui.hash.lookup(rdevice.path);
+			var device_ui = ui.opened_wins.lookup(rdevice.path);
 			if( device_ui == null ) {
 				device_ui = new BluezRemoteDeviceUI(rdevice);
-				ui.hash.insert(rdevice.path, device_ui);
+				ui.opened_wins.insert(rdevice.path, device_ui);
 				device_ui.create();
 			}
-				device_ui.show();
+				device_ui.show(); //TODO: !null then don't show, but focus the win
 		}
 		
 	

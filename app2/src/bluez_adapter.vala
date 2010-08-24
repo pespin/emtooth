@@ -75,6 +75,18 @@ public class BluezAdapter : Object {
 		
 	}
 	
+	public void remove_rdevice(GLib.ObjectPath device_path) {
+		stdout.printf("Removing device with path "+ (string) device_path+"...\n");
+		try {
+			dbus_obj.remove_device(device_path);
+		} catch (IOError err) {
+			stderr.printf("ERR: Could not remove device %s: %s\n", (string) device_path, err.message);
+		}
+		
+		this.hash.remove(device_path);
+		
+	}
+	
 	
 	public void update_properties() {
 		stdout.printf("Updating properties for local adapter %s...\n", this.path);
@@ -207,7 +219,9 @@ public class BluezAdapter : Object {
 			this.hash.insert(device.path, device);
 			this.num_devices_found++;
 			device.online = true;
-			ui.add_rdevice_to_list(device);
+			ui.add_rdevice_to_ui(device);
+		} else {
+				tmp.online=true;
 		}
 		
 	}
