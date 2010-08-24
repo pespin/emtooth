@@ -7,6 +7,10 @@ public Evas.Coord DISPLAY_WIDTH = 480;
 public Evas.Coord DISPLAY_HEIGHT = 600;
 
 
+#if _FSO_   
+public FSOusaged fso;
+#endif
+
 //Input:
 const string HID_UUID = "00001124-0000-1000-8000-00805f9b34fb";
 

@@ -21,6 +21,18 @@ int main(string[] args) {
     }
     
     
+#if _FSO_
+    /* Get Bluetooth resource if fso is running */
+    try {
+			fso = Bus.get_proxy_sync (BusType.SYSTEM, "org.freesmartphone.ousaged", "/org/freesmartphone/Usage");
+			fso.request_resource("Bluetooth");
+		} catch (IOError e) {
+			stderr.printf ("Could not get access to org.freesmartphone.ousaged: %s\n", e.message);
+		}
+#endif
+    
+   
+    /* Get default bluez adapter */
 	try {
 		Manager root_manager = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", "/");
 
@@ -33,13 +45,25 @@ int main(string[] args) {
 	} 
 
 
+	/* Start ui */
 	ui = new EmtoothUI();
 	ui.main_create();
 	ui.main_show();
 
 
+	/* ENTER MAIN LOOP */
     Elm.run();
     Elm.shutdown();
+    
+    
+#if _FSO_    
+	try {
+		fso.release_resource("Bluetooth");
+	} catch (IOError e) {
+		stderr.printf ("Could not get access to org.freesmartphone.ousaged: %s\n", e.message);
+	}
+#endif   
+    
     return 0;
 
 }
