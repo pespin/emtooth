@@ -252,6 +252,9 @@ public class BluezRemoteDevice : Object {
 			case "Class":
 				this.klass = (uint) val;	
 				break;
+			case "Connected":
+				this.connected = (bool) val;	
+				break;
 			case "Paired":
 				this.paired = (bool) val;	
 				break;

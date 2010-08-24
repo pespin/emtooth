@@ -315,10 +315,8 @@ public class BluezRemoteDeviceUI {
 		vbox_in.pack_end(bt_rm);
 		bt_rm.show();
 		
-		/*1st rm from bluez / adapter, then from main ui, then free this ui*/
 		bt_rm.smart_callback_add( "clicked", () => {ADAPTER.remove_rdevice((GLib.ObjectPath)rdevice.path);} );
-		bt_rm.smart_callback_add( "clicked", () => {ui.remove_rdevice_from_ui(rdevice.path);} );
-		bt_rm.smart_callback_add( "clicked", this.close );
+
 	
 		//BOTTOM:
 		

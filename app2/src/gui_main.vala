@@ -27,13 +27,12 @@ public class EmtoothUI {
 				rdevices_ui_list = new HashTable<string,Elm.ListItem>(str_hash, str_equal);
 		}
 		
-		//Elm.Icon ico;
-		//Elm.ListItem item;
+
 	public void main_create() {
 		
 		win = new Elm.Win( null, "main_win", Elm.WinType.BASIC );
 		win.title_set( "emtooth" );
-		//win.autodel_set( true );
+
 		win.smart_callback_add( "delete-request", Elm.exit );
 		
 		bg = new Elm.Bg(win);
@@ -74,7 +73,6 @@ public class EmtoothUI {
 		//add list
 		li = new Elm.List(win);
 		li.scale_set(1.0);
-		//li.bounce_set(false,false);
 		li.size_hint_weight_set(1.0, 1.0);
 		li.size_hint_align_set(-1.0, -1.0);
 		vbox.pack_end(li);
@@ -129,8 +127,6 @@ public class EmtoothUI {
 		Elm.ListItem item;
 		item = this.li.append(label, null, null, opener.go);
 		
-		//item_container += (owned) item;
-		//owned item: this may not work.
 		rdevices_ui_list.insert(rdevice.path, (owned) item);
 		this.li.go();
 	}
@@ -138,11 +134,10 @@ public class EmtoothUI {
 	public void remove_rdevice_from_ui(string path) {
 		
 		
-		message("Removing rdevice " + path + " from ui-list");
+		message("Removing rdevice " + path + " from ui-list\n");
 		rdevices_ui_list.remove(path);
-		
-		//TODO: redraw the elm.list here
-		//have to ask for void elm_list_clear(obj) inclusion in vala bindings
+		ui.opened_wins.remove(path);
+		this.li.go();
 	}
 	
 	
