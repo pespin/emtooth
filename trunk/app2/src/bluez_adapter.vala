@@ -86,6 +86,7 @@ public class BluezAdapter : Object {
 		}
 		
 		this.hash.remove(device_path);
+		ui.remove_rdevice_from_ui(device_path);
 		
 	}
 	
@@ -179,6 +180,9 @@ public class BluezAdapter : Object {
 			case "UUIDs":
 				this.UUIDs = get_dbus_array(val);
 				break;
+			case "Devices":
+				this.devices = get_dbus_array(val);
+				break;
 			default:
 				stdout.printf("Unknown property %s\n", name);
 				break;	
@@ -193,9 +197,16 @@ public class BluezAdapter : Object {
 
 	private void device_removed_sig (string address) {
 		stdout.printf ("SIGNAL: Remote device removed(%s)\n", address);
+		
+		var device = get_rdevice_by_addr(address);
+		if(device==null) return;
+		
+		this.hash.remove(device.path);
+		ui.remove_rdevice_from_ui(device.path);
+		this.num_devices_found--;
 	}
 	
-	private void device_found_sig (string address, HashTable<string, GLib.Value?> properties) {
+	private void device_found_sig (string address, HashTable<string, GLib.Variant?> properties) {
 		stdout.printf ("SIGNAL: Remote device found (%s)\n",  address);
 		
 		GLib.ObjectPath path = null;
