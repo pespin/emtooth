@@ -55,9 +55,7 @@ namespace org {
 			public signal void device_disappeared(string param0);
 		}
 
-		/*public Adapter get_adapter_proxy(DBus.Connection con, string busname, GLib.ObjectPath path) {
-			return con.get_object(busname, path) as Adapter;
-		}*/
+
 		[DBus (name = "org.bluez.Adapter", timeout = 120000)]
 		public interface AdapterSync : GLib.Object {
 
@@ -114,9 +112,7 @@ namespace org {
 			public abstract void cancel_authorization() throws IOError;
 		}
 
-		/*public Service get_service_proxy(DBus.Connection con, string busname, GLib.ObjectPath path) {
-			return con.get_object(busname, path) as Service;
-		}*/
+
 		[DBus (name = "org.bluez.Service", timeout = 120000)]
 		public interface ServiceSync : GLib.Object {
 
@@ -139,9 +135,7 @@ namespace org {
 			public abstract void unregister(string param0) throws IOError;
 		}
 
-		/*public NetworkServer get_network_server_proxy(DBus.Connection con, string busname, GLib.ObjectPath path) {
-			return con.get_object(busname, path) as NetworkServer;
-		}*/
+
 		[DBus (name = "org.bluez.NetworkServer", timeout = 120000)]
 		public interface NetworkServerSync : GLib.Object {
 
@@ -164,9 +158,7 @@ namespace org {
 			public signal void proxy_removed(string param0);
 		}
 
-		/*public SerialProxyManager get_serial_proxy_manager_proxy(DBus.Connection con, string busname, GLib.ObjectPath path) {
-			return con.get_object(busname, path) as SerialProxyManager;
-		}*/
+
 		[DBus (name = "org.bluez.SerialProxyManager", timeout = 120000)]
 		public interface SerialProxyManagerSync : GLib.Object {
 
@@ -208,9 +200,7 @@ namespace org {
 			public signal void default_adapter_changed(GLib.ObjectPath param0);
 		}
 
-		/*public Manager get_manager_proxy(DBus.Connection con, string busname, GLib.ObjectPath path) {
-			return con.get_object(busname, path) as Manager;
-		}*/
+
 		[DBus (name = "org.bluez.Manager", timeout = 120000)]
 		public interface ManagerSync : GLib.Object {
 
@@ -257,9 +247,6 @@ namespace org {
 			public signal void disconnect_requested();
 		}
 
-		/*public Device get_device_proxy(DBus.Connection con, string busname, GLib.ObjectPath path) {
-			return con.get_object(busname, path) as Device;
-		}*/
 		[DBus (name = "org.bluez.Device", timeout = 120000)]
 		public interface DeviceSync : GLib.Object {
 
@@ -291,9 +278,6 @@ namespace org {
 			public signal void property_changed(string param0, GLib.Variant param1);
 		}
 
-		/*public Audio get_audio_proxy(DBus.Connection con, string busname, GLib.ObjectPath path) {
-			return con.get_object(busname, path) as Audio;
-		} */
 		[DBus (name = "org.bluez.Audio", timeout = 120000)]
 		public interface AudioSync : GLib.Object {
 
@@ -313,10 +297,6 @@ namespace org {
 
 			public abstract void disconnect(string param0) throws IOError;
 		}
-
-	/*	public Serial get_serial_proxy(Bus.Connection con, string busname, GLib.ObjectPath path) {
-			return con.get_object(busname, path) as Serial;
-		} */
 		
 		[DBus (name = "org.bluez.Serial", timeout = 120000)]
 		public interface SerialSync : GLib.Object {
@@ -324,6 +304,31 @@ namespace org {
 			public abstract string connect(string param0) throws IOError;
 
 			public abstract void disconnect(string param0) throws IOError;
+		}
+		
+		
+		[DBus (name = "org.bluez.Input", timeout = 120000)]
+		public interface Input : GLib.Object {
+
+			public abstract void connect() throws IOError;
+
+			public abstract void disconnect() throws IOError;
+
+			public abstract GLib.HashTable<string, GLib.Variant?> get_properties() throws IOError;
+
+			public signal void property_changed(string param0, GLib.Variant param1);
+		}
+
+		[DBus (name = "org.bluez.Input", timeout = 120000)]
+		public interface InputSync : GLib.Object {
+
+			public abstract void connect() throws IOError;
+
+			public abstract void disconnect() throws IOError;
+
+			public abstract GLib.HashTable<string, GLib.Variant?> get_properties() throws IOError;
+
+			public signal void property_changed(string param0, GLib.Variant param1);
 		}
 		
 	}
