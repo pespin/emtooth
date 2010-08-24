@@ -16,12 +16,12 @@ public class BluezRemoteDeviceUI {
 		private Elm.Box vbox_fr;
 		private Elm.Frame fr;
 		private Elm.Box hbox;
-		private Elm.Entry entry_name;
-		private Elm.Entry entry_disc;
-		private Elm.Entry entry_pair;
-		private Elm.Toggle tg_disc;
+		private Elm.Entry entry_alias;
+		private Elm.Toggle tg_con;
 		private Elm.Toggle tg_pair;
+		private Elm.Toggle tg_trust;
 		
+		private Elm.Button bt_rm;
 		private Elm.Button bt_close;
 		
 	public BluezRemoteDeviceUI(BluezRemoteDevice device) {
@@ -52,6 +52,192 @@ public class BluezRemoteDeviceUI {
 		
 
 		
+		//HERE STARTS ALL THE OPTIONS LIST:
+		
+		sc = new Elm.Scroller(win);
+		sc.size_hint_weight_set(1.0, 1.0);
+		sc.size_hint_align_set(-1.0, -1.0);
+		sc.bounce_set(false, true);
+		vbox.pack_end(sc);
+		sc.show();
+		
+		vbox_in = new Elm.Box(win);
+		vbox_in.size_hint_align_set(-1.0, -1.0);
+		vbox_in.size_hint_weight_set(1.0, 1.0);
+		sc.content_set(vbox_in);
+		vbox_in.show();
+		
+		//ADDRESS + NAME
+		// add a frame
+		fr = new Elm.Frame(win);
+		fr.style_set("outdent_top");
+		fr.size_hint_weight_set(0.0, 0.0);
+		fr.size_hint_align_set(0.5, 0.5);
+		vbox_in.pack_end(fr);
+		fr.show();
+		
+		vbox_fr = new Elm.Box(win);
+		vbox_fr.size_hint_align_set(-1.0, -1.0);
+		vbox_fr.size_hint_weight_set(1.0, 1.0);
+		fr.content_set(vbox_fr);
+		vbox_fr.show();
+		
+		lb = new Elm.Label(win);
+		lb.label_set("<b>Address:</b> "+rdevice.addr);
+		vbox_fr.pack_end(lb);
+		lb.show();
+		
+		gui_container += (owned) lb;
+		lb = new Elm.Label(win);
+		lb.label_set("<b>Name:</b> "+rdevice.name);
+		vbox_fr.pack_end(lb);
+		lb.show();
+	
+		
+		// ALIAS:
+		// add a frame	
+		gui_container += (owned) fr;
+		fr = new Elm.Frame(win);
+		fr.style_set("default");
+		fr.size_hint_weight_set(1.0, 0.0);
+		fr.size_hint_align_set(-1.0, -1.0);
+		vbox_in.pack_end(fr);
+		fr.show();
+		
+		hbox = new Elm.Box(win);
+		hbox.horizontal_set(true);
+		hbox.size_hint_align_set(-1.0, 0.0);
+		hbox.size_hint_weight_set(1.0, 0.0);
+		fr.content_set(hbox);
+		hbox.show();
+		
+		gui_container += (owned) lb;
+		lb = new Elm.Label(win);
+		lb.label_set("<b>Alias:</b> ");
+		hbox.pack_end(lb);
+		lb.show();
+		
+		entry_alias = new Elm.Entry(win);
+		entry_alias.single_line_set(true);
+		entry_alias.entry_set(rdevice.alias);
+		hbox.pack_end(entry_alias);
+		entry_alias.show();
+		
+		/*entry_name.smart_callback_add("changed", () => {Variant val = entry_name.entry_get();
+													ADAPTER.set_property_("Name", val);
+													}); */
+		
+		// CONNECTED TOGGLE:
+		// add a frame
+		gui_container += (owned) fr;
+		fr = new Elm.Frame(win);
+		fr.style_set("default");
+		fr.size_hint_weight_set(1.0, 0.0);
+		fr.size_hint_align_set(-1.0, -1.0);
+		vbox_in.pack_end(fr);
+		fr.show();
+		
+		gui_container += (owned) hbox;
+		hbox = new Elm.Box(win);
+		hbox.horizontal_set(true);
+		hbox.size_hint_align_set(-1.0, 0.0);
+		hbox.size_hint_weight_set(1.0, 0.0);
+		fr.content_set(hbox);
+		hbox.show();
+		
+		gui_container += (owned) lb;
+		lb = new Elm.Label(win);
+		lb.label_set("<b>Connected:</b> ");
+		hbox.pack_end(lb);
+		lb.show();
+		
+		tg_con = new Elm.Toggle(win);
+		tg_con.states_labels_set("Yes", "No");
+		tg_con.state_set(rdevice.connected);
+		hbox.pack_end(tg_con);
+		tg_con.show();
+		/*tg_con.smart_callback_add("changed", () => {Variant val = tg_disc.state_get();
+											ADAPTER.set_property_("Discoverable", val); });*/
+		
+		// PAIRED TOGGLE:
+		// add a frame
+		gui_container += (owned) fr;
+		fr = new Elm.Frame(win);
+		fr.style_set("default");
+		fr.size_hint_weight_set(1.0, 0.0);
+		fr.size_hint_align_set(-1.0, -1.0);
+		vbox_in.pack_end(fr);
+		fr.show();
+		
+		gui_container += (owned) hbox;
+		hbox = new Elm.Box(win);
+		hbox.horizontal_set(true);
+		hbox.size_hint_align_set(-1.0, 0.0);
+		hbox.size_hint_weight_set(1.0, 0.0);
+		fr.content_set(hbox);
+		hbox.show();
+		
+		gui_container += (owned) lb;
+		lb = new Elm.Label(win);
+		lb.label_set("<b>Paired:</b> ");
+		hbox.pack_end(lb);
+		lb.show();
+		
+		tg_pair = new Elm.Toggle(win);
+		tg_pair.states_labels_set("Yes", "No");
+		tg_pair.state_set(rdevice.paired);
+		hbox.pack_end(tg_pair);
+		tg_con.show();
+		/*tg_pair.smart_callback_add("changed", () => {Variant val = tg_disc.state_get();
+											ADAPTER.set_property_("Discoverable", val); });*/
+		
+		// TRUSTED TOGGLE:
+		// add a frame
+		gui_container += (owned) fr;
+		fr = new Elm.Frame(win);
+		fr.style_set("default");
+		fr.size_hint_weight_set(1.0, 0.0);
+		fr.size_hint_align_set(-1.0, -1.0);
+		vbox_in.pack_end(fr);
+		fr.show();
+		
+		gui_container += (owned) hbox;
+		hbox = new Elm.Box(win);
+		hbox.horizontal_set(true);
+		hbox.size_hint_align_set(-1.0, 0.0);
+		hbox.size_hint_weight_set(1.0, 0.0);
+		fr.content_set(hbox);
+		hbox.show();
+		
+		gui_container += (owned) lb;
+		lb = new Elm.Label(win);
+		lb.label_set("<b>Trusted:</b> ");
+		hbox.pack_end(lb);
+		lb.show();
+		
+		tg_trust = new Elm.Toggle(win);
+		tg_trust.states_labels_set("Yes", "No");
+		tg_trust.state_set(rdevice.trusted);
+		hbox.pack_end(tg_trust);
+		tg_trust.show();
+		/*tg_pair.smart_callback_add("changed", () => {Variant val = tg_disc.state_get();
+											ADAPTER.set_property_("Discoverable", val); });*/
+											
+											
+		
+		//RM BUTTON:
+		bt_rm = new Elm.Button(win);
+		bt_rm.label_set("Reset/Remove Device");
+		bt_rm.size_hint_weight_set(0, 0);
+		bt_rm.size_hint_align_set(-1.0, -1.0);
+		vbox_in.pack_end(bt_rm);
+		bt_rm.show();
+		
+		/*1st rm from bluez / adapter, then from main ui, then free this ui*/
+		bt_rm.smart_callback_add( "clicked", () => {ADAPTER.remove_rdevice((GLib.ObjectPath)rdevice.path);} );
+		bt_rm.smart_callback_add( "clicked", () => {ui.remove_rdevice_from_ui(rdevice.path);} );
+		bt_rm.smart_callback_add( "clicked", this.close );
+	
 		//BOTTOM:
 		
 		gui_container += (owned) hbox;
@@ -78,9 +264,9 @@ public class BluezRemoteDeviceUI {
 	}
 	
 	public void close() {
-		stdout.printf("Clossing device window %s\n", rdevice.path);
+		stdout.printf("Closing device window %s\n", rdevice.path);
 		win.del();
-		ui.hash.remove(rdevice.path); //this removes this object
+		ui.opened_wins.remove(rdevice.path); //this removes/frees this object (ui)
 
 
 	}
