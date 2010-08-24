@@ -123,9 +123,8 @@ public class BluezRemoteDeviceUI {
 		hbox.pack_end(entry_alias);
 		entry_alias.show();
 		
-		/*entry_name.smart_callback_add("changed", () => {Variant val = entry_name.entry_get();
-													ADAPTER.set_property_("Name", val);
-													}); */
+		entry_alias.smart_callback_add("changed", () => {Variant val = entry_alias.entry_get();
+													rdevice.set_property_device("Alias", val); }); 
 		
 		// CONNECTED TOGGLE:
 		// add a frame
@@ -154,10 +153,12 @@ public class BluezRemoteDeviceUI {
 		tg_con = new Elm.Toggle(win);
 		tg_con.states_labels_set("Yes", "No");
 		tg_con.state_set(rdevice.connected);
+		tg_con.disabled_set(true);
 		hbox.pack_end(tg_con);
+		
 		tg_con.show();
-		/*tg_con.smart_callback_add("changed", () => {Variant val = tg_disc.state_get();
-											ADAPTER.set_property_("Discoverable", val); });*/
+		tg_con.smart_callback_add("changed", () => {Variant val = tg_con.state_get();
+											rdevice.set_property_device("Connected", val); });
 		
 		// PAIRED TOGGLE:
 		// add a frame
@@ -186,10 +187,17 @@ public class BluezRemoteDeviceUI {
 		tg_pair = new Elm.Toggle(win);
 		tg_pair.states_labels_set("Yes", "No");
 		tg_pair.state_set(rdevice.paired);
+		tg_pair.disabled_set(rdevice.paired);
 		hbox.pack_end(tg_pair);
-		tg_con.show();
-		/*tg_pair.smart_callback_add("changed", () => {Variant val = tg_disc.state_get();
-											ADAPTER.set_property_("Discoverable", val); });*/
+		tg_pair.show();
+		tg_pair.smart_callback_add("changed", 
+									() => {		
+										if(tg_pair.state_get()==true) {
+											tg_pair.disabled_set(true);
+											//TODO: call CreatePairedDevice(addr, path, "");
+										}
+										} );
+
 		
 		// TRUSTED TOGGLE:
 		// add a frame
@@ -220,8 +228,8 @@ public class BluezRemoteDeviceUI {
 		tg_trust.state_set(rdevice.trusted);
 		hbox.pack_end(tg_trust);
 		tg_trust.show();
-		/*tg_pair.smart_callback_add("changed", () => {Variant val = tg_disc.state_get();
-											ADAPTER.set_property_("Discoverable", val); });*/
+		tg_trust.smart_callback_add("changed", () => {Variant val = tg_trust.state_get();
+											rdevice.set_property_device("Trusted", val); });
 											
 											
 		

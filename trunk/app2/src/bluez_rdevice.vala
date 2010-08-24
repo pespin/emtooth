@@ -18,14 +18,9 @@ public class BluezRemoteDevice : Object {
 	public bool blocked {get; set; default=false;}
 	public bool connected {get; set; default=false;}
 	
+	private string[] UUIDs;
+	
 	public bool online {get; set; default=false;}
-	
-	//TODO: handle UUIDS
-	
-	
-	
-//"UUIDs": [ "00001105-0000-1000-8000-00805f9b34fb", "00001106-0000-1000-8000-00805f9b34fb", "0000110a-0000-1000-8000-00805f9b34fb", "0000110c-0000-1000-8000-00805f9b34fb", "0000110e-0000-1000-8000-00805f9b34fb", "00001112-0000-1000-8000-00805f9b34fb", "00001115-0000-1000-8000-00805f9b34fb", "00001116-0000-1000-8000-00805f9b34fb", "00001117-0000-1000-8000-00805f9b34fb", "0000111f-0000-1000-8000-00805f9b34fb", "0000112f-0000-1000-8000-00805f9b34fb" ], "Adapter": op'/org/bluez/5333/hci0' } )
-
 	
 	
 	private Device dbus_device;
@@ -41,8 +36,10 @@ public class BluezRemoteDevice : Object {
 		}
 		
 		
-		dbus_device.property_changed.connect(property_changed_sig);
+		dbus_device.property_changed.connect(property_changed_device_sig);
 		dbus_device.disconnect_requested.connect(disconnect_requested_sig);
+		
+		this.update_properties();
 		
 		
 		stdout.printf("Remote device (%s) created successfully.\n", obj_path);
@@ -67,6 +64,8 @@ public class BluezRemoteDevice : Object {
 			this.blocked = (bool) hash.lookup("Blocked");
 			this.connected = (bool) hash.lookup("Connected");
 			
+			this.UUIDs = get_dbus_array(hash.lookup("UUIDs"));
+			
 		} catch (IOError err) {
 			stderr.printf("ERR: Could not get properties from remote device %s: %s\n", this.path, err.message);
 		}
@@ -88,6 +87,26 @@ public class BluezRemoteDevice : Object {
 					"connected = "+connected.to_string()+";\n\n");
 	}
 	
+	public void set_property_device(string name, GLib.Variant val) {
+		stdout.printf("Setting property "+name+" to "+val.get_type_string() +" on rdevice "+path+".\n");
+		try {
+			dbus_device.set_property_(name, val);
+		} catch (IOError err) {
+			stderr.printf("ERR: Could not set property %s on device %s: %s\n",name, this.path, err.message);
+		}
+	}
+	
+	
+	public bool has_service_input() {
+	
+		foreach(var uid in this.UUIDs) 
+			if (uid == HID_UUID) 
+				return true;
+		
+		return false;
+}
+	
+	
 
 	/*
 	 * 
@@ -95,8 +114,44 @@ public class BluezRemoteDevice : Object {
 	 * 
 	 */
 	 
-	 private void property_changed_sig(string name, GLib.Variant val) {
-		 stdout.printf("SIGNAL: Property changed on remote device %s: %s = %s;\n", path, name, (string) val);
+	 private void property_changed_device_sig(string name, GLib.Variant val) {
+		 stdout.printf("SIGNAL: Property changed on remote device %s: %s = %s;\n", path, name, val.get_type_string());
+		 
+		 switch(name) {
+			case "Address":
+				this.addr = (string) val;	
+				break;
+			case "Name":
+				this.name = (string) val;	
+				break;
+			case "Alias":
+				this.alias = (string) val;	
+				break;
+			case "Adapter":
+				this.adapter = (string) val;	
+				break;
+			case "Icon":
+				this.icon = (string) val;	
+				break;
+			case "Class":
+				this.klass = (uint) val;	
+				break;
+			case "Paired":
+				this.paired = (bool) val;	
+				break;
+			case "Trusted":
+				this.trusted = (bool) val;	
+				break;
+			case "Blocked":
+				this.blocked = (bool) val;	
+				break;
+			case "Powered":
+				this.connected = (bool) val;	
+				break;
+			default:
+				stdout.printf("Unknown property %s\n", name);
+				break;	
+		}
 	}
 
 	 private void disconnect_requested_sig() {
