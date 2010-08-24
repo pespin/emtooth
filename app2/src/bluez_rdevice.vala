@@ -104,7 +104,24 @@ public class BluezRemoteDevice : Object {
 				return true;
 		
 		return false;
-}
+	}	
+
+
+	public bool has_service_audio() {
+	
+		foreach(var uid in this.UUIDs) {
+			if ( uid == HSP_HS_UUID ||
+				 uid ==  HSP_AG_UUID ||
+				 uid ==  HFP_HS_UUID ||
+				 uid ==  HFP_AG_UUID ||
+				 uid ==  A2DP_SOURCE_UUID ||
+				 uid ==  A2DP_SINK_UUID ||
+				 uid ==  AVRCP_TARGET_UUID ) 
+				return true;
+		}
+		
+		return false;
+	}	
 	
 	
 

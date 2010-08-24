@@ -5,10 +5,7 @@ public class BluezRemoteDeviceUI {
 		Elm.Object[] gui_container;
 	
 		public Elm.Win win;
-		
-		private Elm.Label lb;
-		
-			
+	
 		private Elm.Bg	bg;
 		private Elm.Box vbox;
 		private Elm.Scroller sc;
@@ -16,10 +13,14 @@ public class BluezRemoteDeviceUI {
 		private Elm.Box vbox_fr;
 		private Elm.Frame fr;
 		private Elm.Box hbox;
+		private Elm.Label lb;
 		private Elm.Entry entry_alias;
 		private Elm.Toggle tg_con;
 		private Elm.Toggle tg_pair;
 		private Elm.Toggle tg_trust;
+		
+		private Elm.Toggle tg_audio;
+		private Elm.Toggle tg_input;
 		
 		private Elm.Button bt_rm;
 		private Elm.Button bt_close;
@@ -230,6 +231,70 @@ public class BluezRemoteDeviceUI {
 		tg_trust.show();
 		tg_trust.smart_callback_add("changed", () => {Variant val = tg_trust.state_get();
 											rdevice.set_property_device("Trusted", val); });
+											
+											
+											
+		//AUDIO TOGGLE:
+		if(rdevice.has_service_audio()) {
+			gui_container += (owned) fr;
+			fr = new Elm.Frame(win);
+			fr.style_set("default");
+			fr.size_hint_weight_set(1.0, 0.0);
+			fr.size_hint_align_set(-1.0, -1.0);
+			vbox_in.pack_end(fr);
+			fr.show();
+				
+			gui_container += (owned) hbox;
+			hbox = new Elm.Box(win);
+			hbox.horizontal_set(true);
+			hbox.size_hint_align_set(-1.0, 0.0);
+			hbox.size_hint_weight_set(1.0, 0.0);
+			fr.content_set(hbox);
+			hbox.show();
+				
+			gui_container += (owned) lb;
+			lb = new Elm.Label(win);
+			lb.label_set("<b>Connect Audio:</b> ");
+			hbox.pack_end(lb);
+			lb.show();
+				
+			tg_audio = new Elm.Toggle(win);
+			tg_audio.states_labels_set("Yes", "No");
+			//tg_audio.state_set(rdevice.trusted);
+			hbox.pack_end(tg_audio);
+			tg_audio.show();
+		}
+		
+		//AUDIO TOGGLE:
+		if(rdevice.has_service_input()) {
+			gui_container += (owned) fr;
+			fr = new Elm.Frame(win);
+			fr.style_set("default");
+			fr.size_hint_weight_set(1.0, 0.0);
+			fr.size_hint_align_set(-1.0, -1.0);
+			vbox_in.pack_end(fr);
+			fr.show();
+				
+			gui_container += (owned) hbox;
+			hbox = new Elm.Box(win);
+			hbox.horizontal_set(true);
+			hbox.size_hint_align_set(-1.0, 0.0);
+			hbox.size_hint_weight_set(1.0, 0.0);
+			fr.content_set(hbox);
+			hbox.show();
+				
+			gui_container += (owned) lb;
+			lb = new Elm.Label(win);
+			lb.label_set("<b>Connect Input:</b> ");
+			hbox.pack_end(lb);
+			lb.show();
+				
+			tg_input = new Elm.Toggle(win);
+			tg_input.states_labels_set("Yes", "No");
+			//tg_input.state_set(rdevice.trusted);
+			hbox.pack_end(tg_input);
+			tg_input.show();
+		}
 											
 											
 		
