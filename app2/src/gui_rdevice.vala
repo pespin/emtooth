@@ -260,9 +260,14 @@ public class BluezRemoteDeviceUI {
 				
 			tg_audio = new Elm.Toggle(win);
 			tg_audio.states_labels_set("Yes", "No");
-			//tg_audio.state_set(rdevice.trusted);
+			tg_audio.state_set(rdevice.connected_audio);
 			hbox.pack_end(tg_audio);
 			tg_audio.show();
+			tg_audio.smart_callback_add("changed", () => { if(tg_audio.state_get()==true)
+															rdevice.connect_audio(); 
+														   else 
+															rdevice.disconnect_audio();
+														});
 		}
 		
 		//AUDIO TOGGLE:
@@ -291,12 +296,16 @@ public class BluezRemoteDeviceUI {
 				
 			tg_input = new Elm.Toggle(win);
 			tg_input.states_labels_set("Yes", "No");
-			//tg_input.state_set(rdevice.trusted);
+			tg_input.state_set(rdevice.connected_input);
 			hbox.pack_end(tg_input);
 			tg_input.show();
-		}
+			tg_input.smart_callback_add("changed", () => { if(tg_input.state_get()==true)
+															rdevice.connect_input(); 
+														   else
+															rdevice.disconnect_input();
+													} );
 											
-											
+		}									
 		
 		//RM BUTTON:
 		bt_rm = new Elm.Button(win);

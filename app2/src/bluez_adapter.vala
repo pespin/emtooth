@@ -112,11 +112,6 @@ public class BluezAdapter : Object {
 		} catch (IOError err) {
 			stderr.printf("ERR: Could not get properties from device %s: %s\n", this.path, err.message);
 		}
-		//TODO: catch Devices:
-		//<Lethalman> pespin_, just do get_pointer()... get_object() every one of them until you don't get a critical :P
-	
-	//"Devices": [ op'/org/bluez/5333/hci0/dev_00_06_6E_19_16_28', op'/org/bluez/5333/hci0/dev_00_19_2D_11_62_09' ], "UUIDs": [ "00001112-0000-1000-8000-00805f9b34fb", "0000111f-0000-1000-8000-00805f9b34fb", "0000110a-0000-1000-8000-00805f9b34fb", "0000110c-0000-1000-8000-00805f9b34fb", "0000110e-0000-1000-8000-00805f9b34fb", "00001105-0000-1000-8000-00805f9b34fb", "00001106-0000-1000-8000-00805f9b34fb" ] } )
-		
 		this.debug_info();
 	}
 	
@@ -180,6 +175,9 @@ public class BluezAdapter : Object {
 				break;
 			case "Powered":
 				this.powered = (bool) val;	
+				break;
+			case "UUIDs":
+				this.UUIDs = get_dbus_array(val);
 				break;
 			default:
 				stdout.printf("Unknown property %s\n", name);
