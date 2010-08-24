@@ -8,6 +8,7 @@ bin_PROGRAMS      = emtooth
 emtooth_SOURCES = \
 	src/main.vala \
 	src/shared.vala \
+	src/fso.vala \
 	src/bluez_adapter.vala \
 	src/bluez_rdevice.vala \
 	src/gui_main.vala \
@@ -17,7 +18,7 @@ emtooth_SOURCES = \
 	
 emtooth_LDADD = @EMTOOTH_LIBS@
 emtooth_CFLAGS =
-VALAFLAGS = @EMTOOTH_PACKAGES@
+VALAFLAGS = @EMTOOTH_PACKAGES@ @EMTOOTH_VALAFLAGS@
 
 desktopdir = $(datadir)/applications
 desktop_DATA = data/emtooth.desktop
