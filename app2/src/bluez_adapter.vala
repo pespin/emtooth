@@ -90,6 +90,23 @@ public class BluezAdapter : Object {
 		
 	}
 	
+	public void register_agent(string agent_path) {
+		stdout.printf("Registering agent "+agent_path+" on adapter "+this.path+"...\n");
+		try {
+			dbus_obj.register_agent((ObjectPath) path, "");
+		} catch (IOError e) {
+			stderr.printf ("Could not register agent: %s\n", e.message);
+		}
+	}
+	
+	public void pair_rdevice(BluezRemoteDevice rdevice) {
+		stdout.printf("Trying to pair with  "+rdevice.path+"...\n");
+		try {
+			dbus_obj.create_paired_device(rdevice.addr, (ObjectPath) rdevice.path, "");
+		} catch (IOError e) {
+			stderr.printf ("Could not create paired device: %s\n", e.message);
+		}
+	}
 	
 	public void update_properties() {
 		stdout.printf("Updating properties for local adapter %s...\n", this.path);

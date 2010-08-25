@@ -11,6 +11,7 @@ emtooth_SOURCES = \
 	src/fso.vala \
 	src/bluez_adapter.vala \
 	src/bluez_rdevice.vala \
+	src/bluez_agent.vala \
 	src/gui_main.vala \
 	src/gui_settings.vala \
 	src/gui_rdevice.vala \
