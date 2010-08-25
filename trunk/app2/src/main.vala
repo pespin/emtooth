@@ -32,18 +32,29 @@ int main(string[] args) {
 #endif
     
    
-    /* Get default bluez adapter */
+	/* Start bluez_agent */
+	try {
+		var conn = Bus.get_sync (BusType.SYSTEM);
+		//TODO: enable this. there's a vala bug which doesn't let compile
+		//conn.register_object (EMTOOTH_BLUEZ_AGENT_PATH, new BluezAgent ());
+	
+	} catch (IOError e) {
+		stderr.printf ("Could not create service org.emtooth: %s\n", e.message);
+	}
+   
+   
+    /* Get default bluez adapter and register agent */
 	try {
 		Manager root_manager = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", "/");
 
 		var adapter_path = root_manager.default_adapter();
 		stdout.printf("Default adapter path -> %s\n", adapter_path);
 		ADAPTER = new BluezAdapter(adapter_path);
+		ADAPTER.register_agent(EMTOOTH_BLUEZ_AGENT_PATH);
 	} catch (IOError e) {
 		stderr.printf ("Could not get access to org.bluez: %s\n", e.message);
 		return 1;
 	} 
-
 
 	/* Start ui */
 	ui = new EmtoothUI();

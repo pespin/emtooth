@@ -1,3 +1,8 @@
+/*
+ * 
+ * Global variables:
+ *
+ */
 public GLib.MainLoop gmain;
 public BluezAdapter ADAPTER;
 public EmtoothUI ui;
@@ -11,6 +16,17 @@ public Evas.Coord DISPLAY_HEIGHT = 600;
 public FSOusaged fso;
 #endif
 
+
+/*
+ * 
+ * CONSTANTS/DEFINES:
+ *
+ */
+ 
+
+const string EMTOOTH_BLUEZ_AGENT_IFACE = "org.bluez.Agent";
+const string EMTOOTH_BLUEZ_AGENT_PATH = "/org/emtooth/bluez/agent";
+ 
 //Input:
 const string HID_UUID = "00001124-0000-1000-8000-00805f9b34fb";
 
@@ -25,7 +41,12 @@ const string AVRCP_TARGET_UUID = "0000110c-0000-1000-8000-00805f9b34fb";
 
 
 
-
+/*
+ * 
+ * MISC FUNCS
+ * 
+ * 
+ */
 
 public string[]? get_dbus_array(Variant bar) {
 	//stdout.printf("CREATING GLIST FROM DBUS...\n");

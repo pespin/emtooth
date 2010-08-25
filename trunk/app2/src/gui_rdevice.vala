@@ -195,7 +195,7 @@ public class BluezRemoteDeviceUI {
 									() => {		
 										if(tg_pair.state_get()==true) {
 											tg_pair.disabled_set(true);
-											//TODO: call CreatePairedDevice(addr, path, "");
+											ADAPTER.pair_rdevice(rdevice);
 										}
 										} );
 
