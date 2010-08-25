@@ -353,5 +353,4 @@ public class BluezRemoteDeviceUI {
 	
 
 
-
 }

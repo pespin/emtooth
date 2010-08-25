@@ -23,7 +23,7 @@ public class BluezRemoteDevice : Object {
 	public bool connected_audio {get; set; default=false;}
 	public bool connected_input {get; set; default=false;}
 	
-	
+	public string? password {get; set; default=null;}
 	
 	public bool online {get; set; default=false;}
 	
