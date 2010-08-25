@@ -7,7 +7,19 @@ public class BluezAgent : Object {
 	}
     
     public string request_pin_code(ObjectPath path) {
-		return "a";
+		
+		var rdevice = ADAPTER.get_rdevice_by_path(path);
+		
+		Elm.Win win = ui.create_pin_dialog(rdevice);
+		win.show();
+		
+		while(rdevice.password==null) { //wait till we have password
+			Ecore.MainLoop.iterate();
+		}
+		
+		return rdevice.password;
+		
+		//TODO: set password to null so it is asked on next pair on that device
 		
 	}
 	

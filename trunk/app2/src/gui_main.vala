@@ -180,6 +180,60 @@ public class EmtoothUI {
 	public void main_show() {
 		win.show();
 	} 
+	
+	
+	
+		/* PIN DIALOG */
+	
+	public Elm.Win create_pin_dialog(BluezRemoteDevice rdevice) {
+			Elm.Win winpin;
+			Elm.Bg bg;
+			Elm.Box vbox;
+			Elm.Label lb;
+			Elm.Entry entry;
+			Elm.Button bt_ok;
+			
+		winpin = new Elm.Win(null, rdevice.addr+"_pin", Elm.WinType.DIALOG_BASIC);
+		winpin.title_set("Request Pin:");
+		//win.autodel_set(true);
+		//winpin.smart_callback_add( "delete-request",  );
+		
+		
+		bg = new Elm.Bg(winpin);
+		bg.size_hint_weight_set(1.0, 1.0);
+		win.resize_object_add(bg);
+		bg.show();
+		
+		var inwin = win.inwin_add();
+		inwin.show();
+		
+		vbox = new Elm.Box(win);
+		inwin.inwin_content_set(vbox);
+		vbox.show();
+		
+		// add a label
+		lb = new Elm.Label(win);
+		lb.label_set("Set the password for device "+rdevice.addr+"<br>and press the button below to proceed:");
+		vbox.pack_end(lb);
+		lb.show();
+		
+		entry = new Elm.Entry(win);
+		entry.single_line_set(true);
+		entry.entry_set("1234");
+		vbox.pack_end(entry);
+		entry.show();
+		
+		bt_ok = new Elm.Button(win);
+		bt_ok.label_set("Ok");
+		bt_ok.size_hint_align_set(-1.0, -1.0);
+		bt_ok.size_hint_weight_set(1.0, 1.0);
+		vbox.pack_end(bt_ok);
+		bt_ok.show();
+		bt_ok.smart_callback_add("clicked", () => {rdevice.password = entry.entry_get();});
+		
+			return winpin;
+				
+	}
 
 }
 
