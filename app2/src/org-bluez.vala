@@ -30,9 +30,9 @@ namespace org {
 
 			public abstract GLib.ObjectPath[] list_devices() throws IOError;
 
-			public abstract GLib.ObjectPath create_device(string param0) throws IOError;
+			public abstract async GLib.ObjectPath create_device(string param0) throws IOError;
 
-			public abstract GLib.ObjectPath create_paired_device(string param0, GLib.ObjectPath param1, string param2) throws IOError;
+			public abstract async GLib.ObjectPath create_paired_device(string param0, GLib.ObjectPath param1, string param2) throws IOError;
 
 			public abstract void cancel_device_creation(string param0) throws IOError;
 
