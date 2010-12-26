@@ -129,11 +129,6 @@ public class EmtoothUI {
 		
 		rdevices_ui_list.insert(rdevice.path, (owned) item);
 		this.li.go();
-		
-		/*stderr.printf("HERE SHOULD COME A PIN DIALOG\n");
-		lala = new PinDialogUI();
-		lala.create(rdevice);
-		lala.show();*/
 	}
 	
 	public void remove_rdevice_from_ui(string path) {
@@ -201,14 +196,14 @@ public class PinDialogUI {
 	Elm.Label lb;
 	Elm.Entry entry;
 	Elm.Button bt_ok;
+	BluezRemoteDevice rdevice;
 	
 	public void create(BluezRemoteDevice rdevice) {
+		this.rdevice = rdevice;
 		
-		stderr.printf("PIN DIALOG start\n");
 		win = new Elm.Win(null, rdevice.addr+"_pin", Elm.WinType.DIALOG_BASIC);
 		win.title_set("Request Pin:");
 		win.autodel_set(true);
-		//winpin.smart_callback_add( "delete-request",  );
 		
 		
 		bg = new Elm.Bg(win);
@@ -241,7 +236,7 @@ public class PinDialogUI {
 		bt_ok.size_hint_weight_set(1.0, 1.0);
 		vbox.pack_end(bt_ok);
 		bt_ok.show();
-		bt_ok.smart_callback_add("clicked", () => {rdevice.password = entry.entry_get();});
+		bt_ok.smart_callback_add("clicked", () => { this.rdevice.password = this.entry.entry_get(); this.close(); } );
 				
 	}
 
@@ -249,6 +244,10 @@ public class PinDialogUI {
 		win.show();
 	} 
 	
+	public void close() {
+		stdout.printf("Closing pinDialog window\n");
+		win.del();
+	}
 }
 
 //we all love dirty hacks!
