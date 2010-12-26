@@ -180,26 +180,31 @@ public class EmtoothUI {
 	public void main_show() {
 		win.show();
 	} 
+
+}
+
+
+
+
+	/* PIN DIALOG */
+public class PinDialogUI {	
 	
+	Elm.Win win;
+	Elm.Bg bg;
+	Elm.Box vbox;
+	Elm.Label lb;
+	Elm.Entry entry;
+	Elm.Button bt_ok;
 	
-	
-		/* PIN DIALOG */
-	
-	public Elm.Win create_pin_dialog(BluezRemoteDevice rdevice) {
-			Elm.Win winpin;
-			Elm.Bg bg;
-			Elm.Box vbox;
-			Elm.Label lb;
-			Elm.Entry entry;
-			Elm.Button bt_ok;
+	public void create(BluezRemoteDevice rdevice) {
 			
-		winpin = new Elm.Win(null, rdevice.addr+"_pin", Elm.WinType.DIALOG_BASIC);
-		winpin.title_set("Request Pin:");
-		//win.autodel_set(true);
+		win = new Elm.Win(null, rdevice.addr+"_pin", Elm.WinType.DIALOG_BASIC);
+		win.title_set("Request Pin:");
+		win.autodel_set(true);
 		//winpin.smart_callback_add( "delete-request",  );
 		
 		
-		bg = new Elm.Bg(winpin);
+		bg = new Elm.Bg(win);
 		bg.size_hint_weight_set(1.0, 1.0);
 		win.resize_object_add(bg);
 		bg.show();
@@ -230,13 +235,14 @@ public class EmtoothUI {
 		vbox.pack_end(bt_ok);
 		bt_ok.show();
 		bt_ok.smart_callback_add("clicked", () => {rdevice.password = entry.entry_get();});
-		
-			return winpin;
 				
 	}
 
+	public void show() {
+		win.show();
+	} 
+	
 }
-
 
 //we all love dirty hacks!
 //this is needed because of vala internals. It's necessary to pass an object to callback

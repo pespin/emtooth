@@ -16,12 +16,14 @@ public class BluezAgent : Object {
 		
 		var rdevice = ADAPTER.get_rdevice_by_path(path);
 		
-		Elm.Win win = ui.create_pin_dialog(rdevice);
-		win.show();
+		PinDialogUI dialog = new PinDialogUI();
+		dialog.create(rdevice);
+		dialog.show();
 		
 		while(rdevice.password==null) { //wait till we have password
 			Ecore.MainLoop.iterate();
 		}
+
 		
 		return rdevice.password;
 		
