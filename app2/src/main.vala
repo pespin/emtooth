@@ -51,7 +51,7 @@ int main(string[] args) {
    Bus.own_name (BusType.SYSTEM, EMTOOTH_BLUEZ_AGENT_NAME, BusNameOwnerFlags.NONE,
 			  on_bus_acquired,
 			  () => stderr.printf ("Bus name acquired\n"),
-			  () => stderr.printf ("Could not aquire bus name\n"));
+			  () => stderr.printf ("Could not acquire bus name\n"));
     
     
 #if _FSO_
