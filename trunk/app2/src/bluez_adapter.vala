@@ -225,35 +225,41 @@ public class BluezAdapter : Object {
 	
 	private void device_found_sig (string address, HashTable<string, GLib.Variant?> properties) {
 		stdout.printf ("SIGNAL: Remote device found (%s)\n",  address);
+		device_found_sig_async.begin(address, properties);
+		return;
+		
+	}
+	
+	private async void device_found_sig_async(string address, HashTable<string, GLib.Variant?> properties) {
 		
 		GLib.ObjectPath path = null;
-		
-		try {
-			path = dbus_obj.find_device(address);
 			
-		} catch (GLib.Error err) {
-			stderr.printf ("ERR: Could not find object path for device  %s: %s.\t Creating it\n", address, err.message);
 			try {
-				path = dbus_obj.create_device(address);
-			}  catch (IOError err2) {
-				stderr.printf ("ERR: Could not crete object path for device  %s: %s.\n", address, err2.message);
-				return;
+				path = dbus_obj.find_device(address);
+				
+			} catch (GLib.Error err) {
+				stderr.printf ("ERR: Could not find object path for device  %s: %s.\t Creating it\n", address, err.message);
+				try {
+					path = yield dbus_obj.create_device(address);
+				}  catch (IOError err2) {
+					stderr.printf ("ERR: Could not crete object path for device  %s: %s.\n", address, err2.message);
+					return;
+				}
 			}
-		}
-		
-		stdout.printf("Object path for device with addr %s is %s\n", address, path);
-		
-		unowned BluezRemoteDevice tmp;
-		tmp = hash.lookup(path);
-		if(tmp == null) {
-			var device = new BluezRemoteDevice(path);
-			this.hash.insert(device.path, device);
-			this.num_devices_found++;
-			device.online = true;
-			ui.add_rdevice_to_ui(device);
-		} else {
-				tmp.online=true;
-		}
+			
+			stdout.printf("Object path for device with addr %s is %s\n", address, path);
+			
+			unowned BluezRemoteDevice tmp;
+			tmp = hash.lookup(path);
+			if(tmp == null) {
+				var device = new BluezRemoteDevice(path);
+				this.hash.insert(device.path, device);
+				this.num_devices_found++;
+				device.online = true;
+				ui.add_rdevice_to_ui(device);
+			} else {
+					tmp.online=true;
+			}
 		
 	}
 
@@ -265,6 +271,4 @@ public class BluezAdapter : Object {
 			device.online = false;
 		
 	}
-	
-	
 }

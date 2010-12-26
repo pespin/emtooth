@@ -40,7 +40,7 @@ const string A2DP_SOURCE_UUID = "0000110a-0000-1000-8000-00805f9b34fb";
 const string A2DP_SINK_UUID = "0000110b-0000-1000-8000-00805f9b34fb";
 const string AVRCP_TARGET_UUID = "0000110c-0000-1000-8000-00805f9b34fb";
 
-
+//PinDialogUI lala; //DEBUG
 
 /*
  * 

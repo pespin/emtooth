@@ -129,6 +129,11 @@ public class EmtoothUI {
 		
 		rdevices_ui_list.insert(rdevice.path, (owned) item);
 		this.li.go();
+		
+		/*stderr.printf("HERE SHOULD COME A PIN DIALOG\n");
+		lala = new PinDialogUI();
+		lala.create(rdevice);
+		lala.show();*/
 	}
 	
 	public void remove_rdevice_from_ui(string path) {
@@ -190,6 +195,7 @@ public class EmtoothUI {
 public class PinDialogUI {	
 	
 	Elm.Win win;
+	Elm.Win inwin;
 	Elm.Bg bg;
 	Elm.Box vbox;
 	Elm.Label lb;
@@ -197,7 +203,8 @@ public class PinDialogUI {
 	Elm.Button bt_ok;
 	
 	public void create(BluezRemoteDevice rdevice) {
-			
+		
+		stderr.printf("PIN DIALOG start\n");
 		win = new Elm.Win(null, rdevice.addr+"_pin", Elm.WinType.DIALOG_BASIC);
 		win.title_set("Request Pin:");
 		win.autodel_set(true);
@@ -209,7 +216,7 @@ public class PinDialogUI {
 		win.resize_object_add(bg);
 		bg.show();
 		
-		var inwin = win.inwin_add();
+		inwin = win.inwin_add();
 		inwin.show();
 		
 		vbox = new Elm.Box(win);
