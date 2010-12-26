@@ -93,7 +93,7 @@ public class BluezAdapter : Object {
 	public void register_agent(string agent_path) {
 		stdout.printf("Registering agent "+agent_path+" on adapter "+this.path+"...\n");
 		try {
-			dbus_obj.register_agent((ObjectPath) path, "");
+			dbus_obj.register_agent((ObjectPath) agent_path, "DisplayYesNo");
 		} catch (IOError e) {
 			stderr.printf ("Could not register agent: %s\n", e.message);
 		}

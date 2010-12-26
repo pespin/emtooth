@@ -23,9 +23,10 @@ public FSOusaged fso;
  *
  */
  
-
-const string EMTOOTH_BLUEZ_AGENT_IFACE = "org.bluez.Agent";
+const string EMTOOTH_BLUEZ_AGENT_NAME = "org.emtooth";
 const string EMTOOTH_BLUEZ_AGENT_PATH = "/org/emtooth/bluez/agent";
+const string EMTOOTH_BLUEZ_AGENT_IFACE = "org.bluez.Agent";
+
  
 //Input:
 const string HID_UUID = "00001124-0000-1000-8000-00805f9b34fb";
