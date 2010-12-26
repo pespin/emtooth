@@ -2,6 +2,32 @@ using org;
 using bluez;
 
 
+void on_bus_acquired (DBusConnection conn) {
+	/* Start bluez_agent */
+	try {
+		
+		conn.register_object (EMTOOTH_BLUEZ_AGENT_PATH, new BluezAgent ());
+		stderr.printf ("service org.emtooth created correctly\n");
+	} catch (IOError e) {
+		stderr.printf ("Could not create service org.emtooth: %s\n", e.message);
+	}
+	
+	    /* Get default bluez adapter and register agent */
+	try {
+		Manager root_manager = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", "/");
+
+		var adapter_path = root_manager.default_adapter();
+		stdout.printf("Default adapter path -> %s\n", adapter_path);
+		ADAPTER = new BluezAdapter(adapter_path);
+		ADAPTER.register_agent(EMTOOTH_BLUEZ_AGENT_PATH);
+	} catch (IOError e) {
+		stderr.printf ("Could not get access to org.bluez: %s\n", e.message);
+		//exit(1);
+	} 
+
+}
+
+
 int main(string[] args) {
 
 	Elm.init(args);
@@ -21,6 +47,13 @@ int main(string[] args) {
     }
     
     
+   /* Start bluez_agent */
+   Bus.own_name (BusType.SYSTEM, EMTOOTH_BLUEZ_AGENT_NAME, BusNameOwnerFlags.NONE,
+			  on_bus_acquired,
+			  () => stderr.printf ("Bus name acquired\n"),
+			  () => stderr.printf ("Could not aquire bus name\n"));
+    
+    
 #if _FSO_
     /* Get Bluetooth resource if fso is running */
     try {
@@ -31,30 +64,6 @@ int main(string[] args) {
 		}
 #endif
     
-   
-	/* Start bluez_agent */
-	try {
-		var conn = Bus.get_sync (BusType.SYSTEM);
-		//TODO: enable this. there's a vala bug which doesn't let compile
-		//conn.register_object (EMTOOTH_BLUEZ_AGENT_PATH, new BluezAgent ());
-	
-	} catch (IOError e) {
-		stderr.printf ("Could not create service org.emtooth: %s\n", e.message);
-	}
-   
-   
-    /* Get default bluez adapter and register agent */
-	try {
-		Manager root_manager = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", "/");
-
-		var adapter_path = root_manager.default_adapter();
-		stdout.printf("Default adapter path -> %s\n", adapter_path);
-		ADAPTER = new BluezAdapter(adapter_path);
-		ADAPTER.register_agent(EMTOOTH_BLUEZ_AGENT_PATH);
-	} catch (IOError e) {
-		stderr.printf ("Could not get access to org.bluez: %s\n", e.message);
-		return 1;
-	} 
 
 	/* Start ui */
 	ui = new EmtoothUI();
