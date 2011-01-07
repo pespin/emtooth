@@ -12,7 +12,7 @@ PR = "r0"
 
 SRC_URI = "svn://emtooth.googlecode.com/svn/trunk;module=app2;proto=http"
 
-S = "${WORKDIR}/app"
+S = "${WORKDIR}/app2"
 
 inherit autotools vala
 
