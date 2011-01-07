@@ -184,6 +184,64 @@ public class EmtoothUI {
 }
 
 
+	/* PIN DIALOG */
+public class DialogUI : Object {	
+	
+	Elm.Win win;
+	Elm.Win inwin;
+	Elm.Bg bg;
+	Elm.Box vbox;
+	Elm.Label lb;
+	Elm.Button bt_ok;
+	
+	public void create(string text) {
+		this.ref(); //let it be unless someone presses the kill button
+		
+		win = new Elm.Win(null, "dialog", Elm.WinType.DIALOG_BASIC);
+		win.title_set("Attention:");
+		win.autodel_set(false);
+		
+		
+		bg = new Elm.Bg(win);
+		bg.size_hint_weight_set(1.0, 1.0);
+		win.resize_object_add(bg);
+		bg.show();
+		
+		inwin = win.inwin_add();
+		inwin.show();
+		
+		vbox = new Elm.Box(win);
+		inwin.inwin_content_set(vbox);
+		vbox.show();
+		
+		// add a label
+		lb = new Elm.Label(win);
+		lb.label_set(text);
+		vbox.pack_end(lb);
+		lb.show();
+		
+		bt_ok = new Elm.Button(win);
+		bt_ok.label_set("Ok");
+		bt_ok.size_hint_align_set(-1.0, -1.0);
+		bt_ok.size_hint_weight_set(1.0, 1.0);
+		vbox.pack_end(bt_ok);
+		bt_ok.show();
+		bt_ok.smart_callback_add("clicked", () => { this.close(); } );
+				
+	}
+
+	public void show() {
+		win.show();
+	} 
+	
+	public void close() {
+		stdout.printf("Closing Dialog window\n");
+		win.del();
+		this.unref();
+	}
+}
+
+
 
 
 	/* PIN DIALOG */
