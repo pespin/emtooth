@@ -32,6 +32,9 @@ public class BluezAdapter : Object {
 
 		} catch (IOError err) {
 			stderr.printf("ERR: Could not get local adapter with path %s: %s\n", obj_path, err.message);
+			var dialog = new DialogUI();
+			dialog.create("Could not get local adapter with path "+(string)obj_path+":<br>"+err.message);
+			dialog.show();
 			return;
 		}
 		
@@ -83,6 +86,9 @@ public class BluezAdapter : Object {
 			dbus_obj.remove_device(device_path);
 		} catch (IOError err) {
 			stderr.printf("ERR: Could not remove device %s: %s\n", (string) device_path, err.message);
+			var dialog = new DialogUI();
+			dialog.create("Could not remove device "+(string)device_path+":<br>"+err.message);
+			dialog.show();
 		}
 		
 		this.hash.remove(device_path);
@@ -95,7 +101,10 @@ public class BluezAdapter : Object {
 		try {
 			dbus_obj.register_agent((ObjectPath) agent_path, "DisplayYesNo");
 		} catch (IOError e) {
-			stderr.printf ("Could not register agent: %s\n", e.message);
+			stderr.printf ("ERR: Could not register agent: %s\n", e.message);
+			var dialog = new DialogUI();
+			dialog.create("Could not register agent:<br>"+e.message);
+			dialog.show();
 		}
 	}
 	
@@ -104,7 +113,10 @@ public class BluezAdapter : Object {
 		try {
 			dbus_obj.create_paired_device(rdevice.addr, (ObjectPath) rdevice.path, "");
 		} catch (IOError e) {
-			stderr.printf ("Could not create paired device: %s\n", e.message);
+			stderr.printf ("ERR: Could not create paired device: %s\n", e.message);
+			var dialog = new DialogUI();
+			dialog.create("Could not create paired device:<br>"+e.message);
+			dialog.show();
 		}
 	}
 	
@@ -250,6 +262,9 @@ public class BluezAdapter : Object {
 					path = yield dbus_obj.create_device(address);
 				}  catch (IOError err2) {
 					stderr.printf ("ERR: Could not crete object path for device  %s: %s.\n", address, err2.message);
+					var dialog = new DialogUI();
+					dialog.create("Could not crete object path for device "+address+":<br>"+err2.message);
+					dialog.show();
 					return;
 				}
 			}
