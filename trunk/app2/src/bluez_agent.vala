@@ -24,8 +24,10 @@ public class BluezAgent : Object {
 			Ecore.MainLoop.iterate();
 		}
 
+		string s = rdevice.password;
+		rdevice.password=null;
 		
-		return rdevice.password;
+		return s;
 		
 		//TODO: set password to null so it is asked on next pair on that device
 		

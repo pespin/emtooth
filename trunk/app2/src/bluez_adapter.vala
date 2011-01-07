@@ -212,13 +212,20 @@ public class BluezAdapter : Object {
 		stdout.printf ("SIGNAL: Remote device created (%s)\n",  address);
 	}
 
-	private void device_removed_sig (string address) {
-		stdout.printf ("SIGNAL: Remote device removed(%s)\n", address);
+	private void device_removed_sig (string path) {
+		stdout.printf ("SIGNAL: Remote device removed(%s)\n", path);
 		
-		var device = get_rdevice_by_addr(address);
+		/*var device = get_rdevice_by_addr(address);
 		if(device==null) return;
 		
 		this.hash.remove(device.path);
+		ui.remove_rdevice_from_ui(device.path);
+		this.num_devices_found--; */
+		
+		var device = this.hash.lookup(path);
+		if(device==null) return;
+		
+		this.hash.remove(path);
 		ui.remove_rdevice_from_ui(device.path);
 		this.num_devices_found--;
 	}

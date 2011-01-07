@@ -285,8 +285,11 @@ private class WinOpener : Object {
 				device_ui = new BluezRemoteDeviceUI(rdevice);
 				ui.opened_wins.insert(rdevice.path, device_ui);
 				device_ui.create();
+				device_ui.show();
+			} else {
+				//device_ui.win.focus_set(true);  //FIXME: (focusing the active win instead of creating it) doesn't work
 			}
-				device_ui.show(); //TODO: !null then don't show, but focus the win
+				
 		}
 		
 	
