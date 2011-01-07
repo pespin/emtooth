@@ -1,11 +1,11 @@
 AUTOMAKE_OPTIONS     = 1.4 foreign
 MAINTAINERCLEANFILES = Makefile.in
 
-INCLUDES = -I$(top_srcdir) @EMTOOTH_CFLAGS@
+INCLUDES = -I$(top_srcdir) @EMTOOTH2_CFLAGS@
 
-bin_PROGRAMS      = emtooth
+bin_PROGRAMS      = emtooth2
 
-emtooth_SOURCES = \
+emtooth2_SOURCES = \
 	src/main.vala \
 	src/shared.vala \
 	src/fso.vala \
@@ -17,9 +17,9 @@ emtooth_SOURCES = \
 	src/gui_rdevice.vala \
 	src/org-bluez.vala
 	
-emtooth_LDADD = @EMTOOTH_LIBS@
-emtooth_CFLAGS =
-VALAFLAGS = @EMTOOTH_PACKAGES@ @EMTOOTH_VALAFLAGS@
+emtooth2_LDADD = @EMTOOTH2_LIBS@
+emtooth2_CFLAGS =
+VALAFLAGS = @EMTOOTH2_PACKAGES@ @EMTOOTH2_VALAFLAGS@
 
 desktopdir = $(datadir)/applications
 desktop_DATA = data/emtooth.desktop
