@@ -126,7 +126,7 @@ public class EmtoothUI {
 		var opener = new WinOpener(rdevice.path);
 		Elm.ListItem item;
 		item = this.li.append(label, null, null, opener.go);
-		
+		opener.item = item; // this is needed to unselect ListItem to be able to press it again.
 		rdevices_ui_list.insert(rdevice.path, (owned) item);
 		this.li.go();
 	}
@@ -168,7 +168,7 @@ public class EmtoothUI {
 	}
 	
 	
-		private void cb_bt_settings_clicked() {
+	private void cb_bt_settings_clicked() {
 		stdout.printf("Settings button pressed.\n");
 		
 		settings_ui = new SettingsUI();
@@ -255,6 +255,7 @@ public class PinDialogUI {
 private class WinOpener : Object {
 	
 		public string path;
+		public unowned Elm.ListItem item;
 		
 		public WinOpener(string str) {
 			this.ref();
@@ -264,6 +265,8 @@ private class WinOpener : Object {
 		
 		public void go () { 
 		stderr.printf ("PATH=" + this.path + ";\n"); 
+		stderr.printf ("label=" + this.item.label_get() + ";\n");
+		this.item.selected_set(false);
 		open_rdevice_win(this.path); 
 		//this.unref ();
 		//^ we don't want this to be unrefd, as it has to be kept alive to be called by clicked signal
