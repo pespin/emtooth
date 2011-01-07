@@ -253,13 +253,13 @@ public class BluezAdapter : Object {
 				path = dbus_obj.find_device(address);
 				
 			} catch (GLib.Error err) {
-				stderr.printf ("ERR: Could not find object path for device  %s: %s.\t Creating it\n", address, err.message);
+				stderr.printf ("Could not find object path for device  %s: %s.\t Creating it\n", address, err.message);
 				try {
 					path = yield dbus_obj.create_device(address);
 				}  catch (IOError err2) {
-					stderr.printf ("ERR: Could not crete object path for device  %s: %s.\n", address, err2.message);
+					stderr.printf ("ERR: Could not create object path for device  %s: %s.\n", address, err2.message);
 					var dialog = new DialogUI();
-					dialog.create("Could not crete object path for device "+address+":<br>"+err2.message);
+					dialog.create("Could not create object path for device "+address+":<br>"+err2.message);
 					dialog.show();
 					return;
 				}
