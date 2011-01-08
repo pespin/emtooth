@@ -9,19 +9,20 @@ public class SettingsUI {
 	
 		public Elm.Win win;
 		
-		private Elm.Label lb;
+		private FrameBox fr_general;
+		private FrameBox fr_disc;
+		private FrameBox fr_pair;
 		
+		private LabelBox address;
+		private EntryBox name;
+		private EntryBox discoverable_timeout;
+		private EntryBox pairable_timeout;
 			
 		private Elm.Bg	bg;
 		private Elm.Box vbox;
 		private Elm.Scroller sc;
 		private Elm.Box vbox_in;
-		private Elm.Box vbox_fr;
-		private Elm.Frame fr;
 		private Elm.Box hbox;
-		private Elm.Entry entry_name;
-		private Elm.Entry entry_disc;
-		private Elm.Entry entry_pair;
 		private Elm.Toggle tg_disc;
 		private Elm.Toggle tg_pair;
 		
@@ -48,8 +49,6 @@ public class SettingsUI {
 		vbox.size_hint_weight_set(1.0, 1.0);
 		vbox.show();
 		
-		//HERE STARTS ALL THE OPTIONS LIST:
-		
 		sc = new Elm.Scroller(win);
 		sc.size_hint_weight_set(1.0, 1.0);
 		sc.size_hint_align_set(-1.0, -1.0);
@@ -63,178 +62,69 @@ public class SettingsUI {
 		sc.content_set(vbox_in);
 		vbox_in.show();
 		
-		//ADDRESS	
-		// add a frame
-		fr = new Elm.Frame(win);
-		fr.style_set("outdent_top");
-		fr.size_hint_weight_set(0.0, 0.0);
-		fr.size_hint_align_set(0.5, 0.5);
-		vbox_in.pack_end(fr);
-		fr.show();
+		//HERE STARTS ALL THE OPTIONS LIST:
 		
-		lb = new Elm.Label(win);
-		lb.label_set("<b>Address:</b> "+ADAPTER.addr);
-		fr.content_set(lb);
-		lb.show();
-	
+		fr_general = new FrameBox(win, vbox_in, "General settings");
+		fr_general.show();
+		
+		//ADDRESS	
+		address = new LabelBox(win, fr_general.box, "Address", ADAPTER.addr);
+		address.show();
 		
 		// NAME:
-		// add a frame	
-		gui_container += (owned) fr;
-		fr = new Elm.Frame(win);
-		fr.style_set("default");
-		fr.size_hint_weight_set(1.0, 0.0);
-		fr.size_hint_align_set(-1.0, -1.0);
-		vbox_in.pack_end(fr);
-		fr.show();
+		name = new EntryBox(win, fr_general.box, "Name", ADAPTER.name);
+		name.show();
 		
-		hbox = new Elm.Box(win);
-		hbox.horizontal_set(true);
-		hbox.size_hint_align_set(1.0, 0.0);
-		hbox.size_hint_weight_set(-1.0, 0.0);
-		fr.content_set(hbox);
-		hbox.show();
-		
-		gui_container += (owned) lb;
-		lb = new Elm.Label(win);
-		lb.label_set("<b>Name:</b> ");
-		hbox.pack_end(lb);
-		lb.show();
-		
-		entry_name = new Elm.Entry(win);
-		entry_name.single_line_set(true);
-		entry_name.entry_set(ADAPTER.name);
-		hbox.pack_end(entry_name);
-		entry_name.show();
-		
-		entry_name.smart_callback_add("changed", () => {Variant val = entry_name.entry_get();
+		name.val.smart_callback_add("changed", () => {Variant val = name.val_get();
 													ADAPTER.set_property_("Name", val);
 													});
 		
 		// DISCOVERABLE TOGGLE + TIMEOUT:
-		// add a frame
-		gui_container += (owned) fr;
-		fr = new Elm.Frame(win);
-		fr.style_set("default");
-		fr.size_hint_weight_set(1.0, 0.0);
-		fr.size_hint_align_set(-1.0, -1.0);
-		vbox_in.pack_end(fr);
-		fr.show();
 		
-		vbox_fr = new Elm.Box(win);
-		vbox_fr.size_hint_align_set(-1.0, 0.0);
-		vbox_fr.size_hint_weight_set(1.0, 1.0);
-		fr.content_set(vbox_fr);
-		vbox_fr.show();
-		
-		gui_container += (owned) hbox;
-		hbox = new Elm.Box(win);
-		hbox.horizontal_set(true);
-		hbox.size_hint_align_set(1.0, 0.0);
-		hbox.size_hint_weight_set(-1.0, 0.0);
-		vbox_fr.pack_end(hbox);
-		hbox.show();
-		
-		gui_container += (owned) lb;
-		lb = new Elm.Label(win);
-		lb.label_set("<b>Discoverable:</b> ");
-		hbox.pack_end(lb);
-		lb.show();
+		fr_disc = new FrameBox(win, vbox_in, "Discovery settings");
+		fr_disc.show();
 		
 		tg_disc = new Elm.Toggle(win);
+		tg_disc.label_set("Discoverable:");
 		tg_disc.states_labels_set("On", "Off");
 		tg_disc.state_set(ADAPTER.discoverable);
-		hbox.pack_end(tg_disc);
+		tg_disc.size_hint_align_set(-1.0, 0.0);
+		fr_disc.box.pack_end(tg_disc);
 		tg_disc.show();
+		
 		tg_disc.smart_callback_add("changed", () => {Variant val = tg_disc.state_get();
 											ADAPTER.set_property_("Discoverable", val); });
 		//endl
 		
-		gui_container += (owned) hbox;
-		hbox = new Elm.Box(win);
-		hbox.horizontal_set(true);
-		hbox.size_hint_align_set(1.0, 0.0);
-		hbox.size_hint_weight_set(-1.0, 0.0);
-		vbox_fr.pack_end(hbox);
-		hbox.show();
+		discoverable_timeout = new EntryBox(win, fr_disc.box, "Discoverable timeout", ADAPTER.discoverable_timeout.to_string());
+		discoverable_timeout.show();
 		
-		gui_container += (owned) lb;
-		lb = new Elm.Label(win);
-		lb.label_set("<b>Discovey timeout:</b> ");
-		hbox.pack_end(lb);
-		lb.show();
-		
-		entry_disc = new Elm.Entry(win);
-		entry_disc.single_line_set(true);
-		entry_disc.entry_set(ADAPTER.discoverable_timeout.to_string());
-		hbox.pack_end(entry_disc);
-		entry_disc.show(); 
-		entry_disc.smart_callback_add("changed", () => {Variant val = (uint) entry_disc.entry_get().to_int();
+		discoverable_timeout.val.smart_callback_add("changed", () => {Variant val = (uint) discoverable_timeout.val_get().to_int();
 									ADAPTER.set_property_("DiscoverableTimeout", val); });
 	
 		
 		// PAIRABLE TOGGLE + TIMEOUT:
-		// add a frame
-		gui_container += (owned) fr;
-		fr = new Elm.Frame(win);
-		fr.style_set("default");
-		fr.size_hint_weight_set(1.0, 0.0);
-		fr.size_hint_align_set(-1.0, -1.0);
-		vbox_in.pack_end(fr);
-		fr.show();
 		
-		gui_container += (owned) vbox_fr;
-		vbox_fr = new Elm.Box(win);
-		vbox_fr.size_hint_align_set(-1.0, 0.0);
-		vbox_fr.size_hint_weight_set(1.0, 1.0);
-		fr.content_set(vbox_fr);
-		vbox_fr.show();
-		
-		gui_container += (owned) hbox;
-		hbox = new Elm.Box(win);
-		hbox.horizontal_set(true);
-		hbox.size_hint_align_set(1.0, 0.0);
-		hbox.size_hint_weight_set(-1.0, 0.0);
-		vbox_fr.pack_end(hbox);
-		hbox.show();
-		
-		gui_container += (owned) lb;
-		lb = new Elm.Label(win);
-		lb.label_set("<b>Pairable:</b> ");
-		hbox.pack_end(lb);
-		lb.show();
+		fr_pair = new FrameBox(win, vbox_in, "Pairing settings");
+		fr_pair.show();
 		
 		tg_pair = new Elm.Toggle(win);
+		tg_pair.label_set("Pairable:");
 		tg_pair.states_labels_set("On", "Off");
 		tg_pair.state_set(ADAPTER.pairable);
-		hbox.pack_end(tg_pair);
+		tg_pair.size_hint_align_set(-1.0, 0.0);
+		fr_pair.box.pack_end(tg_pair);
 		tg_pair.show();
+		
 		tg_pair.smart_callback_add("changed", () => {Variant val = tg_pair.state_get();
 									ADAPTER.set_property_("Pairable", val); });
 		
 		//endl
 		
-		gui_container += (owned) hbox;
-		hbox = new Elm.Box(win);
-		hbox.horizontal_set(true);
-		hbox.size_hint_align_set(1.0, 0.0);
-		hbox.size_hint_weight_set(-1.0, 0.0);
-		vbox_fr.pack_end(hbox);
-		hbox.show();
+		pairable_timeout = new EntryBox(win, fr_pair.box, "Pairable timeout", ADAPTER.pairable_timeout.to_string());
+		pairable_timeout.show();
 		
-		gui_container += (owned) lb;
-		lb = new Elm.Label(win);
-		lb.label_set("<b>Pairing timeout:</b> ");
-		hbox.pack_end(lb);
-		lb.show();
-
-
-		entry_pair = new Elm.Entry(win);
-		entry_pair.single_line_set(true);
-		entry_pair.entry_set(ADAPTER.pairable_timeout.to_string());
-		hbox.pack_end(entry_pair);
-		entry_pair.show();
-		entry_pair.smart_callback_add("changed", () => {Variant val = (uint) entry_pair.entry_get().to_int();
+		discoverable_timeout.val.smart_callback_add("changed", () => {Variant val = (uint) pairable_timeout.val_get().to_int();
 												ADAPTER.set_property_("PairableTimeout", val); });
 		
 		//BOTTOM:
