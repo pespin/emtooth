@@ -233,6 +233,10 @@ public class BluezRemoteDevice : Object {
 	 private void property_changed_device_sig(string name, GLib.Variant val) {
 		 stdout.printf("SIGNAL: DeviceProperty changed on remote device %s: %s = %s;\n", path, name, val.get_type_string());
 		 
+		if(val==null) {
+			warning("bluez_adapter.property_changed_sig() -> "+name+" was null!");		
+		}
+		 
 		 switch(name) {
 			case "Address":
 				this.addr = (string) val;	

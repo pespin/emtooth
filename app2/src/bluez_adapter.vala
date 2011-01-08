@@ -181,6 +181,11 @@ public class BluezAdapter : Object {
 	/* SIGNALS */
 	private void property_changed_sig(string name, GLib.Variant val) {
 		stdout.printf ("SIGNAL: Property changed on adapter %s -> %s = %s;\n", path,  name, val.get_type_string());
+		
+		if(val==null) {
+			warning("bluez_adapter.property_changed_sig() -> "+name+" was null!");		
+		}
+		
 		switch(name) {
 			case "Address":
 				this.addr = (string) val;	

@@ -51,13 +51,6 @@ int main(string[] args) {
     }
     
     
-   /* Start bluez_agent */
-   Bus.own_name (BusType.SYSTEM, EMTOOTH_BLUEZ_AGENT_NAME, BusNameOwnerFlags.NONE,
-			  on_bus_acquired,
-			  () => stderr.printf ("Bus name acquired\n"),
-			  () => stderr.printf ("Could not acquire bus name\n"));
-    
-    
 #if _FSO_
     /* Get Bluetooth resource if fso is running */
     try {
@@ -68,6 +61,13 @@ int main(string[] args) {
 			stderr.printf ("ERR: Could not get access to org.freesmartphone.ousaged: %s\n", e.message);
 		}
 #endif
+
+
+	   /* Start bluez_agent */
+   Bus.own_name (BusType.SYSTEM, EMTOOTH_BLUEZ_AGENT_NAME, BusNameOwnerFlags.NONE,
+			  on_bus_acquired,
+			  () => stderr.printf ("Bus name acquired\n"),
+			  () => stderr.printf ("Could not acquire bus name\n"));
     
 
 	/* Start ui */
