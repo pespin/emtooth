@@ -61,10 +61,11 @@ int main(string[] args) {
 #if _FSO_
     /* Get Bluetooth resource if fso is running */
     try {
+			stderr.printf ("Requesting \"Bluetooth\" resource to org.freesmartphone.ousaged...\n");
 			fso = Bus.get_proxy_sync (BusType.SYSTEM, "org.freesmartphone.ousaged", "/org/freesmartphone/Usage");
 			fso.request_resource("Bluetooth");
 		} catch (IOError e) {
-			stderr.printf ("Could not get access to org.freesmartphone.ousaged: %s\n", e.message);
+			stderr.printf ("ERR: Could not get access to org.freesmartphone.ousaged: %s\n", e.message);
 		}
 #endif
     
@@ -82,6 +83,7 @@ int main(string[] args) {
     
 #if _FSO_    
 	try {
+		stderr.printf ("Releasing \"Bluetooth\" resource...\n");
 		fso.release_resource("Bluetooth");
 	} catch (IOError e) {
 		stderr.printf ("Could not get access to org.freesmartphone.ousaged: %s\n", e.message);
