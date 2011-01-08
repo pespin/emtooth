@@ -22,8 +22,8 @@ emtooth2_CFLAGS =
 VALAFLAGS = @EMTOOTH2_PACKAGES@ @EMTOOTH2_VALAFLAGS@
 
 desktopdir = $(datadir)/applications
-desktop_DATA = data/emtooth.desktop
+desktop_DATA = data/emtooth2.desktop
 
 pixmapsdir = $(datadir)/pixmaps
-pixmaps_DATA =  data/emtooth.png
+pixmaps_DATA =  data/emtooth2.png
 
