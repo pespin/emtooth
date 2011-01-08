@@ -48,7 +48,7 @@ const string AVRCP_TARGET_UUID = "0000110c-0000-1000-8000-00805f9b34fb";
  * 
  */
 
-public string[]? get_dbus_array(Variant bar) {
+public string[]? get_dbus_array(Variant? bar) {
 	//stdout.printf("CREATING GLIST FROM DBUS...\n"); 
 	if(bar==null || bar.is_container()==false) return null;
 	
