@@ -188,7 +188,8 @@ public class BluezRemoteDevice : Object {
 	
 	
 	public bool has_service_input() {
-	
+		if(this.UUIDs==null) return false;
+		
 		foreach(var uid in this.UUIDs) 
 			if (uid == HID_UUID) 
 				return true;
@@ -198,7 +199,8 @@ public class BluezRemoteDevice : Object {
 
 
 	public bool has_service_audio() {
-	
+		if(this.UUIDs==null) return false;
+		
 		foreach(var uid in this.UUIDs) {
 			if ( uid == HSP_HS_UUID ||
 				 uid ==  HSP_AG_UUID ||
