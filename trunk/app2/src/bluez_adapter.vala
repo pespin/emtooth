@@ -15,8 +15,8 @@ public class BluezAdapter : Object {
 	public bool pairable {get; set; default=false;}
 	public uint pairable_timeout {get; set; default=0;}
 	public bool powered {get; set; default=false;}
-	private string[] devices;
-	private string[] UUIDs;
+	private string[]? devices;
+	private string[]? UUIDs;
 	
 	public uint num_devices_found {get; private set; default=0;}
 	

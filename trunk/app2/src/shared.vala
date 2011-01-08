@@ -49,19 +49,20 @@ const string AVRCP_TARGET_UUID = "0000110c-0000-1000-8000-00805f9b34fb";
  */
 
 public string[]? get_dbus_array(Variant bar) {
-	//stdout.printf("CREATING GLIST FROM DBUS...\n");
-	string[] list; 
+	//stdout.printf("CREATING GLIST FROM DBUS...\n"); 
 	if(bar==null || bar.is_container()==false) return null;
 	
-		size_t max = bar.n_children();
-		list = new string[max];
-		
-		for(size_t i=0; i<max; i++) {
-			var item = (string) bar.get_child_value(i);
-					list[i] = item;
-					stdout.printf("ListAdded: %s;\n",(string) item);
-		}
-		
-		return list;
+	string[] list;
+
+	size_t max = bar.n_children();
+	list = new string[max];
+	
+	for(size_t i=0; i<max; i++) {
+		var item = (string) bar.get_child_value(i);
+				list[i] = item;
+				stdout.printf("ListAdded: %s;\n",(string) item);
+	}
+	
+	return list;
 	
 }
