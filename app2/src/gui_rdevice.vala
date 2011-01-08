@@ -5,16 +5,21 @@ public class BluezRemoteDeviceUI {
 		Elm.Object[] gui_container;
 	
 		public Elm.Win win;
+		
+		private FrameBox fr_general;
+		private FrameBox fr_conn;
+		private FrameBox fr_audio;
+		private FrameBox fr_input;
+		
+		private LabelBox address;
+		private LabelBox name;
+		private EntryBox alias;
 	
 		private Elm.Bg	bg;
 		private Elm.Box vbox;
 		private Elm.Scroller sc;
 		private Elm.Box vbox_in;
-		private Elm.Box vbox_fr;
-		private Elm.Frame fr;
 		private Elm.Box hbox;
-		private Elm.Label lb;
-		private Elm.Entry entry_alias;
 		private Elm.Toggle tg_con;
 		private Elm.Toggle tg_pair;
 		private Elm.Toggle tg_trust;
@@ -51,10 +56,6 @@ public class BluezRemoteDeviceUI {
 		vbox.size_hint_weight_set(1.0, 1.0);
 		vbox.show();
 		
-
-		
-		//HERE STARTS ALL THE OPTIONS LIST:
-		
 		sc = new Elm.Scroller(win);
 		sc.size_hint_weight_set(1.0, 1.0);
 		sc.size_hint_align_set(-1.0, -1.0);
@@ -68,129 +69,61 @@ public class BluezRemoteDeviceUI {
 		sc.content_set(vbox_in);
 		vbox_in.show();
 		
-		//ADDRESS + NAME
-		// add a frame
-		fr = new Elm.Frame(win);
-		fr.style_set("outdent_top");
-		fr.size_hint_weight_set(0.0, 0.0);
-		fr.size_hint_align_set(0.5, 0.5);
-		vbox_in.pack_end(fr);
-		fr.show();
+		//HERE STARTS ALL THE OPTIONS LIST:
 		
-		vbox_fr = new Elm.Box(win);
-		vbox_fr.size_hint_align_set(-1.0, -1.0);
-		vbox_fr.size_hint_weight_set(1.0, 1.0);
-		fr.content_set(vbox_fr);
-		vbox_fr.show();
+		fr_general = new FrameBox(win, vbox_in, "General settings");
+		fr_general.show();
 		
-		lb = new Elm.Label(win);
-		lb.label_set("<b>Address:</b> "+rdevice.addr);
-		vbox_fr.pack_end(lb);
-		lb.show();
+		//ADDRESS
 		
-		gui_container += (owned) lb;
-		lb = new Elm.Label(win);
-		lb.label_set("<b>Name:</b> "+rdevice.name);
-		vbox_fr.pack_end(lb);
-		lb.show();
+		address = new LabelBox(win, fr_general.box, "Address", rdevice.addr);
+		address.show();
+		
+		//NAME
+		
+		name = new LabelBox(win, fr_general.box, "Name", rdevice.name);
+		name.show();
 	
 		
 		// ALIAS:
-		// add a frame	
-		gui_container += (owned) fr;
-		fr = new Elm.Frame(win);
-		fr.style_set("default");
-		fr.size_hint_weight_set(1.0, 0.0);
-		fr.size_hint_align_set(-1.0, -1.0);
-		vbox_in.pack_end(fr);
-		fr.show();
 		
-		hbox = new Elm.Box(win);
-		hbox.horizontal_set(true);
-		hbox.size_hint_align_set(-1.0, 0.0);
-		hbox.size_hint_weight_set(1.0, 0.0);
-		fr.content_set(hbox);
-		hbox.show();
+		alias = new EntryBox(win, fr_general.box, "Alias", rdevice.alias);
+		alias.show();
 		
-		gui_container += (owned) lb;
-		lb = new Elm.Label(win);
-		lb.label_set("<b>Alias:</b> ");
-		hbox.pack_end(lb);
-		lb.show();
-		
-		entry_alias = new Elm.Entry(win);
-		entry_alias.single_line_set(true);
-		entry_alias.entry_set(rdevice.alias);
-		hbox.pack_end(entry_alias);
-		entry_alias.show();
-		
-		entry_alias.smart_callback_add("changed", () => {Variant val = entry_alias.entry_get();
+		alias.val.smart_callback_add("changed", () => {Variant val = alias.val_get();
 													rdevice.set_property_device("Alias", val); }); 
 		
+		
+		
+		fr_conn = new FrameBox(win, vbox_in, "Connectivity settings");
+		fr_conn.show();
+		
 		// CONNECTED TOGGLE:
-		// add a frame
-		gui_container += (owned) fr;
-		fr = new Elm.Frame(win);
-		fr.style_set("default");
-		fr.size_hint_weight_set(1.0, 0.0);
-		fr.size_hint_align_set(-1.0, -1.0);
-		vbox_in.pack_end(fr);
-		fr.show();
-		
-		gui_container += (owned) hbox;
-		hbox = new Elm.Box(win);
-		hbox.horizontal_set(true);
-		hbox.size_hint_align_set(-1.0, 0.0);
-		hbox.size_hint_weight_set(1.0, 0.0);
-		fr.content_set(hbox);
-		hbox.show();
-		
-		gui_container += (owned) lb;
-		lb = new Elm.Label(win);
-		lb.label_set("<b>Connected:</b> ");
-		hbox.pack_end(lb);
-		lb.show();
 		
 		tg_con = new Elm.Toggle(win);
+		tg_con.label_set("Connected:");
 		tg_con.states_labels_set("Yes", "No");
 		tg_con.state_set(rdevice.connected);
+		tg_con.size_hint_align_set(-1.0, 0.0);
 		tg_con.disabled_set(true);
-		hbox.pack_end(tg_con);
-		
+		fr_conn.box.pack_end(tg_con);
 		tg_con.show();
+		
 		tg_con.smart_callback_add("changed", () => {Variant val = tg_con.state_get();
 											rdevice.set_property_device("Connected", val); });
 		
 		// PAIRED TOGGLE:
-		// add a frame
-		gui_container += (owned) fr;
-		fr = new Elm.Frame(win);
-		fr.style_set("default");
-		fr.size_hint_weight_set(1.0, 0.0);
-		fr.size_hint_align_set(-1.0, -1.0);
-		vbox_in.pack_end(fr);
-		fr.show();
-		
-		gui_container += (owned) hbox;
-		hbox = new Elm.Box(win);
-		hbox.horizontal_set(true);
-		hbox.size_hint_align_set(-1.0, 0.0);
-		hbox.size_hint_weight_set(1.0, 0.0);
-		fr.content_set(hbox);
-		hbox.show();
-		
-		gui_container += (owned) lb;
-		lb = new Elm.Label(win);
-		lb.label_set("<b>Paired:</b> ");
-		hbox.pack_end(lb);
-		lb.show();
+
 		
 		tg_pair = new Elm.Toggle(win);
+		tg_pair.label_set("Paired:");
 		tg_pair.states_labels_set("Yes", "No");
 		tg_pair.state_set(rdevice.paired);
 		tg_pair.disabled_set(rdevice.paired);
-		hbox.pack_end(tg_pair);
+		tg_pair.size_hint_align_set(-1.0, 0.0);
+		fr_conn.box.pack_end(tg_pair);
 		tg_pair.show();
+		
 		tg_pair.smart_callback_add("changed", 
 									() => {		
 										if(tg_pair.state_get()==true) {
@@ -201,34 +134,16 @@ public class BluezRemoteDeviceUI {
 
 		
 		// TRUSTED TOGGLE:
-		// add a frame
-		gui_container += (owned) fr;
-		fr = new Elm.Frame(win);
-		fr.style_set("default");
-		fr.size_hint_weight_set(1.0, 0.0);
-		fr.size_hint_align_set(-1.0, -1.0);
-		vbox_in.pack_end(fr);
-		fr.show();
-		
-		gui_container += (owned) hbox;
-		hbox = new Elm.Box(win);
-		hbox.horizontal_set(true);
-		hbox.size_hint_align_set(-1.0, 0.0);
-		hbox.size_hint_weight_set(1.0, 0.0);
-		fr.content_set(hbox);
-		hbox.show();
-		
-		gui_container += (owned) lb;
-		lb = new Elm.Label(win);
-		lb.label_set("<b>Trusted:</b> ");
-		hbox.pack_end(lb);
-		lb.show();
+
 		
 		tg_trust = new Elm.Toggle(win);
+		tg_trust.label_set("Trusted:");
 		tg_trust.states_labels_set("Yes", "No");
 		tg_trust.state_set(rdevice.trusted);
-		hbox.pack_end(tg_trust);
+		tg_trust.size_hint_align_set(-1.0, 0.0);
+		fr_conn.box.pack_end(tg_trust);
 		tg_trust.show();
+		
 		tg_trust.smart_callback_add("changed", () => {Variant val = tg_trust.state_get();
 											rdevice.set_property_device("Trusted", val); });
 											
@@ -236,32 +151,16 @@ public class BluezRemoteDeviceUI {
 											
 		//AUDIO TOGGLE:
 		if(rdevice.has_service_audio()) {
-			gui_container += (owned) fr;
-			fr = new Elm.Frame(win);
-			fr.style_set("default");
-			fr.size_hint_weight_set(1.0, 0.0);
-			fr.size_hint_align_set(-1.0, -1.0);
-			vbox_in.pack_end(fr);
-			fr.show();
-				
-			gui_container += (owned) hbox;
-			hbox = new Elm.Box(win);
-			hbox.horizontal_set(true);
-			hbox.size_hint_align_set(-1.0, 0.0);
-			hbox.size_hint_weight_set(1.0, 0.0);
-			fr.content_set(hbox);
-			hbox.show();
-				
-			gui_container += (owned) lb;
-			lb = new Elm.Label(win);
-			lb.label_set("<b>Connect Audio:</b> ");
-			hbox.pack_end(lb);
-			lb.show();
+			
+			fr_audio = new FrameBox(win, vbox_in, "Audio settings");
+			fr_audio.show();
 				
 			tg_audio = new Elm.Toggle(win);
+			tg_audio.label_set("Connect");
 			tg_audio.states_labels_set("Yes", "No");
 			tg_audio.state_set(rdevice.connected_audio);
-			hbox.pack_end(tg_audio);
+			tg_audio.size_hint_align_set(-1.0, 0.0);
+			fr_audio.box.pack_end(tg_audio);
 			tg_audio.show();
 			tg_audio.smart_callback_add("changed", () => { if(tg_audio.state_get()==true)
 															rdevice.connect_audio(); 
@@ -270,34 +169,18 @@ public class BluezRemoteDeviceUI {
 														});
 		}
 		
-		//AUDIO TOGGLE:
+		//INPUT TOGGLE:
 		if(rdevice.has_service_input()) {
-			gui_container += (owned) fr;
-			fr = new Elm.Frame(win);
-			fr.style_set("default");
-			fr.size_hint_weight_set(1.0, 0.0);
-			fr.size_hint_align_set(-1.0, -1.0);
-			vbox_in.pack_end(fr);
-			fr.show();
-				
-			gui_container += (owned) hbox;
-			hbox = new Elm.Box(win);
-			hbox.horizontal_set(true);
-			hbox.size_hint_align_set(-1.0, 0.0);
-			hbox.size_hint_weight_set(1.0, 0.0);
-			fr.content_set(hbox);
-			hbox.show();
-				
-			gui_container += (owned) lb;
-			lb = new Elm.Label(win);
-			lb.label_set("<b>Connect Input:</b> ");
-			hbox.pack_end(lb);
-			lb.show();
+			
+			fr_input = new FrameBox(win, vbox_in, "Input settings");
+			fr_input.show();
 				
 			tg_input = new Elm.Toggle(win);
+			tg_input.label_set("Connect");
 			tg_input.states_labels_set("Yes", "No");
 			tg_input.state_set(rdevice.connected_input);
-			hbox.pack_end(tg_input);
+			tg_input.size_hint_align_set(-1.0, 0.0);
+			fr_input.box.pack_end(tg_input);
 			tg_input.show();
 			tg_input.smart_callback_add("changed", () => { if(tg_input.state_get()==true)
 															rdevice.connect_input(); 
