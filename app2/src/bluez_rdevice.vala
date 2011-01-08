@@ -18,7 +18,7 @@ public class BluezRemoteDevice : Object {
 	public bool blocked {get; set; default=false;}
 	public bool connected {get; set; default=false;}
 	
-	private string[] UUIDs;
+	private string[]? UUIDs;
 	
 	public bool connected_audio {get; set; default=false;}
 	public bool connected_input {get; set; default=false;}
