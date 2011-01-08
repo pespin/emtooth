@@ -308,6 +308,125 @@ public class PinDialogUI {
 	}
 }
 
+
+public class LabelBox {
+	
+	private Elm.Label lb;
+	private Elm.Label val;
+	private Elm.Box box;
+	
+	public LabelBox(Elm.Win win, Elm.Box parent, string label, string Value) {
+		
+		box = new Elm.Box(win);
+		box.horizontal_set(true);
+		box.size_hint_align_set(0.0, 0.0);	
+		parent.pack_end(box);
+		
+		lb = new Elm.Label(win);
+		lb.label_set("<b>"+label+":</b>");
+		box.pack_end(lb);
+		
+		val = new Elm.Label(win);
+		val.label_set(Value);
+		box.pack_end(val);
+		
+	}
+	
+	public void show() {
+		box.show();
+		lb.show();
+		val.show();
+	}
+	
+	public string val_get() {
+		return this.val.label_get();
+	}
+	public void val_set(string Value) {
+		this.val.label_set(Value);
+	}
+	
+}
+
+public class EntryBox {
+	
+	private Elm.Label lb;
+	public Elm.Entry val;
+	private Elm.Frame fr;
+	private Elm.Box box;
+	
+	public EntryBox(Elm.Win win, Elm.Box parent, string label, string Value) {
+		
+		box = new Elm.Box(win);
+		box.horizontal_set(true);
+		box.size_hint_weight_set(1.0, 0.0);
+        box.size_hint_align_set(-1.0, 0.0);
+		parent.pack_end(box);
+		
+		lb = new Elm.Label(win);
+		lb.label_set("<b>"+label+":</b>");
+		box.pack_end(lb);
+		
+		fr = new Elm.Frame(win);
+        fr.size_hint_align_set(-1.0, 0.0);
+        fr.size_hint_weight_set(1.0, 0.0);
+        fr.style_set("outdent_top");
+        box.pack_end(fr);
+		
+		val = new Elm.Entry(win);
+		val.size_hint_align_set(-1.0, 0.0);
+        val.size_hint_weight_set(1.0, 0.0);
+        val.single_line_set(true);
+		val.entry_set(Value);
+		fr.content_set(val);
+		
+	}
+	
+	public void show() {
+		box.show();
+		lb.show();
+		fr.show();
+		val.show();
+	}
+	
+	public string val_get() {
+		return this.val.entry_get();
+	}
+	public void val_set(string Value) {
+		this.val.entry_set(Value);
+	}
+	
+}
+
+
+
+public class FrameBox {
+	
+	public Elm.Frame fr;
+	public Elm.Box box;
+	
+	public FrameBox(Elm.Win win, Elm.Box parent, string label) {
+		
+		fr = new Elm.Frame(win);
+		fr.label_set(label);
+        fr.size_hint_align_set(-1.0, 0.0);
+        fr.size_hint_weight_set(1.0, 0.0);
+        parent.pack_end(fr);
+		
+		box = new Elm.Box(win);
+		box.size_hint_weight_set(1.0, 0.0);
+        box.size_hint_align_set(-1.0, 0.0);
+		fr.content_set(box);
+		
+	}
+	
+	public void show() {
+		box.show();
+		fr.show();
+	}
+	
+}
+
+
 //we all love dirty hacks!
 //this is needed because of vala internals. It's necessary to pass an object to callback
 private class WinOpener : Object {
