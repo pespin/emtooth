@@ -75,7 +75,7 @@ public class BluezRemoteDevice : Object {
 	}
 	
 	public void update_properties_device() {
-		stdout.printf("Updating properties for remote device %s...\n", this.path);
+		stdout.printf("Updating properties for remote device %s...", this.path);
 		
 		try {
 			var hash = dbus_device.get_properties();
@@ -92,9 +92,10 @@ public class BluezRemoteDevice : Object {
 			this.connected = (bool) hash.lookup("Connected");
 			
 			this.UUIDs = get_dbus_array(hash.lookup("UUIDs"));
+			stdout.printf("done\n");
 			
 		} catch (IOError err) {
-			stderr.printf("ERR: Could not get device properties from remote device %s: %s\n", this.path, err.message);
+			stderr.printf("\nERR: Could not get device properties from remote device %s: %s\n", this.path, err.message);
 		}
 
 		this.debug_info();
