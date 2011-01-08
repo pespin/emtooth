@@ -36,6 +36,8 @@ public class BluezRemoteDevice : Object {
 		
 		this.path = obj_path;
 		
+		UUIDs = null;
+		
 		dbus_audio = null;
 		dbus_input = null;
 		

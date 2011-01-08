@@ -27,6 +27,10 @@ public class BluezAdapter : Object {
 	public BluezAdapter(GLib.ObjectPath obj_path) {
 		
 		this.path = obj_path;
+		
+		devices = null;
+		UUIDs = null;
+		
 		try {
 			dbus_obj = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", obj_path);
 
