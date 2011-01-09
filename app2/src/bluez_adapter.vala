@@ -296,8 +296,11 @@ public class BluezAdapter : Object {
 		stdout.printf ("Remote device disappeared (%s)\n", address);
 		
 		var device = get_rdevice_by_addr(address);
-		if(device!=null)
-			device.online = false;
-		
+		if(device==null) return;
+			
+			
+		device.online = false;
+		ui.remove_rdevice_from_ui(device.path);
+		this.num_devices_found--;
 	}
 }
