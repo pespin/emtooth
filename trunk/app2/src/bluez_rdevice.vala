@@ -227,16 +227,31 @@ public class BluezRemoteDevice : Object {
 	 */
 	 
 	 private void property_changed_audio_sig(string name, GLib.Variant val) {
-		 stdout.printf("SIGNAL: AudioProperty changed on remote device %s: %s = %s;\n", path, name, val.get_type_string());
+		stdout.printf("SIGNAL: AudioProperty changed on remote device %s: %s = %s;\n", path, name, val.get_type_string());
+		
+		if(name=="Connected") {
+			this.connected_audio = (bool) val;
+		} else {
+			stderr.printf("Unknown Audio property %s\n", name);
+		}
+	 
 	 }
 	 
 	 
 	 private void property_changed_input_sig(string name, GLib.Variant val) {
 		stdout.printf("SIGNAL: InputProperty changed on remote device %s: %s = %s;\n", path, name, val.get_type_string());
+	 
+		if(name=="Connected") {
+			this.connected_input = (bool) val;
+		} else {
+			stderr.printf("Unknown Input property %s\n", name);
+		}
+	 
+	 
 	 }
 	 
 	 private void property_changed_device_sig(string name, GLib.Variant val) {
-		 stdout.printf("SIGNAL: DeviceProperty changed on remote device %s: %s = %s;\n", path, name, val.get_type_string());
+		stdout.printf("SIGNAL: DeviceProperty changed on remote device %s: %s = %s;\n", path, name, val.get_type_string());
 		 
 		if(val==null) {
 			warning("bluez_adapter.property_changed_sig() -> "+name+" was null!");		
@@ -284,7 +299,7 @@ public class BluezRemoteDevice : Object {
 					dbus_input = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", this.path);
 				break;
 			default:
-				stdout.printf("Unknown property %s\n", name);
+				stderr.printf("Unknown property %s\n", name);
 				break;	
 		}
 	}
