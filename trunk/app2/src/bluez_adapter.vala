@@ -22,7 +22,7 @@ public class BluezAdapter : Object {
 	
 	private Adapter dbus_obj;
 	
-	private HashTable<string,BluezRemoteDevice> hash;
+	private HashTable<string,BluezRemoteDevice> rdevice_hash;
 	
 	public BluezAdapter(GLib.ObjectPath obj_path) {
 		
@@ -42,7 +42,7 @@ public class BluezAdapter : Object {
 			return;
 		}
 		
-		hash = new HashTable<string,BluezRemoteDevice>(str_hash, str_equal);
+		rdevice_hash = new HashTable<string,BluezRemoteDevice>(str_hash, str_equal);
 		
 		dbus_obj.device_found.connect (device_found_sig);
 		dbus_obj.device_disappeared.connect (device_disappeared_sig);
@@ -96,7 +96,7 @@ public class BluezAdapter : Object {
 			return false;
 		}
 		
-		this.hash.remove(device_path);
+		this.rdevice_hash.remove(device_path);
 		ui.remove_rdevice_from_ui(device_path);
 		
 		return true;
@@ -168,12 +168,12 @@ public class BluezAdapter : Object {
 	
 	
 	public unowned BluezRemoteDevice? get_rdevice_by_path(string path) {
-			return hash.lookup(path);
+			return rdevice_hash.lookup(path);
 	}
 	
 	public BluezRemoteDevice? get_rdevice_by_addr(string addr) {
 			List<BluezRemoteDevice> list;
-			list = this.hash.get_values();
+			list = this.rdevice_hash.get_values();
 			foreach(var device in list) {
 				if(addr == device.addr) return device;
 			} 
@@ -241,10 +241,10 @@ public class BluezAdapter : Object {
 	private void device_removed_sig (string path) {
 		stdout.printf ("SIGNAL: Remote device removed(%s)\n", path);
 		
-		var device = this.hash.lookup(path);
+		var device = this.rdevice_hash.lookup(path);
 		if(device==null) return;
 		
-		this.hash.remove(path);
+		this.rdevice_hash.remove(path);
 		ui.remove_rdevice_from_ui(device.path);
 		this.num_devices_found--;
 	}
@@ -279,10 +279,10 @@ public class BluezAdapter : Object {
 			stdout.printf("Object path for device with addr %s is %s\n", address, path);
 			
 			unowned BluezRemoteDevice tmp;
-			tmp = hash.lookup(path);
+			tmp = this.rdevice_hash.lookup(path);
 			if(tmp == null) {
 				var device = new BluezRemoteDevice(path);
-				this.hash.insert(device.path, device);
+				this.rdevice_hash.insert(device.path, device);
 				this.num_devices_found++;
 				device.online = true;
 				ui.add_rdevice_to_ui(device);
