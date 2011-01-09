@@ -451,11 +451,14 @@ private class WinOpener : Object {
 	
 		private void open_rdevice_win(string path) {
 			message("Opening win for rdevice "+path+"...\n");
-			unowned BluezRemoteDevice rdevice = ADAPTER.get_rdevice_by_path(path);
+			BluezRemoteDevice rdevice = ADAPTER.get_rdevice_by_path(path);
 			if(rdevice==null) {
 				warning("Trying to open NULL device!\n");
 				return;
 			}
+			
+			//if true, this means probably that rdevice.ref_count==0
+			if(rdevice.path==null) warning("rdevice.path is null!!!\n");
 			
 			var device_ui = ui.opened_wins.lookup(rdevice.path);
 			if( device_ui == null ) {
