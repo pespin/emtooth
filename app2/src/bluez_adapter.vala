@@ -167,7 +167,7 @@ public class BluezAdapter : Object {
 	}
 	
 	
-	public unowned BluezRemoteDevice? get_rdevice_by_path(string path) {
+	public BluezRemoteDevice? get_rdevice_by_path(string path) {
 			return rdevice_hash.lookup(path);
 	}
 	
@@ -282,12 +282,16 @@ public class BluezAdapter : Object {
 			device = this.rdevice_hash.lookup(path);
 			if(device == null) {
 				device = new BluezRemoteDevice(path);
-				this.rdevice_hash.insert(device.path, device);
+				this.rdevice_hash.insert(device.path, (owned) device);
+				device = this.rdevice_hash.lookup(path); //glib CRITICAL errors without this line
 			} 
 			
-			this.num_devices_found++;
-			device.online = true;
-			ui.add_rdevice_to_ui(device);
+			
+			if(device.online==false) {
+				device.online = true;
+				this.num_devices_found++;
+				ui.add_rdevice_to_ui(device);
+			}
 		
 	}
 
