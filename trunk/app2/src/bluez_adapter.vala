@@ -278,17 +278,16 @@ public class BluezAdapter : Object {
 			
 			stdout.printf("Object path for device with addr %s is %s\n", address, path);
 			
-			unowned BluezRemoteDevice tmp;
-			tmp = this.rdevice_hash.lookup(path);
-			if(tmp == null) {
-				var device = new BluezRemoteDevice(path);
+			BluezRemoteDevice device;
+			device = this.rdevice_hash.lookup(path);
+			if(device == null) {
+				device = new BluezRemoteDevice(path);
 				this.rdevice_hash.insert(device.path, device);
-				this.num_devices_found++;
-				device.online = true;
-				ui.add_rdevice_to_ui(device);
-			} else {
-					tmp.online=true;
-			}
+			} 
+			
+			this.num_devices_found++;
+			device.online = true;
+			ui.add_rdevice_to_ui(device);
 		
 	}
 
