@@ -170,7 +170,7 @@ public class BluezRemoteDevice : Object {
 	}
 	
 	public void connect_input() {
-		if(dbus_audio==null) return;
+		if(dbus_input==null) return;
 		stdout.printf("Connecting input with device %s.\n", this.path);
 		try {
 			dbus_input.connect();
@@ -180,7 +180,7 @@ public class BluezRemoteDevice : Object {
 	}
 	
 	public void disconnect_input() {
-		if(dbus_audio==null) return;
+		if(dbus_input==null) return;
 		stdout.printf("Disconnecting audio from device %s.\n", this.path);
 		try {
 			dbus_input.disconnect();
