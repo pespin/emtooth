@@ -117,14 +117,19 @@ public class BluezAdapter : Object {
 	
 	public void pair_rdevice(BluezRemoteDevice rdevice) {
 		stdout.printf("Trying to pair with  "+rdevice.path+"...\n");
+		this.pair_device_async(rdevice);
+	}
+	
+	private async void pair_device_async(BluezRemoteDevice rdevice) {
 		try {
-			dbus_obj.create_paired_device(rdevice.addr, (ObjectPath) rdevice.path, "");
+			yield dbus_obj.create_paired_device(rdevice.addr, (ObjectPath) rdevice.path, "");
 		} catch (IOError e) {
 			stderr.printf ("ERR: Could not create paired device: %s\n", e.message);
 			var dialog = new DialogUI();
 			dialog.create("Could not create paired device:<br>"+e.message);
 			dialog.show();
-		}
+		}	
+		
 	}
 	
 	public void update_properties() {

@@ -55,13 +55,23 @@ public class BluezRemoteDevice : Object {
 		this.update_properties_device();
 		
 		if(this.has_service_audio()) {
-			dbus_audio = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", this.path);
-			dbus_audio.property_changed.connect(property_changed_audio_sig);
+			try {
+				dbus_audio = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", this.path);
+				dbus_audio.property_changed.connect(property_changed_audio_sig);
+			} catch (IOError e) {
+				stderr.printf ("ERR: Could not get access to dbus_audio: org.bluez [%s]: %s\n",
+				this.path, e.message);
+			}
 		}
 		
 		if(this.has_service_input()) {
-			dbus_input = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", this.path);
-			dbus_input.property_changed.connect(property_changed_input_sig);
+			try {
+				dbus_input = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", this.path);
+				dbus_input.property_changed.connect(property_changed_input_sig);
+			} catch (IOError e) {
+				stderr.printf ("ERR: Could not get access to dbus_input: org.bluez [%s]: %s\n",
+				this.path, e.message);
+			}
 		}
 		
 		stdout.printf("Remote device (%s) created successfully.\n", this.path);
@@ -293,10 +303,21 @@ public class BluezRemoteDevice : Object {
 				break;
 			case "UUIDs":
 				this.UUIDs = get_dbus_array(val);
-				if(this.has_service_audio() && dbus_audio==null) 
-					dbus_audio = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", this.path);
-				if(this.has_service_input()  && dbus_input==null) 
-					dbus_input = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", this.path);
+				if(this.has_service_audio() && dbus_audio==null) {
+					try {
+						dbus_audio = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", this.path);
+					} catch (IOError e) {
+						stderr.printf ("ERR: Could not get access to dbus_audio: org.bluez [%s]: %s\n",
+						this.path, e.message);
+					}
+				} if(this.has_service_input()  && dbus_input==null) {
+					try {
+						dbus_input = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", this.path);
+					} catch (IOError e) {
+						stderr.printf ("ERR: Could not get access to dbus_input: org.bluez [%s]: %s\n",
+						this.path, e.message);
+					}
+				}
 				break;
 			default:
 				stderr.printf("Unknown property %s\n", name);
