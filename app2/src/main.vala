@@ -20,7 +20,7 @@ void on_bus_acquired (DBusConnection conn) {
 		stdout.printf("Default adapter path -> %s\n", adapter_path);
 		ADAPTER = new BluezAdapter(adapter_path);
 		ADAPTER.register_agent(EMTOOTH_BLUEZ_AGENT_PATH);
-	} catch (IOError e) {
+	} catch (Error e) {
 		stderr.printf ("Could not get access to org.bluez: %s\n", e.message);
 		var dialog = new DialogUI();
 		dialog.create("Could not get access to org.bluez:<br>"+e.message+"<br><br>"+
@@ -60,8 +60,9 @@ int main(string[] args) {
 		} catch (IOError e) {
 			stderr.printf ("ERR: Could not get access to org.freesmartphone.ousaged: %s\n", e.message);
 		}
+	
+	Posix.sleep(5);
 #endif
-
 
 	   /* Start bluez_agent */
    Bus.own_name (BusType.SYSTEM, EMTOOTH_BLUEZ_AGENT_NAME, BusNameOwnerFlags.NONE,
