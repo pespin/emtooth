@@ -253,8 +253,8 @@ public class BluezAdapter : Object {
 		var device = this.rdevice_hash.lookup(path);
 		if(device==null) return;
 		
-		this.rdevice_hash.remove(path);
 		ui.remove_rdevice_from_ui(device.path);
+		this.rdevice_hash.remove(path);
 		this.num_devices_found--;
 	}
 	
