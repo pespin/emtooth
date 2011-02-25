@@ -52,6 +52,10 @@ public class BluezAdapter : Object {
 		
 		stdout.printf("Local bluez adapter (%s) created successfully.\n", obj_path);
 		
+		//power on the device:
+		Variant v = true;
+		this.set_property_("Powered", v); 
+		
 		this.update_properties();
 		
 		this.start_discovery();
