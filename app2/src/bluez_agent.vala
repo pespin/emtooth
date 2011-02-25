@@ -28,9 +28,6 @@ public class BluezAgent : Object {
 		rdevice.password=null;
 		
 		return s;
-		
-		//TODO: set password to null so it is asked on next pair on that device
-		
 	}
 	
 	public uint32 request_pass_key(ObjectPath path) {
