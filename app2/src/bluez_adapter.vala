@@ -185,7 +185,7 @@ public class BluezAdapter : Object {
 	}
 	
 	public BluezRemoteDevice? get_rdevice_by_addr(string addr) {
-			List<BluezRemoteDevice> list;
+			List<unowned BluezRemoteDevice> list;
 			list = this.rdevice_hash.get_values();
 			foreach(var device in list) {
 				if(addr == device.addr) return device;
