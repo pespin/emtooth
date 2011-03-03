@@ -2,9 +2,9 @@
 Name=emtooth2
 Comment=A bluetooth manager designed for embedded devices
 Type=Application
-Version=0.1
+Version=1.0
 Exec=emtooth2
 Icon=emtooth2
 Terminal=false
-Categories=Application;Utility;
+Categories=Applications;Utility;
 StartupNotify=true
