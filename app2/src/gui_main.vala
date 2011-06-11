@@ -8,6 +8,8 @@ public class EmtoothUI {
 		public Elm.Win win;
 		public Elm.Label header;
 		public Elm.List li;
+		
+		public Elm.Pager pager;
 			
 		private Elm.Bg	bg;
 		private Elm.Box vbox;
@@ -32,7 +34,6 @@ public class EmtoothUI {
 		
 		win = new Elm.Win( null, "main_win", Elm.WinType.BASIC );
 		win.title_set( "emtooth" );
-
 		win.smart_callback_add( "delete-request", Elm.exit );
 		
 		bg = new Elm.Bg(win);
@@ -42,9 +43,15 @@ public class EmtoothUI {
 		
 		win.resize( DISPLAY_WIDTH, DISPLAY_HEIGHT );
 		
+		pager = new Elm.Pager( win );
+		win.resize_object_add( pager );
+		pager.size_hint_weight_set( 1.0, 1.0 );
+		pager.show();
+		
 		//add vbox
 		vbox = new Elm.Box(win);
-		win.resize_object_add(vbox);
+		//win.resize_object_add(vbox);
+		pager.content_push( vbox );
 		vbox.size_hint_weight_set( 1.0, 1.0 );
 		vbox.show();
 		
@@ -114,6 +121,16 @@ public class EmtoothUI {
 		bt.smart_callback_add( "clicked", cb_bt_settings_clicked );
 	
 
+	}
+	
+	public void pop_page(Elm.Object obj, string path) {
+		stderr.printf("pop_page() started!\n");
+		//if( obj == pager.content_top_get() ) { //this segfaults...
+			pager.content_pop();
+		//}
+		obj.del();
+		opened_wins.remove(path); //this removes/frees this object (ui)
+		stderr.printf("pop_page() finished!\n");
 	}
 	
 	
@@ -464,8 +481,8 @@ private class WinOpener : Object {
 			if( device_ui == null ) {
 				device_ui = new BluezRemoteDeviceUI(rdevice);
 				ui.opened_wins.insert(rdevice.path, device_ui);
-				device_ui.create();
-				device_ui.show();
+				unowned Elm.Object page = device_ui.create(ui.win);
+				ui.pager.content_push(page);
 			} else {
 				//device_ui.win.focus_set(true);  //FIXME: (focusing the active win instead of creating it) doesn't work
 			}

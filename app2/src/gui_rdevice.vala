@@ -1,10 +1,6 @@
 public class BluezRemoteDeviceUI {
 	
 		private BluezRemoteDevice rdevice;
-	
-		Elm.Object[] gui_container;
-	
-		public Elm.Win win;
 		
 		private FrameBox fr_general;
 		private FrameBox fr_conn;
@@ -15,7 +11,6 @@ public class BluezRemoteDeviceUI {
 		private LabelBox name;
 		private EntryBox alias;
 	
-		private Elm.Bg	bg;
 		private Elm.Box vbox;
 		private Elm.Scroller sc;
 		private Elm.Box vbox_in;
@@ -34,25 +29,11 @@ public class BluezRemoteDeviceUI {
 			this.rdevice = device;
 	 }
 		
-	public void create() {
+	public unowned Elm.Object create(Elm.Win win) {
 		
-		gui_container = {};
-		
-		win = new Elm.Win(null, rdevice.addr+"_win", Elm.WinType.BASIC);
-		win.title_set("emtooth - "+rdevice.addr);
-		win.autodel_set(true);
-		win.smart_callback_add( "delete-request", this.close );
-		
-		bg = new Elm.Bg(win);
-		bg.size_hint_weight_set(1.0, 1.0);
-		win.resize_object_add(bg);
-		bg.show();
-		
-		win.resize( DISPLAY_WIDTH, DISPLAY_HEIGHT );
-		
-		//add vbox
+		//add vbox (page)
 		vbox = new Elm.Box(win);
-		win.resize_object_add(vbox);
+		//pager.content_push(vbox);
 		vbox.size_hint_weight_set(1.0, 1.0);
 		vbox.show();
 		
@@ -198,12 +179,13 @@ public class BluezRemoteDeviceUI {
 		vbox_in.pack_end(bt_rm);
 		bt_rm.show();
 		
-		bt_rm.smart_callback_add( "clicked", () => {ADAPTER.remove_rdevice((GLib.ObjectPath)rdevice.path);} );
+		bt_rm.smart_callback_add( "clicked", () => {
+											ADAPTER.remove_rdevice((GLib.ObjectPath)rdevice.path);
+											this.close();
+											} );
 
 	
 		//BOTTOM:
-		
-		gui_container += (owned) hbox;
 		hbox = new Elm.Box(win);
 		hbox.horizontal_set(true);
 		hbox.size_hint_weight_set(1.0, 0.0);
@@ -218,19 +200,14 @@ public class BluezRemoteDeviceUI {
 		hbox.pack_end(bt_close);
 		bt_close.show();
 		bt_close.smart_callback_add( "clicked", this.close );
+		
+		return vbox;
 
-	}
-
-
-	public void show() {
-		win.show();
 	}
 	
 	public void close() {
 		stdout.printf("Closing device window %s\n", rdevice.path);
-		win.del();
-		ui.opened_wins.remove(rdevice.path); //this removes/frees this object (ui)
-
+		ui.pop_page(vbox, rdevice.path);
 
 	}
 	
