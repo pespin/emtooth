@@ -55,66 +55,8 @@ namespace org {
 			public signal void device_disappeared(string param0);
 		}
 
-
-		[DBus (name = "org.bluez.Adapter", timeout = 120000)]
-		public interface AdapterSync : GLib.Object {
-
-			public abstract GLib.HashTable<string, GLib.Variant?> get_properties() throws IOError;
-
-			[DBus (name = "SetProperty")] public abstract void set_property_(string param0, GLib.Variant param1) throws IOError;
-
-			public abstract void request_session() throws IOError;
-
-			public abstract void release_session() throws IOError;
-
-			public abstract void start_discovery() throws IOError;
-
-			public abstract void stop_discovery() throws IOError;
-
-			public abstract GLib.ObjectPath[] list_devices() throws IOError;
-
-			public abstract GLib.ObjectPath create_device(string param0) throws IOError;
-
-			public abstract GLib.ObjectPath create_paired_device(string param0, GLib.ObjectPath param1, string param2) throws IOError;
-
-			public abstract void cancel_device_creation(string param0) throws IOError;
-
-			public abstract void remove_device(GLib.ObjectPath param0) throws IOError;
-
-			public abstract GLib.ObjectPath find_device(string param0) throws IOError;
-
-			public abstract void register_agent(GLib.ObjectPath param0, string param1) throws IOError;
-
-			public abstract void unregister_agent(GLib.ObjectPath param0) throws IOError;
-
-			public signal void property_changed(string param0, GLib.Variant param1);
-
-			public signal void device_created(GLib.ObjectPath param0);
-
-			public signal void device_removed(GLib.ObjectPath param0);
-
-			public signal void device_found(string param0, GLib.HashTable<string, GLib.Variant?> param1);
-
-			public signal void device_disappeared(string param0);
-		}
-
 		[DBus (name = "org.bluez.Service", timeout = 120000)]
 		public interface Service : GLib.Object {
-
-			public abstract uint add_record(string param0) throws IOError;
-
-			public abstract void update_record(uint param0, string param1) throws IOError;
-
-			public abstract void remove_record(uint param0) throws IOError;
-
-			public abstract void request_authorization(string param0, uint param1) throws IOError;
-
-			public abstract void cancel_authorization() throws IOError;
-		}
-
-
-		[DBus (name = "org.bluez.Service", timeout = 120000)]
-		public interface ServiceSync : GLib.Object {
 
 			public abstract uint add_record(string param0) throws IOError;
 
@@ -136,31 +78,8 @@ namespace org {
 		}
 
 
-		[DBus (name = "org.bluez.NetworkServer", timeout = 120000)]
-		public interface NetworkServerSync : GLib.Object {
-
-			public abstract void register_(string param0, string param1) throws IOError;
-
-			public abstract void unregister(string param0) throws IOError;
-		}
-
 		[DBus (name = "org.bluez.SerialProxyManager", timeout = 120000)]
 		public interface SerialProxyManager : GLib.Object {
-
-			public abstract string create_proxy(string param0, string param1) throws IOError;
-
-			public abstract string[] list_proxies() throws IOError;
-
-			public abstract void remove_proxy(string param0) throws IOError;
-
-			public signal void proxy_created(string param0);
-
-			public signal void proxy_removed(string param0);
-		}
-
-
-		[DBus (name = "org.bluez.SerialProxyManager", timeout = 120000)]
-		public interface SerialProxyManagerSync : GLib.Object {
 
 			public abstract string create_proxy(string param0, string param1) throws IOError;
 
@@ -182,27 +101,6 @@ namespace org {
 
 		[DBus (name = "org.bluez.Manager", timeout = 120000)]
 		public interface Manager : GLib.Object {
-
-			public abstract GLib.HashTable<string, GLib.Variant?> get_properties() throws IOError;
-
-			public abstract GLib.ObjectPath default_adapter() throws IOError;
-
-			public abstract GLib.ObjectPath find_adapter(string param0) throws IOError;
-
-			public abstract GLib.ObjectPath[] list_adapters() throws IOError;
-
-			public signal void property_changed(string param0, GLib.Variant param1);
-
-			public signal void adapter_added(GLib.ObjectPath param0);
-
-			public signal void adapter_removed(GLib.ObjectPath param0);
-
-			public signal void default_adapter_changed(GLib.ObjectPath param0);
-		}
-
-
-		[DBus (name = "org.bluez.Manager", timeout = 120000)]
-		public interface ManagerSync : GLib.Object {
 
 			public abstract GLib.HashTable<string, GLib.Variant?> get_properties() throws IOError;
 
@@ -247,39 +145,8 @@ namespace org {
 			public signal void disconnect_requested();
 		}
 
-		[DBus (name = "org.bluez.Device", timeout = 120000)]
-		public interface DeviceSync : GLib.Object {
-
-			public abstract GLib.HashTable<string, GLib.Variant?> get_properties() throws IOError;
-
-			[DBus (name = "SetProperty")]
-			public abstract void set_property_(string param0, GLib.Variant param1) throws IOError;
-
-			public abstract GLib.HashTable<uint, string> discover_services(string param0) throws IOError;
-
-			public abstract void cancel_discovery() throws IOError;
-
-			public abstract void disconnect() throws IOError;
-
-			public signal void property_changed(string param0, GLib.Variant param1);
-
-			public signal void disconnect_requested();
-		}
-
 		[DBus (name = "org.bluez.Audio", timeout = 120000)]
 		public interface Audio : GLib.Object {
-
-			public abstract void connect() throws IOError;
-
-			public abstract void disconnect() throws IOError;
-
-			public abstract GLib.HashTable<string, GLib.Variant?> get_properties() throws IOError;
-
-			public signal void property_changed(string param0, GLib.Variant param1);
-		}
-
-		[DBus (name = "org.bluez.Audio", timeout = 120000)]
-		public interface AudioSync : GLib.Object {
 
 			public abstract void connect() throws IOError;
 
@@ -298,29 +165,9 @@ namespace org {
 			public abstract void disconnect(string param0) throws IOError;
 		}
 		
-		[DBus (name = "org.bluez.Serial", timeout = 120000)]
-		public interface SerialSync : GLib.Object {
-
-			public abstract string connect(string param0) throws IOError;
-
-			public abstract void disconnect(string param0) throws IOError;
-		}
-		
 		
 		[DBus (name = "org.bluez.Input", timeout = 120000)]
 		public interface Input : GLib.Object {
-
-			public abstract void connect() throws IOError;
-
-			public abstract void disconnect() throws IOError;
-
-			public abstract GLib.HashTable<string, GLib.Variant?> get_properties() throws IOError;
-
-			public signal void property_changed(string param0, GLib.Variant param1);
-		}
-
-		[DBus (name = "org.bluez.Input", timeout = 120000)]
-		public interface InputSync : GLib.Object {
 
 			public abstract void connect() throws IOError;
 
