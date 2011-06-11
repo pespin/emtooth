@@ -99,7 +99,7 @@ public class SettingsUI {
 		discoverable_timeout = new EntryBox(win, fr_disc.box, "Discoverable timeout", ADAPTER.discoverable_timeout.to_string());
 		discoverable_timeout.show();
 		
-		discoverable_timeout.val.smart_callback_add("changed", () => {Variant val = (uint) discoverable_timeout.val_get().to_int();
+		discoverable_timeout.val.smart_callback_add("changed", () => {Variant val = (uint) int.parse(discoverable_timeout.val_get());
 									ADAPTER.set_property_("DiscoverableTimeout", val); });
 	
 		
@@ -124,7 +124,7 @@ public class SettingsUI {
 		pairable_timeout = new EntryBox(win, fr_pair.box, "Pairable timeout", ADAPTER.pairable_timeout.to_string());
 		pairable_timeout.show();
 		
-		discoverable_timeout.val.smart_callback_add("changed", () => {Variant val = (uint) pairable_timeout.val_get().to_int();
+		discoverable_timeout.val.smart_callback_add("changed", () => {Variant val = (uint) int.parse(pairable_timeout.val_get());
 												ADAPTER.set_property_("PairableTimeout", val); });
 		
 		//BOTTOM:

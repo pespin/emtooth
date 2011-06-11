@@ -101,7 +101,7 @@ public class BluezAdapter : Object {
 		}
 		
 		bool found;
-		ui.remove_rdevice_from_ui(device_path);
+		//ui.remove_rdevice_from_ui(device_path);
 		found = this.rdevice_hash.remove(device_path);
 		
 		if(found) this.num_devices_found--;
