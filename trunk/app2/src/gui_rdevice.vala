@@ -207,7 +207,7 @@ public class BluezRemoteDeviceUI {
 	
 	public void close() {
 		stdout.printf("Closing device window %s\n", rdevice.path);
-		ui.pop_page(vbox, rdevice.path);
+		ui.pop_rdeviceui(vbox, rdevice.path);
 
 	}
 	

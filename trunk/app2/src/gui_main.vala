@@ -123,14 +123,18 @@ public class EmtoothUI {
 
 	}
 	
-	public void pop_page(Elm.Object obj, string path) {
+	public void pop_page(Elm.Object obj) {
 		stderr.printf("pop_page() started!\n");
 		//if( obj == pager.content_top_get() ) { //this segfaults...
 			pager.content_pop();
+			obj.del();
 		//}
-		obj.del();
-		opened_wins.remove(path); //this removes/frees this object (ui)
 		stderr.printf("pop_page() finished!\n");
+	}
+	
+	public void pop_rdeviceui(Elm.Object obj, string path) {
+		pop_page(obj);
+		opened_wins.remove(path); //this removes/frees this object (ui)
 	}
 	
 	
@@ -189,8 +193,8 @@ public class EmtoothUI {
 		stdout.printf("Settings button pressed.\n");
 		
 		settings_ui = new SettingsUI();
-		settings_ui.create();
-		settings_ui.show();
+		unowned Elm.Object page = settings_ui.create(win);
+		pager.content_push(page);
 	}
 	
 	
