@@ -47,7 +47,6 @@ public class BluezRemoteDevice : Object {
 			stderr.printf("ERR: Could not get remote device with path %s: %s\n", obj_path, err.message);
 			var dialog = new DialogUI();
 			dialog.create("Could not get remote device with path<br>"+(string)obj_path+"<br>"+err.message);
-			dialog.show();
 			return;
 		}
 		
@@ -171,7 +170,6 @@ public class BluezRemoteDevice : Object {
 			stderr.printf("ERR: Could not connect audio with device %s: %s\n", this.path, err.message);
 			var dialog = new DialogUI();
 			dialog.create("Could not connect audio with device:<br>"+this.path+"<br>"+err.message);
-			dialog.show();
 		}
 	}
 	
@@ -184,7 +182,6 @@ public class BluezRemoteDevice : Object {
 			stderr.printf("ERR: Could not disconnect audio from device %s: %s\n", this.path, err.message);
 			var dialog = new DialogUI();
 			dialog.create("Could not disconnect audio from device:<br>"+this.path+"<br>"+err.message);
-			dialog.show();
 		}
 	}
 	
@@ -197,7 +194,6 @@ public class BluezRemoteDevice : Object {
 			stderr.printf("ERR: Could not connect input with device %s: %s\n", this.path, err.message);
 			var dialog = new DialogUI();
 			dialog.create("Could not connect input with device:<br>"+this.path+"<br>"+err.message);
-			dialog.show();
 		}
 	}
 	
@@ -210,7 +206,6 @@ public class BluezRemoteDevice : Object {
 			stderr.printf("ERR: Could not disconnect input from device %s: %s\n", this.path, err.message);
 			var dialog = new DialogUI();
 			dialog.create("Could not disconnect input from device:<br>"+this.path+"<br>"+err.message);
-			dialog.show();
 		}
 	}
 	
@@ -259,7 +254,6 @@ public class BluezRemoteDevice : Object {
 			if(this.connected_audio==true) {
 				var dialog = new DialogUI();
 				dialog.create("Audio connection with device<br>"+this.addr+"<br>was successful!");
-				dialog.show();
 			}
 		} else {
 			stderr.printf("Unknown Audio property %s\n", name);
@@ -276,7 +270,6 @@ public class BluezRemoteDevice : Object {
 			if(this.connected_input==true) {
 				var dialog = new DialogUI();
 				dialog.create("Input connection with device<br>"+this.addr+"<br>was successful!");
-				dialog.show();
 			}
 		} else {
 			stderr.printf("Unknown Input property %s\n", name);

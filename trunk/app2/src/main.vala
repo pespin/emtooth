@@ -25,7 +25,6 @@ void on_bus_acquired (DBusConnection conn) {
 		var dialog = new DialogUI();
 		dialog.create("Could not get access to org.bluez:<br>"+e.message+"<br><br>"+
 		"Please be sure bluetoothd is running.");
-		dialog.show();
 		//exit(1);
 	} 
 

@@ -14,11 +14,15 @@ public class BluezAgent : Object {
 		
 		stderr.printf("Agent: request_pin_code\n");
 		
-		var rdevice = ADAPTER.get_rdevice_by_path(path);
+		unowned BluezRemoteDevice rdevice = ADAPTER.get_rdevice_by_path(path);
+		
+		if(rdevice==null) {
+			stderr.printf("Agent: request_pin_code: rdevice==null for %s\n", path);
+			return "unknown";
+		}
 		
 		PinDialogUI dialog = new PinDialogUI();
 		dialog.create(rdevice);
-		dialog.show();
 		
 		while(rdevice.password==null) { //wait till we have password
 			Ecore.MainLoop.iterate();

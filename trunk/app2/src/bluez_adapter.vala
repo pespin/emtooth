@@ -38,7 +38,6 @@ public class BluezAdapter : Object {
 			stderr.printf("ERR: Could not get local adapter with path %s: %s\n", obj_path, err.message);
 			var dialog = new DialogUI();
 			dialog.create("Could not get local adapter with path "+(string)obj_path+":<br>"+err.message);
-			dialog.show();
 			return;
 		}
 		
@@ -96,7 +95,6 @@ public class BluezAdapter : Object {
 			stderr.printf("ERR: Could not remove device %s: %s\n", (string) device_path, err.message);
 			var dialog = new DialogUI();
 			dialog.create("Could not remove device "+(string)device_path+":<br>"+err.message);
-			dialog.show();
 			return false;
 		}
 		
@@ -119,7 +117,6 @@ public class BluezAdapter : Object {
 			stderr.printf ("ERR: Could not register agent: %s\n", e.message);
 			var dialog = new DialogUI();
 			dialog.create("Could not register agent:<br>"+e.message);
-			dialog.show();
 		}
 	}
 	
@@ -135,7 +132,6 @@ public class BluezAdapter : Object {
 			stderr.printf ("ERR: Could not create paired device: %s\n", e.message);
 			var dialog = new DialogUI();
 			dialog.create("Could not create paired device:<br>"+e.message);
-			dialog.show();
 		}	
 		
 	}
@@ -180,7 +176,7 @@ public class BluezAdapter : Object {
 	}
 	
 	
-	public BluezRemoteDevice? get_rdevice_by_path(string path) {
+	public unowned BluezRemoteDevice? get_rdevice_by_path(string path) {
 			return rdevice_hash.lookup(path);
 	}
 	
@@ -252,14 +248,15 @@ public class BluezAdapter : Object {
 	}
 
 	private void device_removed_sig (string path) {
-		stdout.printf ("SIGNAL: Remote device removed(%s)\n", path);
+		stdout.printf ("SIGNAL: Remote device removed (%s)\n", path);
 		
 		var device = this.rdevice_hash.lookup(path);
-		if(device==null) return;
-		
-		ui.remove_rdevice_from_ui(device.path);
-		this.rdevice_hash.remove(path);
-		this.num_devices_found--;
+		if(device!=null) {
+			stdout.printf ("device is cached, time to remove it from everywhere\n");
+			this.rdevice_hash.remove(path);
+			this.num_devices_found--;
+		}
+		ui.remove_rdevice_from_ui(path);
 	}
 	
 	private void device_found_sig (string address, HashTable<string, GLib.Variant?> properties) {
@@ -284,7 +281,6 @@ public class BluezAdapter : Object {
 					stderr.printf ("ERR: Could not create object path for device  %s: %s.\n", address, err2.message);
 					var dialog = new DialogUI();
 					dialog.create("Could not create object path for device "+address+":<br>"+err2.message);
-					dialog.show();
 					return;
 				}
 			}
