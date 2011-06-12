@@ -28,24 +28,10 @@ public class SettingsUI {
 		
 		private Elm.Button bt_close;
 		
-	public void create() {
-		
-		gui_container = {};
-		
-		win = new Elm.Win(null, "settings_win", Elm.WinType.BASIC);
-		win.title_set("emtooth - Settings");
-		win.autodel_set(true);
-		
-		bg = new Elm.Bg(win);
-		bg.size_hint_weight_set(1.0, 1.0);
-		win.resize_object_add(bg);
-		bg.show();
-		
-		win.resize( DISPLAY_WIDTH, DISPLAY_HEIGHT );
+	public unowned Elm.Object create(Elm.Win win) {
 		
 		//add vbox
 		vbox = new Elm.Box(win);
-		win.resize_object_add(vbox);
 		vbox.size_hint_weight_set(1.0, 1.0);
 		vbox.show();
 		
@@ -145,15 +131,12 @@ public class SettingsUI {
 		bt_close.show();
 		bt_close.smart_callback_add( "clicked", this.close );
 
+		return vbox;
 	}
 
-
-	public void show() {
-		win.show();
-	}
 	
 	public void close() {
-		win.del();
+		ui.pop_page(vbox);
 	}
 	
 
