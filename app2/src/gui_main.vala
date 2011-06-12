@@ -153,8 +153,7 @@ public class EmtoothUI {
 	}
 	
 	public void remove_rdevice_from_ui(string path) {
-		
-		
+
 		message("Removing rdevice " + path + " from ui-list\n");
 		rdevices_ui_list.remove(path);
 		ui.opened_wins.remove(path);
@@ -208,56 +207,58 @@ public class EmtoothUI {
 	/* PIN DIALOG */
 public class DialogUI : Object {	
 	
-	Elm.Win win;
 	Elm.Win inwin;
-	Elm.Bg bg;
 	Elm.Box vbox;
-	Elm.Label lb;
+	Elm.Box vbox_in;
+	Elm.Anchorblock lb;
 	Elm.Button bt_ok;
+	Elm.Scroller sc;
 	
 	public void create(string text) {
 		this.ref(); //let it be unless someone presses the kill button
 		
-		win = new Elm.Win(null, "dialog", Elm.WinType.DIALOG_BASIC);
-		win.title_set("Attention:");
-		win.autodel_set(false);
-		
-		
-		bg = new Elm.Bg(win);
-		bg.size_hint_weight_set(1.0, 1.0);
-		win.resize_object_add(bg);
-		bg.show();
-		
-		inwin = win.inwin_add();
+		inwin = ui.win.inwin_add();
 		inwin.show();
 		
-		vbox = new Elm.Box(win);
+		vbox = new Elm.Box(ui.win);
 		inwin.inwin_content_set(vbox);
 		vbox.show();
 		
+		sc = new Elm.Scroller(ui.win);
+		sc.size_hint_weight_set(1.0, 1.0);
+		sc.size_hint_align_set(-1.0, -1.0);
+		sc.bounce_set(false, true);
+		vbox.pack_end(sc);
+		sc.show();
+		
+		vbox_in = new Elm.Box(ui.win);
+		vbox_in.size_hint_align_set(-1.0, -1.0);
+		vbox_in.size_hint_weight_set(1.0, 1.0);
+		sc.content_set(vbox_in);
+		vbox_in.show();
+		
 		// add a label
-		lb = new Elm.Label(win);
-		lb.label_set(text);
-		vbox.pack_end(lb);
+		lb = new Elm.Anchorblock(ui.win);
+		lb.text_set(text);
+		lb.size_hint_weight_set(1.0, 1.0);
+		lb.size_hint_align_set(-1.0, -1.0);
+		vbox_in.pack_end(lb);
 		lb.show();
 		
-		bt_ok = new Elm.Button(win);
+		bt_ok = new Elm.Button(ui.win);
 		bt_ok.label_set("Ok");
 		bt_ok.size_hint_align_set(-1.0, -1.0);
 		bt_ok.size_hint_weight_set(1.0, 1.0);
-		vbox.pack_end(bt_ok);
+		vbox_in.pack_end(bt_ok);
 		bt_ok.show();
 		bt_ok.smart_callback_add("clicked", () => { this.close(); } );
-				
+		
+			
 	}
-
-	public void show() {
-		win.show();
-	} 
 	
 	public void close() {
 		stdout.printf("Closing Dialog window\n");
-		win.del();
+		//win.del();
 		this.unref();
 	}
 }
@@ -268,64 +269,66 @@ public class DialogUI : Object {
 	/* PIN DIALOG */
 public class PinDialogUI {	
 	
-	Elm.Win win;
 	Elm.Win inwin;
-	Elm.Bg bg;
 	Elm.Box vbox;
-	Elm.Label lb;
+	Elm.Box vbox_in;
+	Elm.Anchorblock lb;
 	Elm.Entry entry;
 	Elm.Button bt_ok;
+	Elm.Scroller sc;
+	
 	BluezRemoteDevice rdevice;
 	
 	public void create(BluezRemoteDevice rdevice) {
 		this.rdevice = rdevice;
 		
-		win = new Elm.Win(null, rdevice.addr+"_pin", Elm.WinType.DIALOG_BASIC);
-		win.title_set("Request Pin:");
-		win.autodel_set(true);
-		
-		
-		bg = new Elm.Bg(win);
-		bg.size_hint_weight_set(1.0, 1.0);
-		win.resize_object_add(bg);
-		bg.show();
-		
-		inwin = win.inwin_add();
+		inwin = ui.win.inwin_add();
 		inwin.show();
 		
-		vbox = new Elm.Box(win);
+		vbox = new Elm.Box(ui.win);
 		inwin.inwin_content_set(vbox);
 		vbox.show();
 		
+		sc = new Elm.Scroller(ui.win);
+		sc.size_hint_weight_set(1.0, 1.0);
+		sc.size_hint_align_set(-1.0, -1.0);
+		sc.bounce_set(false, true);
+		vbox.pack_end(sc);
+		sc.show();
+		
+		vbox_in = new Elm.Box(ui.win);
+		vbox_in.size_hint_align_set(-1.0, -1.0);
+		vbox_in.size_hint_weight_set(1.0, 1.0);
+		sc.content_set(vbox_in);
+		vbox_in.show();
+		
 		// add a label
-		lb = new Elm.Label(win);
-		lb.label_set("Set the password for device "+rdevice.addr+"<br>and press the button below to proceed:");
-		vbox.pack_end(lb);
+		lb = new Elm.Anchorblock(ui.win);
+		lb.text_set("Set the password for device "+rdevice.addr+"<br>and press the button below to proceed:");
+		lb.size_hint_weight_set(1.0, 1.0);
+		lb.size_hint_align_set(-1.0, -1.0);
+		vbox_in.pack_end(lb);
 		lb.show();
 		
-		entry = new Elm.Entry(win);
+		entry = new Elm.Entry(ui.win);
 		entry.single_line_set(true);
 		entry.entry_set("1234");
-		vbox.pack_end(entry);
+		vbox_in.pack_end(entry);
 		entry.show();
 		
-		bt_ok = new Elm.Button(win);
+		bt_ok = new Elm.Button(ui.win);
 		bt_ok.label_set("Ok");
 		bt_ok.size_hint_align_set(-1.0, -1.0);
 		bt_ok.size_hint_weight_set(1.0, 1.0);
-		vbox.pack_end(bt_ok);
+		vbox_in.pack_end(bt_ok);
 		bt_ok.show();
 		bt_ok.smart_callback_add("clicked", () => { this.rdevice.password = this.entry.entry_get(); this.close(); } );
 				
 	}
-
-	public void show() {
-		win.show();
-	} 
 	
 	public void close() {
 		stdout.printf("Closing pinDialog window\n");
-		win.del();
+		//win.del();
 	}
 }
 

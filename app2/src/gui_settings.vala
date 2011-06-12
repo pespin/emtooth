@@ -6,8 +6,7 @@ using bluez;
 public class SettingsUI {
 	
 		Elm.Object[] gui_container;
-	
-		public Elm.Win win;
+
 		
 		private FrameBox fr_general;
 		private FrameBox fr_disc;
@@ -18,7 +17,6 @@ public class SettingsUI {
 		private EntryBox discoverable_timeout;
 		private EntryBox pairable_timeout;
 			
-		private Elm.Bg	bg;
 		private Elm.Box vbox;
 		private Elm.Scroller sc;
 		private Elm.Box vbox_in;
