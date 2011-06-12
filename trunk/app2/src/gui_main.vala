@@ -34,7 +34,7 @@ public class EmtoothUI {
 		
 		win = new Elm.Win( null, "main_win", Elm.WinType.BASIC );
 		win.title_set( "emtooth" );
-		win.smart_callback_add( "delete-request", Elm.exit );
+		win.smart_callback_add( "delete,request", Elm.exit );
 		
 		bg = new Elm.Bg(win);
 		bg.size_hint_weight_set( 1.0, 1.0 );
