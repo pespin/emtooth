@@ -256,7 +256,7 @@ public class BluezAdapter : Object {
 			this.rdevice_hash.remove(path);
 			this.num_devices_found--;
 		}
-		ui.remove_rdevice_from_ui(path);
+		ui.mui.remove_rdevice_from_ui(path);
 	}
 	
 	private void device_found_sig (string address, HashTable<string, GLib.Variant?> properties) {
@@ -299,7 +299,7 @@ public class BluezAdapter : Object {
 			if(device.online==false) {
 				device.online = true;
 				this.num_devices_found++;
-				ui.add_rdevice_to_ui(device);
+				ui.mui.add_rdevice_to_ui(device);
 			}
 		
 	}
@@ -312,7 +312,7 @@ public class BluezAdapter : Object {
 			
 			
 		device.online = false;
-		ui.remove_rdevice_from_ui(device.path);
+		ui.mui.remove_rdevice_from_ui(device.path);
 		this.num_devices_found--;
 	}
 }

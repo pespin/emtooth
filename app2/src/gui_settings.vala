@@ -3,7 +3,7 @@ using bluez;
 
 
 
-public class SettingsUI {
+public class SettingsUI : Page {
 	
 		Elm.Object[] gui_container;
 
@@ -17,7 +17,6 @@ public class SettingsUI {
 		private EntryBox discoverable_timeout;
 		private EntryBox pairable_timeout;
 			
-		private Elm.Box vbox;
 		private Elm.Scroller sc;
 		private Elm.Box vbox_in;
 		private Elm.Box hbox;
@@ -26,6 +25,12 @@ public class SettingsUI {
 		
 		private Elm.Button bt_close;
 		
+		
+	public override string get_page_sid() {
+			return "settings"; 
+	}
+	
+	
 	public unowned Elm.Object create(Elm.Win win) {
 		
 		//add vbox
@@ -134,7 +139,7 @@ public class SettingsUI {
 
 	
 	public void close() {
-		ui.pop_page(vbox);
+		ui.pop_page(this.get_page_sid());
 	}
 	
 

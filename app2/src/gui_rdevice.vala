@@ -1,4 +1,4 @@
-public class BluezRemoteDeviceUI {
+public class BluezRemoteDeviceUI : Page {
 	
 		private BluezRemoteDevice rdevice;
 		
@@ -10,8 +10,7 @@ public class BluezRemoteDeviceUI {
 		private LabelBox address;
 		private LabelBox name;
 		private EntryBox alias;
-	
-		private Elm.Box vbox;
+
 		private Elm.Scroller sc;
 		private Elm.Box vbox_in;
 		private Elm.Box hbox;
@@ -28,6 +27,10 @@ public class BluezRemoteDeviceUI {
 	public BluezRemoteDeviceUI(BluezRemoteDevice device) {
 			this.rdevice = device;
 	 }
+	 
+	public override string get_page_sid() {
+			return this.rdevice.path; 
+	}
 		
 	public unowned Elm.Object create(Elm.Win win) {
 		
@@ -207,7 +210,7 @@ public class BluezRemoteDeviceUI {
 	
 	public void close() {
 		stdout.printf("Closing device window %s\n", rdevice.path);
-		ui.pop_rdeviceui(vbox, rdevice.path);
+		ui.pop_page(this.get_page_sid());
 
 	}
 	
