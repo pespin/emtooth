@@ -161,8 +161,7 @@ public class EmtoothUI {
 	}
 	
 	
-	private void cb_bt_start_clicked() {
-		stdout.printf("Start Discovery button pressed.\n");
+	public void discovery_start() {
 		bt_start.hide();
 		hbox1.unpack(bt_start);
 		
@@ -171,11 +170,10 @@ public class EmtoothUI {
 		
 		header.label_set("Discovering Devices...");
 		
-		ADAPTER.start_discovery();
+		ADAPTER.start_discovery();		
 	}
 	
-	private void cb_bt_stop_clicked() {
-		stdout.printf("Stop Discovery button pressed.\n");
+	public void discovery_stop() {
 		bt_stop.hide();
 		hbox1.unpack(bt_stop);
 		
@@ -184,7 +182,17 @@ public class EmtoothUI {
 		
 		header.label_set(ADAPTER.num_devices_found.to_string()+" Devices Found:");
 		
-		ADAPTER.stop_discovery();
+		ADAPTER.stop_discovery();		
+	}
+	
+	private void cb_bt_start_clicked() {
+		stdout.printf("Start Discovery button pressed.\n");
+		discovery_start();
+	}
+	
+	private void cb_bt_stop_clicked() {
+		stdout.printf("Stop Discovery button pressed.\n");
+		discovery_stop();
 	}
 	
 	
