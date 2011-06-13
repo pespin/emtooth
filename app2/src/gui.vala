@@ -12,11 +12,11 @@ public class EmtoothUI {
 		private Elm.Bg	bg;
 		public MainUI  mui;
 		
-		public HashTable<string, Page> opened_wins;
+		public List<Page> page_stack;
 		
 		
 		public EmtoothUI() {
-				opened_wins = new HashTable<string,Page>(str_hash, str_equal);
+				page_stack = new List<Page>();
 				mui = new MainUI();
 		}
 		
@@ -47,25 +47,73 @@ public class EmtoothUI {
 	
 	}
 	
-	public void pop_page(string sid) {
+	public void pop_page(Page page) {
 		stderr.printf("pop_page() started!\n");
 		//if( obj == pager.content_top_get() ) { //this segfaults...
 			pager.content_pop();
-			opened_wins.remove(sid);
+			page_stack.remove(page);
+			
+			string? last_title = get_last_title();
+			if(last_title != null)
+				win.title_set(last_title);
+			else
+				win.title_set(mui.get_page_title());
 		//}
 		stderr.printf("pop_page() finished!\n");
 	}
 
 
 	public void push_page(Page obj) {
-		opened_wins.insert(obj.get_page_sid(), obj);
+		
+		page_stack.prepend(obj);
+		
 		unowned Elm.Object? page = obj.get_page();
-		if(page!=null)
+		if(page!=null) {
+			
 			pager.content_push(page);
-		else 
+			
+			string title = obj.get_page_title();
+			if(title!=null)
+				win.title_set(title);
+		
+		} else 
 			stderr.printf("push_page(): pager.content_push(NULL)!!!\n");
 	}
+	
+	
+	private string? get_last_title() {
+		
+		string title;
+		unowned List<Page> l = page_stack;
+		
+		while(l!=null) {
+			title = l.data.get_page_title();
+			if(title!=null) return title;
+		} 
+		
+		return null;
+		
+	}
 
+}
+
+/* PAGE: all UIs inherit from this, and is used by EmtoothUI */
+public abstract class Page : Object {
+	
+	protected Elm.Box vbox;
+	
+	public Page() {
+			vbox = null;
+	}
+	
+	public unowned Elm.Object? get_page() {
+			return vbox;
+	}
+	
+	public abstract string get_page_sid();
+	
+	public abstract string? get_page_title();
+	
 }
 
 
@@ -312,22 +360,6 @@ public class FrameBox {
 		box.show();
 		fr.show();
 	}
-	
-}
-
-public abstract class Page : Object {
-	
-	protected Elm.Box vbox;
-	
-	public Page() {
-			vbox = null;
-	}
-	
-	public unowned Elm.Object? get_page() {
-			return vbox;
-	}
-	
-	public abstract string get_page_sid();
 	
 }
 

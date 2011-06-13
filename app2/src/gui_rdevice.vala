@@ -31,6 +31,10 @@ public class BluezRemoteDeviceUI : Page {
 	public override string get_page_sid() {
 			return this.rdevice.path; 
 	}
+	
+	public override string? get_page_title() {
+			return (rdevice==null ? "Emtooth - unknown" : "Emtooth - "+rdevice.name); 
+	}
 		
 	public unowned Elm.Object create(Elm.Win win) {
 		
@@ -210,7 +214,7 @@ public class BluezRemoteDeviceUI : Page {
 	
 	public void close() {
 		stdout.printf("Closing device window %s\n", rdevice.path);
-		ui.pop_page(this.get_page_sid());
+		ui.pop_page(this);
 
 	}
 	
