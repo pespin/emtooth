@@ -72,8 +72,7 @@ int main(string[] args) {
 
 	/* Start ui */
 	ui = new EmtoothUI();
-	ui.main_create();
-	ui.main_show();
+	ui.create();
 
 
 	/* ENTER MAIN LOOP */
