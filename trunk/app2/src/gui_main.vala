@@ -99,11 +99,6 @@ public class MainUI : Page {
 		return vbox;
 	}
 	
-	public void pop_rdeviceui(Elm.Object obj, string path) {
-		ui.pop_page(path); //TODO: remove obj^
-	}
-	
-	
 	public void add_rdevice_to_ui(BluezRemoteDevice rdevice) {
 		
 		
@@ -172,6 +167,10 @@ public class MainUI : Page {
 	
 	public override string get_page_sid() {
 			return "main"; 
+	}
+	
+	public override string? get_page_title() {
+			return "Emtooth - settings"; 
 	}
 
 }

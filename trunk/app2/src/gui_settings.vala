@@ -30,6 +30,10 @@ public class SettingsUI : Page {
 			return "settings"; 
 	}
 	
+	public override string? get_page_title() {
+			return "Emtooth - settings"; 
+	}
+	
 	
 	public unowned Elm.Object create(Elm.Win win) {
 		
@@ -139,7 +143,7 @@ public class SettingsUI : Page {
 
 	
 	public void close() {
-		ui.pop_page(this.get_page_sid());
+		ui.pop_page(this);
 	}
 	
 
