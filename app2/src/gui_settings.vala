@@ -27,11 +27,15 @@ public class SettingsUI : Page {
 		
 		
 	public override string get_page_sid() {
-			return "settings"; 
+			return PAGE_SID_SETTINGS; 
 	}
 	
 	public override string? get_page_title() {
 			return "Emtooth - settings"; 
+	}
+	
+	public override void refresh_content() {
+			stderr.printf("NOT IMPLEMENTED: refresh_content() on SettingsUI\n");
 	}
 	
 	

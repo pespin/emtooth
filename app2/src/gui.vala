@@ -81,6 +81,31 @@ public class EmtoothUI {
 	}
 	
 	
+	public void refresh_page_with_sid(string sid) {
+		
+		Page? p = get_page_by_sid(sid);
+		
+		if(p==null) return; //no action needed, we are finished
+		
+		p.refresh_content();
+		
+	}
+	
+	//TODO: this should return a list of pages, not only the first page.
+	private Page? get_page_by_sid(string sid) {
+		
+		unowned List<Page> l = page_stack;
+		
+		while(l!=null) {
+			stderr.printf("iterating over page: "+l.data.get_page_sid()+"\n");
+			if( sid == l.data.get_page_sid() )
+				return l.data;
+			l = l.next;
+		} 
+		
+		return null;
+	}
+	
 	private string? get_last_title() {
 		
 		string title;
@@ -89,6 +114,7 @@ public class EmtoothUI {
 		while(l!=null) {
 			title = l.data.get_page_title();
 			if(title!=null) return title;
+			l = l.next;
 		} 
 		
 		return null;
@@ -103,12 +129,14 @@ public abstract class Page : Object {
 	protected Elm.Box vbox;
 	
 	public Page() {
-			vbox = null;
+		vbox = null;
 	}
 	
 	public unowned Elm.Object? get_page() {
-			return vbox;
+		return vbox;
 	}
+	
+	public abstract void refresh_content();
 	
 	public abstract string get_page_sid();
 	

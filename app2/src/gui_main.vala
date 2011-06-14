@@ -166,11 +166,15 @@ public class MainUI : Page {
 	
 	
 	public override string get_page_sid() {
-			return "main"; 
+			return PAGE_SID_MAIN; 
 	}
 	
 	public override string? get_page_title() {
 			return "Emtooth - settings"; 
+	}
+	
+	public override void refresh_content() {
+			stderr.printf("NOT IMPLEMENTED: refresh_content() on MainUI\n");
 	}
 
 }

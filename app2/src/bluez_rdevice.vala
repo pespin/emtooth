@@ -113,6 +113,7 @@ public class BluezRemoteDevice : Object {
 		}
 
 		this.debug_info();
+		ui.refresh_page_with_sid(this.path);
 	}
 	
 	
@@ -124,6 +125,9 @@ public class BluezRemoteDevice : Object {
 		} catch (IOError err) {
 			stderr.printf("ERR: Could not get audio properties from remote device %s: %s\n", this.path, err.message);
 		}
+		
+		ui.refresh_page_with_sid(this.path);
+		
 	}
 	
 	public void update_properties_input() {
@@ -134,6 +138,9 @@ public class BluezRemoteDevice : Object {
 		} catch (IOError err) {
 			stderr.printf("ERR: Could not get input properties from remote device %s: %s\n", this.path, err.message);
 		}
+		
+		ui.refresh_page_with_sid(this.path);
+		
 	}
 	
 	
@@ -158,6 +165,7 @@ public class BluezRemoteDevice : Object {
 			dbus_device.set_property_(name, val);
 		} catch (IOError err) {
 			stderr.printf("ERR: Could not set property %s on device %s: %s\n",name, this.path, err.message);
+			ui.refresh_page_with_sid(this.path);
 		}
 	}
 	
@@ -170,6 +178,7 @@ public class BluezRemoteDevice : Object {
 			stderr.printf("ERR: Could not connect audio with device %s: %s\n", this.path, err.message);
 			var dialog = new DialogUI();
 			dialog.create("Could not connect audio with device:<br>"+this.path+"<br>"+err.message);
+			ui.refresh_page_with_sid(this.path);
 		}
 	}
 	
@@ -182,6 +191,7 @@ public class BluezRemoteDevice : Object {
 			stderr.printf("ERR: Could not disconnect audio from device %s: %s\n", this.path, err.message);
 			var dialog = new DialogUI();
 			dialog.create("Could not disconnect audio from device:<br>"+this.path+"<br>"+err.message);
+			ui.refresh_page_with_sid(this.path);
 		}
 	}
 	
@@ -194,6 +204,7 @@ public class BluezRemoteDevice : Object {
 			stderr.printf("ERR: Could not connect input with device %s: %s\n", this.path, err.message);
 			var dialog = new DialogUI();
 			dialog.create("Could not connect input with device:<br>"+this.path+"<br>"+err.message);
+			ui.refresh_page_with_sid(this.path);
 		}
 	}
 	
@@ -206,6 +217,7 @@ public class BluezRemoteDevice : Object {
 			stderr.printf("ERR: Could not disconnect input from device %s: %s\n", this.path, err.message);
 			var dialog = new DialogUI();
 			dialog.create("Could not disconnect input from device:<br>"+this.path+"<br>"+err.message);
+			ui.refresh_page_with_sid(this.path);
 		}
 	}
 	
@@ -258,6 +270,8 @@ public class BluezRemoteDevice : Object {
 		} else {
 			stderr.printf("Unknown Audio property %s\n", name);
 		}
+		
+		ui.refresh_page_with_sid(this.path);
 	 
 	 }
 	 
@@ -274,7 +288,8 @@ public class BluezRemoteDevice : Object {
 		} else {
 			stderr.printf("Unknown Input property %s\n", name);
 		}
-	 
+		
+		ui.refresh_page_with_sid(this.path);
 	 
 	 }
 	 
@@ -341,6 +356,8 @@ public class BluezRemoteDevice : Object {
 				stderr.printf("Unknown property %s\n", name);
 				break;	
 		}
+		
+		ui.refresh_page_with_sid(this.path);
 	}
 
 	 private void disconnect_requested_sig() {

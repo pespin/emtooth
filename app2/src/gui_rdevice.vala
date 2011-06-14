@@ -138,31 +138,27 @@ public class BluezRemoteDeviceUI : Page {
 											
 											
 		//AUDIO TOGGLE:
-		if(rdevice.has_service_audio()) {
 			
-			fr_audio = new FrameBox(win, vbox_in, "Audio settings");
-			fr_audio.show();
-				
-			tg_audio = new Elm.Toggle(win);
-			tg_audio.label_set("Connect");
-			tg_audio.states_labels_set("Yes", "No");
-			tg_audio.state_set(rdevice.connected_audio);
-			tg_audio.size_hint_align_set(-1.0, 0.0);
-			fr_audio.box.pack_end(tg_audio);
-			tg_audio.show();
-			tg_audio.smart_callback_add("changed", () => { if(tg_audio.state_get()==true)
-															rdevice.connect_audio(); 
-														   else 
-															rdevice.disconnect_audio();
-														});
-		}
+		fr_audio = new FrameBox(win, vbox_in, "Audio settings");
+		fr_audio.show();	
+		tg_audio = new Elm.Toggle(win);
+		tg_audio.label_set("Connect");
+		tg_audio.states_labels_set("Yes", "No");
+		tg_audio.state_set(rdevice.connected_audio);
+		tg_audio.size_hint_align_set(-1.0, 0.0);
+		fr_audio.box.pack_end(tg_audio);
+		tg_audio.show();
+		tg_audio.smart_callback_add("changed", () => { if(tg_audio.state_get()==true)
+														rdevice.connect_audio(); 
+													   else 
+														rdevice.disconnect_audio();
+													});
+		tg_audio.disabled_set(!rdevice.has_service_audio());
 		
 		//INPUT TOGGLE:
-		if(rdevice.has_service_input()) {
 			
 			fr_input = new FrameBox(win, vbox_in, "Input settings");
-			fr_input.show();
-				
+			fr_input.show();	
 			tg_input = new Elm.Toggle(win);
 			tg_input.label_set("Connect");
 			tg_input.states_labels_set("Yes", "No");
@@ -174,9 +170,8 @@ public class BluezRemoteDeviceUI : Page {
 															rdevice.connect_input(); 
 														   else
 															rdevice.disconnect_input();
-													} );
-											
-		}									
+													} );										
+		tg_input.disabled_set(!rdevice.has_service_input());								
 		
 		//RM BUTTON:
 		bt_rm = new Elm.Button(win);
@@ -211,13 +206,32 @@ public class BluezRemoteDeviceUI : Page {
 		return vbox;
 
 	}
+
+	public override void refresh_content() {
+			stderr.printf("YEAAAAH refresh content called correctly... ("+rdevice.addr+"\n");
+		
+			address.val_set(rdevice.addr);
+			name.val_set(rdevice.name);
+			alias.val_set(rdevice.alias);
+			tg_con.state_set(rdevice.connected);
+			tg_pair.state_set(rdevice.paired);
+			tg_trust.state_set(rdevice.trusted);
+			tg_audio.state_set(rdevice.connected_audio);
+			tg_input.state_set(rdevice.connected_input);
+						
+			tg_pair.disabled_set(rdevice.paired);
+			
+			tg_audio.disabled_set(!rdevice.has_service_audio());
+			
+			tg_input.disabled_set(!rdevice.has_service_input());
+	}
+
 	
 	public void close() {
 		stdout.printf("Closing device window %s\n", rdevice.path);
 		ui.pop_page(this);
 
 	}
-	
 
 
 }
