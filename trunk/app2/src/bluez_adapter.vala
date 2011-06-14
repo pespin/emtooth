@@ -132,6 +132,7 @@ public class BluezAdapter : Object {
 			stderr.printf ("ERR: Could not create paired device: %s\n", e.message);
 			var dialog = new DialogUI();
 			dialog.create("Could not create paired device:<br>"+e.message);
+			ui.refresh_page_with_sid(rdevice.path);
 		}	
 		
 	}
@@ -161,6 +162,7 @@ public class BluezAdapter : Object {
 			stderr.printf("\nERR: Could not get properties from device %s: %s\n", this.path, err.message);
 		}
 		this.debug_info();
+		ui.refresh_page_with_sid(PAGE_SID_SETTINGS);
 	}
 	
 	public void debug_info() {
@@ -239,6 +241,8 @@ public class BluezAdapter : Object {
 				stdout.printf("Unknown property %s\n", name);
 				break;	
 		}
+		
+		ui.refresh_page_with_sid(PAGE_SID_SETTINGS);
 		
 
 	}

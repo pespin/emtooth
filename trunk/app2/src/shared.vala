@@ -26,6 +26,10 @@ const string EMTOOTH_BLUEZ_AGENT_NAME = "org.emtooth";
 const string EMTOOTH_BLUEZ_AGENT_PATH = "/org/emtooth/bluez/agent";
 const string EMTOOTH_BLUEZ_AGENT_IFACE = "org.bluez.Agent";
 
+
+//Pager:
+const string PAGE_SID_SETTINGS	= "settings";
+const string PAGE_SID_MAIN		= "main";
  
 //Input:
 const string HID_UUID = "00001124-0000-1000-8000-00805f9b34fb";
