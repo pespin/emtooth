@@ -208,11 +208,9 @@ public class BluezRemoteDeviceUI : Page {
 	}
 
 	public override void refresh_content() {
-			stderr.printf("YEAAAAH refresh content called correctly... ("+rdevice.addr+"\n");
 		
 			address.val_set(rdevice.addr);
 			name.val_set(rdevice.name);
-			alias.val_set(rdevice.alias);
 			tg_con.state_set(rdevice.connected);
 			tg_pair.state_set(rdevice.paired);
 			tg_trust.state_set(rdevice.trusted);

@@ -48,7 +48,7 @@ public class EmtoothUI {
 	}
 	
 	public void pop_page(Page page) {
-		stderr.printf("pop_page() started!\n");
+		//stderr.printf("pop_page() started!\n");
 		//if( obj == pager.content_top_get() ) { //this segfaults...
 			pager.content_pop();
 			page_stack.remove(page);
@@ -59,7 +59,7 @@ public class EmtoothUI {
 			else
 				win.title_set(mui.get_page_title());
 		//}
-		stderr.printf("pop_page() finished!\n");
+		//stderr.printf("pop_page() finished!\n");
 	}
 
 
@@ -97,7 +97,7 @@ public class EmtoothUI {
 		unowned List<Page> l = page_stack;
 		
 		while(l!=null) {
-			stderr.printf("iterating over page: "+l.data.get_page_sid()+"\n");
+			//stderr.printf("iterating over page: "+l.data.get_page_sid()+"\n");
 			if( sid == l.data.get_page_sid() )
 				return l.data;
 			l = l.next;
