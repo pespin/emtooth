@@ -420,9 +420,11 @@ public class ListItemHandler : Object {
 		item.icon_set(icon);
 	}
 	
-	private static Elm.Icon gen_icon(string name) {
+	public static string format_item_label(BluezRemoteDevice device) {
+		return device.alias;
+	}
 	
-		stdout.printf("Adding %s to icon cache...\n", Path.build_filename(IMAGESDIR,name+".png"));
+	private static Elm.Icon gen_icon(string name) {
 		
 		var ic = new Elm.Icon(win);
 		ic.file_set(Path.build_filename(IMAGESDIR,name+".png"));
@@ -430,10 +432,6 @@ public class ListItemHandler : Object {
 		ic.fill_outside_set(true);
 		ic.show();
 		return ic;
-	}
-	
-	private static string format_item_label(BluezRemoteDevice device) {
-		return "["+ device.addr + "] " + device.alias;
 	}
 
 	private void open_rdevice_page() {
