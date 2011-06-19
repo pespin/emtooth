@@ -114,6 +114,7 @@ public class BluezRemoteDevice : Object {
 
 		this.debug_info();
 		ui.refresh_page_with_sid(this.path);
+		ui.refresh_page_with_sid(PAGE_SID_MAIN);
 	}
 	
 	
@@ -309,6 +310,7 @@ public class BluezRemoteDevice : Object {
 				break;
 			case "Alias":
 				this.alias = (string) val;	
+				ui.refresh_page_with_sid(PAGE_SID_MAIN);
 				break;
 			case "Adapter":
 				this.adapter = (string) val;	
