@@ -57,7 +57,7 @@ public class BluezAdapter : Object {
 		
 		this.update_properties();
 		
-		this.create_all_known_devices();
+		this.create_all_known_devices.begin();
 		
 		this.start_discovery();
 		
@@ -210,7 +210,7 @@ public class BluezAdapter : Object {
 	}
 	
 	
-	private void create_all_known_devices() {
+	private async void create_all_known_devices() {
 			foreach(var path in this.devices) {
 					create_rdevice(path);
 			} 
