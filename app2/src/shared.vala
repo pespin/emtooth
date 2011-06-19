@@ -26,6 +26,8 @@ const string EMTOOTH_BLUEZ_AGENT_NAME = "org.emtooth";
 const string EMTOOTH_BLUEZ_AGENT_PATH = "/org/emtooth/bluez/agent";
 const string EMTOOTH_BLUEZ_AGENT_IFACE = "org.bluez.Agent";
 
+extern const string IMAGESDIR;
+
 
 //Pager:
 const string PAGE_SID_SETTINGS	= "settings";

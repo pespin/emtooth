@@ -7,6 +7,8 @@ public class MainUI : Page {
 	
 		public Elm.Label header;
 		public Elm.List li;
+		
+		private unowned Elm.Win win;
 			
 		private Elm.Box hbox;
 		private Elm.Frame fr;
@@ -15,16 +17,17 @@ public class MainUI : Page {
 		private Elm.Button bt_stop;
 		private Elm.Button bt;
 
-		public HashTable<string,Elm.ListItem> rdevices_ui_list; 
-		
+		public HashTable<string,ListItemHandler> rdevices_ui_list; 
 		
 		public MainUI() {
 				//super();
-				rdevices_ui_list = new HashTable<string,Elm.ListItem>(str_hash, str_equal);
+				rdevices_ui_list = new HashTable<string,ListItemHandler>(str_hash, str_equal);
 		}
 		
 
 	public unowned Elm.Object create(Elm.Win win) {
+		
+		this.win = win;
 		
 		//add vbox
 		vbox = new Elm.Box(win);
@@ -105,11 +108,9 @@ public class MainUI : Page {
 		message("Adding rdevice " + rdevice.path + " to ui-list");
 		string label = "["+ rdevice.addr + "] " + rdevice.alias;
 		
-		var opener = new WinOpener(rdevice.path);
-		Elm.ListItem item;
-		item = this.li.append(label, null, null, opener.go);
-		opener.item = item; // this is needed to unselect ListItem to be able to press it again.
-		rdevices_ui_list.insert(rdevice.path, (owned) item);
+		var opener = new ListItemHandler(win, rdevice);
+		opener.item = this.li.append(label, null, opener.icon, opener.go);
+		rdevices_ui_list.insert(rdevice.path, (owned) opener);
 		this.li.go();
 	}
 	
@@ -177,14 +178,14 @@ public class MainUI : Page {
 			//stderr.printf("NOT IMPLEMENTED: refresh_content() on MainUI\n");
 			
 			
-		HashTableIter<string,Elm.ListItem> it = HashTableIter<string,Elm.ListItem>(rdevices_ui_list);
+		HashTableIter<string,ListItemHandler> it = HashTableIter<string,ListItemHandler>(rdevices_ui_list);
 		
 		unowned string? path;
-		unowned Elm.ListItem? item;
-		while(it.next(out path, out item)) {
+		unowned ListItemHandler? handler;
+		while(it.next(out path, out handler)) {
 			var device = ADAPTER.get_rdevice_by_path(path);
 			if(device==null) continue;
-			item.label_set("["+ device.addr + "] " + device.alias);
+			handler.refresh_content();
 		}
 		
 		li.go();
@@ -192,47 +193,3 @@ public class MainUI : Page {
 	}
 
 }
-
-
-//we all love dirty hacks!
-//this is needed because of vala internals. It's necessary to pass an object to callback
-private class WinOpener : Object {
-	
-		public string path;
-		public unowned Elm.ListItem item;
-		
-		public WinOpener(string str) {
-			this.ref();
-			path = str;
-		}
-		
-		
-		public void go () { 
-		stderr.printf ("PATH=" + this.path + ";\n"); 
-		stderr.printf ("label=" + this.item.label_get() + ";\n");
-		this.item.selected_set(false);
-		open_rdevice_win(this.path); 
-		//this.unref ();
-		//^ we don't want this to be unrefd, as it has to be kept alive to be called by clicked signal
-	}
-	
-		private void open_rdevice_win(string path) {
-			message("Opening win for rdevice "+path+"...\n");
-			BluezRemoteDevice rdevice = ADAPTER.get_rdevice_by_path(path);
-			if(rdevice==null) {
-				warning("Trying to open NULL device!\n");
-				return;
-			}
-			
-			//if true, this means probably that rdevice.ref_count==0
-			if(rdevice.path==null) warning("rdevice.path is null!!!\n");
-			
-			BluezRemoteDeviceUI device_ui = new BluezRemoteDeviceUI(rdevice);
-			device_ui.create(ui.win);
-			ui.push_page(device_ui);
-
-		}
-		
-	
-}
-

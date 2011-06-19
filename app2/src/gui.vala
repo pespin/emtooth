@@ -392,3 +392,64 @@ public class FrameBox {
 }
 
 
+public class ListItemHandler : Object {
+	
+	public BluezRemoteDevice rdevice;
+	public Elm.ListItem item;
+	public Elm.Icon icon;
+	public static unowned Elm.Win win;
+	
+	
+	public ListItemHandler(Elm.Win win, BluezRemoteDevice device) {
+		this.rdevice = device;
+		this.win = win;
+		this.icon = gen_icon(rdevice.online ? "online" : "offline" );
+	}
+	
+	
+	public void go () { 
+		stderr.printf ("PATH=" + this.rdevice.path + ";\n"); 
+		stderr.printf ("label=" + this.item.label_get() + ";\n");
+		this.item.selected_set(false);
+		open_rdevice_page(); 
+	}
+	
+	public void refresh_content() {
+		item.label_set(format_item_label(rdevice));
+		icon = gen_icon(rdevice.online ? "online" : "offline" );
+		item.icon_set(icon);
+	}
+	
+	private static Elm.Icon gen_icon(string name) {
+	
+		stdout.printf("Adding %s to icon cache...\n", Path.build_filename(IMAGESDIR,name+".png"));
+		
+		var ic = new Elm.Icon(win);
+		ic.file_set(Path.build_filename(IMAGESDIR,name+".png"));
+		ic.scale_set(true, true);
+		ic.fill_outside_set(true);
+		ic.show();
+		return ic;
+	}
+	
+	private static string format_item_label(BluezRemoteDevice device) {
+		return "["+ device.addr + "] " + device.alias;
+	}
+
+	private void open_rdevice_page() {
+		
+		//if true, this means probably that rdevice.ref_count==0
+		if(rdevice==null || rdevice.path==null) warning("rdevice.path is null!!!\n");
+		
+		message("Opening win for rdevice "+rdevice.path+"...\n");
+		
+		BluezRemoteDeviceUI device_ui = new BluezRemoteDeviceUI(rdevice);
+		device_ui.create(ui.win);
+		ui.push_page(device_ui);
+
+	}		
+	
+}
+
+
+
