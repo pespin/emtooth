@@ -193,7 +193,7 @@ public class DialogUI : Object {
 		bt_ok = new Elm.Button(ui.win);
 		bt_ok.label_set("Ok");
 		bt_ok.size_hint_align_set(-1.0, -1.0);
-		bt_ok.size_hint_weight_set(1.0, 1.0);
+		bt_ok.size_hint_weight_set(1.0, 0.0);
 		vbox_in.pack_end(bt_ok);
 		bt_ok.show();
 		bt_ok.smart_callback_add("clicked", () => { this.close(); } );
@@ -264,7 +264,7 @@ public class PinDialogUI {
 		bt_ok = new Elm.Button(ui.win);
 		bt_ok.label_set("Ok");
 		bt_ok.size_hint_align_set(-1.0, -1.0);
-		bt_ok.size_hint_weight_set(1.0, 1.0);
+		bt_ok.size_hint_weight_set(1.0, 0.0);
 		vbox_in.pack_end(bt_ok);
 		bt_ok.show();
 		bt_ok.smart_callback_add("clicked", () => { this.rdevice.password = this.entry.entry_get(); this.close(); } );
