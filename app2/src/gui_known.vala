@@ -63,7 +63,7 @@ public class KnownUI : Page {
 		bt.show();
 		bt.smart_callback_add( "clicked", this.close );
 	
-		populate_list();
+		populate_list.begin();
 	
 		return vbox;
 	}
@@ -87,7 +87,7 @@ public class KnownUI : Page {
 	}
 	
 	
-	private void populate_list() {
+	private async void populate_list() {
 			stderr.printf("populate_List() started.\n");
 			List<unowned BluezRemoteDevice> l = ADAPTER.get_all_rdevices();
 			foreach(var device in l) {
@@ -108,7 +108,7 @@ public class KnownUI : Page {
 	
 	public override void refresh_content() {
 		rdevices_ui_list = new HashTable<string,ListItemHandler>(str_hash, str_equal);
-		populate_list();
+		populate_list.begin();
 	}
 
 }
