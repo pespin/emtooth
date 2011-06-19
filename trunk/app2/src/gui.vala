@@ -136,6 +136,10 @@ public abstract class Page : Object {
 		return vbox;
 	}
 	
+	public void close() {
+		ui.pop_page(this);
+	}
+	
 	public abstract void refresh_content();
 	
 	public abstract string get_page_sid();
@@ -437,7 +441,10 @@ public class ListItemHandler : Object {
 	private void open_rdevice_page() {
 		
 		//if true, this means probably that rdevice.ref_count==0
-		if(rdevice==null || rdevice.path==null) warning("rdevice.path is null!!!\n");
+		if(rdevice==null || rdevice.path==null) { 
+			warning("rdevice.path is null!!!\n");
+			return;
+		}
 		
 		message("Opening win for rdevice "+rdevice.path+"...\n");
 		

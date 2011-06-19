@@ -22,6 +22,7 @@ public class SettingsUI : Page {
 		private Elm.Box hbox;
 		private Elm.Toggle tg_disc;
 		private Elm.Toggle tg_pair;
+		private Elm.Button bt_k;
 		
 		private Elm.Button bt_close;
 		
@@ -124,6 +125,23 @@ public class SettingsUI : Page {
 		discoverable_timeout.val.smart_callback_add("changed", () => {Variant val = (uint) int.parse(pairable_timeout.val_get());
 												ADAPTER.set_property_("PairableTimeout", val); });
 		
+		
+		
+		//DEVICES BUTTON:
+		bt_k = new Elm.Button(win);
+		bt_k.label_set("Show Devices");
+		bt_k.size_hint_weight_set(0, 0);
+		bt_k.size_hint_align_set(-1.0, -1.0);
+		vbox_in.pack_end(bt_k);
+		bt_k.show();
+		
+		bt_k.smart_callback_add( "clicked", () => {
+												KnownUI known_ui = new KnownUI();
+												known_ui.create(ui.win);
+												ui.push_page(known_ui);
+											} );
+		
+		
 		//BOTTOM:
 		
 		gui_container += (owned) hbox;
@@ -143,11 +161,6 @@ public class SettingsUI : Page {
 		bt_close.smart_callback_add( "clicked", this.close );
 
 		return vbox;
-	}
-
-	
-	public void close() {
-		ui.pop_page(this);
 	}
 	
 
