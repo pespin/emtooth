@@ -224,12 +224,5 @@ public class BluezRemoteDeviceUI : Page {
 			tg_input.disabled_set(!rdevice.has_service_input());
 	}
 
-	
-	public void close() {
-		stdout.printf("Closing device window %s\n", rdevice.path);
-		ui.pop_page(this);
-
-	}
-
 
 }

@@ -57,7 +57,11 @@ public class BluezAdapter : Object {
 		
 		this.update_properties();
 		
+		this.create_all_known_devices();
+		
 		this.start_discovery();
+		
+		
 		
 	}
 	
@@ -99,7 +103,6 @@ public class BluezAdapter : Object {
 		}
 		
 		bool found;
-		//ui.remove_rdevice_from_ui(device_path);
 		found = this.rdevice_hash.remove(device_path);
 		
 		if(found) this.num_devices_found--;
@@ -182,7 +185,7 @@ public class BluezAdapter : Object {
 			return rdevice_hash.lookup(path);
 	}
 	
-	public BluezRemoteDevice? get_rdevice_by_addr(string addr) {
+	public unowned BluezRemoteDevice? get_rdevice_by_addr(string addr) {
 			List<unowned BluezRemoteDevice> list;
 			list = this.rdevice_hash.get_values();
 			foreach(var device in list) {
@@ -191,9 +194,27 @@ public class BluezAdapter : Object {
 			return null;
 	}
 	
+	public List<BluezRemoteDevice> get_all_rdevices() {
+			return this.rdevice_hash.get_values();
+	}
+	
+	private unowned BluezRemoteDevice create_rdevice(string path) {
+			unowned BluezRemoteDevice device;
+			device = this.rdevice_hash.lookup(path);
+			if(device == null) {
+				var newdevice = new BluezRemoteDevice((GLib.ObjectPath) path);
+				this.rdevice_hash.insert(newdevice.path, (owned)  newdevice);
+				device = this.rdevice_hash.lookup(path); //glib CRITICAL errors without this line
+			} 
+		return device;
+	}
 	
 	
-	
+	private void create_all_known_devices() {
+			foreach(var path in this.devices) {
+					create_rdevice(path);
+			} 
+	}
 	
 	/* SIGNALS */
 	private void property_changed_sig(string name, GLib.Variant val) {
@@ -236,6 +257,7 @@ public class BluezAdapter : Object {
 				break;
 			case "Devices":
 				this.devices = get_dbus_array(val);
+				ui.refresh_page_with_sid(PAGE_SID_KNOWN);
 				break;
 			default:
 				stdout.printf("Unknown property %s\n", name);
@@ -257,10 +279,11 @@ public class BluezAdapter : Object {
 		var device = this.rdevice_hash.lookup(path);
 		if(device!=null) {
 			stdout.printf ("device is cached, time to remove it from everywhere\n");
+			if(device.online) this.num_devices_found--;
 			this.rdevice_hash.remove(path);
-			this.num_devices_found--;
 		}
 		ui.mui.remove_rdevice_from_ui(path);
+		ui.refresh_page_with_sid(PAGE_SID_KNOWN);
 	}
 	
 	private void device_found_sig (string address, HashTable<string, GLib.Variant?> properties) {
@@ -291,14 +314,7 @@ public class BluezAdapter : Object {
 			
 			stdout.printf("Object path for device with addr %s is %s\n", address, path);
 			
-			BluezRemoteDevice device;
-			device = this.rdevice_hash.lookup(path);
-			if(device == null) {
-				device = new BluezRemoteDevice(path);
-				this.rdevice_hash.insert(device.path, (owned) device);
-				device = this.rdevice_hash.lookup(path); //glib CRITICAL errors without this line
-			} 
-			
+			var device = create_rdevice(path);
 			
 			if(device.online==false) {
 				device.online = true;

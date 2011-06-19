@@ -90,7 +90,6 @@ public class MainUI : Page {
 		bt_stop.show();
 	
 	
-		//TODO: add button callbacks
 		bt = new Elm.Button(win);
 		bt.label_set("Settings");
 		bt.size_hint_weight_set( 1.0, 1.0 );
@@ -182,8 +181,6 @@ public class MainUI : Page {
 		unowned string? path;
 		unowned ListItemHandler? handler;
 		while(it.next(out path, out handler)) {
-			var device = ADAPTER.get_rdevice_by_path(path);
-			if(device==null) continue;
 			handler.refresh_content();
 		}
 		

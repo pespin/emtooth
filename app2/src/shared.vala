@@ -32,7 +32,8 @@ extern const string IMAGESDIR;
 //Pager:
 const string PAGE_SID_SETTINGS	= "settings";
 const string PAGE_SID_MAIN		= "main";
- 
+const string PAGE_SID_KNOWN		= "known";
+
 //Input:
 const string HID_UUID = "00001124-0000-1000-8000-00805f9b34fb";
 
