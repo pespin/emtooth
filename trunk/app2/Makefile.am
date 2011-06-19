@@ -2,6 +2,7 @@ AUTOMAKE_OPTIONS     = 1.4 foreign
 MAINTAINERCLEANFILES = Makefile.in
 
 INCLUDES = -I$(top_srcdir) @EMTOOTH2_CFLAGS@
+AM_CPPFLAGS = "-DIMAGESDIR=\"$(datadir)/emtooth2/images\""
 
 bin_PROGRAMS      = emtooth2
 
@@ -28,3 +29,9 @@ desktop_DATA = data/emtooth2.desktop
 pixmapsdir = $(datadir)/pixmaps
 pixmaps_DATA =  data/emtooth2.png
 
+imagesdir = $(datadir)/emtooth2/images
+images_DATA = \
+data/offline.png \
+data/online.png
+
+EXTRA_DIST = $(images_DATA)
