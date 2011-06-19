@@ -164,17 +164,31 @@ public class MainUI : Page {
 		ui.push_page(settings_ui);
 	}
 	
-	
+
 	public override string get_page_sid() {
-			return PAGE_SID_MAIN; 
+		return PAGE_SID_MAIN; 
 	}
 	
 	public override string? get_page_title() {
-			return "Emtooth - settings"; 
+		return "Emtooth - settings"; 
 	}
 	
 	public override void refresh_content() {
-			stderr.printf("NOT IMPLEMENTED: refresh_content() on MainUI\n");
+			//stderr.printf("NOT IMPLEMENTED: refresh_content() on MainUI\n");
+			
+			
+		HashTableIter<string,Elm.ListItem> it = HashTableIter<string,Elm.ListItem>(rdevices_ui_list);
+		
+		unowned string? path;
+		unowned Elm.ListItem? item;
+		while(it.next(out path, out item)) {
+			var device = ADAPTER.get_rdevice_by_path(path);
+			if(device==null) continue;
+			item.label_set("["+ device.addr + "] " + device.alias);
+		}
+		
+		li.go();
+		
 	}
 
 }
