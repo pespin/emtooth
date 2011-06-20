@@ -407,7 +407,7 @@ public class ListItemHandler : Object {
 	public ListItemHandler(Elm.Win win, BluezRemoteDevice device) {
 		this.rdevice = device;
 		this.win = win;
-		this.icon = gen_icon(rdevice.online ? "online" : "offline" );
+		this.icon = gen_icon(rdevice.icon+"-"+(rdevice.online ? "online" : "offline") );
 	}
 	
 	
