@@ -32,7 +32,31 @@ pixmaps_DATA =  data/emtooth2.png
 
 imagesdir = $(datadir)/emtooth2/images
 images_DATA = \
-data/offline.png \
-data/online.png
+	data/audio-card-offline.png \
+	data/audio-card-online.png \
+	data/camera-photo-offline.png \
+	data/camera-photo-online.png \
+	data/camera-video-offline.png \
+	data/camera-video-online.png \
+	data/computer-offline.png \
+	data/computer-online.png \
+	data/input-gaming-offline.png \
+	data/input-gaming-online.png \
+	data/input-keyboard-offline.png \
+	data/input-keyboard-online.png \
+	data/input-mouse-offline.png \
+	data/input-mouse-online.png \
+	data/input-table-offline.png \
+	data/input-table-online.png \
+	data/modem-offline.png \
+	data/modem-online.png \
+	data/network-wireless-offline.png \
+	data/network-wireless-online.png \
+	data/phone-offline.png \
+	data/phone-online.png \
+	data/printer-offline.png \
+	data/printer-online.png \
+	data/unknown-offline.png \
+	data/unknown-online.png
 
 EXTRA_DIST = $(images_DATA)
