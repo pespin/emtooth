@@ -8,6 +8,9 @@ public BluezAdapter ADAPTER;
 public ObexManager	MANAGER;
 public EmtoothUI ui;
 
+DBusConnection SYSCONN;
+DBusConnection SESCONN;
+
 public Evas.Coord DISPLAY_WIDTH = 320;
 public Evas.Coord DISPLAY_HEIGHT = 400;
 

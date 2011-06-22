@@ -1,6 +1,15 @@
+using org;
+using openobex;
 
 [DBus (name = "org.openobex.Agent")]
 public class ObexClientAgent : Object {
+
+	ObexTransfer transfer;
+	Timer t;
+	uint64 size;
+	string name;
+	string filename;
+// DBUS METHODS:
 
     public void release() {
 		
@@ -10,14 +19,38 @@ public class ObexClientAgent : Object {
 	
 	
 	public string request(ObjectPath transfer_path) {
+		stderr.printf("ObexClientAgent: request start\n");
 		
-		stderr.printf("ObexClientAgent: request\n");
-		return "hello.txt";
+		try {
+			transfer = Bus.get_proxy_sync (BusType.SESSION, "org.openobex.client", transfer_path);
+		} catch (IOError e) {
+			stderr.printf ("ObexClientAgent: Error on request: %s\n", e.message);
+		}
+		
+		try {
+			var hash = transfer.get_properties_();
+			this.size = (uint64) hash.lookup("Size");
+			this.name = (string) hash.lookup("Name");
+			this.filename = (string) hash.lookup("Filename");
+		} catch(IOError e) {
+				stderr.printf ("ObexClientAgent: Error on get_properties: %s\n", e.message);
+		}
+		t = new Timer();
+		t.reset();
+		t.start();
+
+		stderr.printf("ObexClientAgent: request end\n");
+		//TODO: we may want to reject files...
+		return "";
 	}
 	
 	
 	public void progress(ObjectPath transfer_path, uint64 bytes) {
-		stderr.printf("ObexClientAgent: progress\n");
+		uint64 seconds = (uint64) t.elapsed();
+		if(seconds==0) seconds++; //avoid dividing by 0 ;)
+		uint64 speed = bytes / (seconds * 1000);
+		
+		stderr.printf( @"ObexClientAgent: progress ($bytes bytes transfered, $speed KB/s)\n");
 		
 	}
 	
