@@ -170,11 +170,11 @@ public class BluezRemoteDevice : Object {
 		}
 	}
 	
-	public void connect_audio() {
+	public async void connect_audio() {
 		if(dbus_audio==null) return;
 		stdout.printf("Connecting audio with device %s.\n", this.path);
 		try {
-			dbus_audio.connect();
+			yield dbus_audio.connect();
 		} catch (IOError err) {
 			stderr.printf("ERR: Could not connect audio with device %s: %s\n", this.path, err.message);
 			var dialog = new DialogUI();
@@ -183,11 +183,11 @@ public class BluezRemoteDevice : Object {
 		}
 	}
 	
-	public void disconnect_audio() {
+	public async void disconnect_audio() {
 		if(dbus_audio==null) return;
 		stdout.printf("Disconnecting audio from device %s.\n", this.path);
 		try {
-			dbus_audio.disconnect();
+			yield dbus_audio.disconnect();
 		} catch (IOError err) {
 			stderr.printf("ERR: Could not disconnect audio from device %s: %s\n", this.path, err.message);
 			var dialog = new DialogUI();
@@ -196,11 +196,11 @@ public class BluezRemoteDevice : Object {
 		}
 	}
 	
-	public void connect_input() {
+	public async void connect_input() {
 		if(dbus_input==null) return;
 		stdout.printf("Connecting input with device %s.\n", this.path);
 		try {
-			dbus_input.connect();
+			yield dbus_input.connect();
 		} catch (IOError err) {
 			stderr.printf("ERR: Could not connect input with device %s: %s\n", this.path, err.message);
 			var dialog = new DialogUI();
@@ -209,11 +209,11 @@ public class BluezRemoteDevice : Object {
 		}
 	}
 	
-	public void disconnect_input() {
+	public async void disconnect_input() {
 		if(dbus_input==null) return;
 		stdout.printf("Disconnecting audio from device %s.\n", this.path);
 		try {
-			dbus_input.disconnect();
+			yield dbus_input.disconnect();
 		} catch (IOError err) {
 			stderr.printf("ERR: Could not disconnect input from device %s: %s\n", this.path, err.message);
 			var dialog = new DialogUI();
