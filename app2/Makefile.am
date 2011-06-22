@@ -18,7 +18,11 @@ emtooth2_SOURCES = \
 	src/gui_main.vala \
 	src/gui_settings.vala \
 	src/gui_rdevice.vala \
-	src/org-bluez.vala
+	src/obex_agent.vala \
+	src/obex_client_agent.vala \
+	src/obex_manager.vala \
+	src/org-bluez.vala \
+	src/org-openobex.vala
 	
 emtooth2_LDADD = @EMTOOTH2_LIBS@
 emtooth2_CFLAGS =

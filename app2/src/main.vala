@@ -1,20 +1,21 @@
 using org;
 using bluez;
+using openobex;
 
 
-void on_bus_acquired (DBusConnection conn) {
+void on_bus_system_acquired (DBusConnection conn) {
 	/* Start bluez_agent */
 	try {
 		
 		conn.register_object (EMTOOTH_BLUEZ_AGENT_PATH, new BluezAgent ());
-		stderr.printf ("service org.emtooth created correctly\n");
+		stderr.printf ("service org.emtooth on system bus created correctly\n");
 	} catch (IOError e) {
-		stderr.printf ("Could not create service org.emtooth: %s\n", e.message);
+		stderr.printf ("Could not create service org.emtooth on system bus: %s\n", e.message);
 	}
 	
 	    /* Get default bluez adapter and register agent */
 	try {
-		Manager root_manager = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", "/");
+		BluezDBusManager root_manager = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", "/");
 
 		var adapter_path = root_manager.default_adapter();
 		stdout.printf("Default adapter path -> %s\n", adapter_path);
@@ -27,6 +28,22 @@ void on_bus_acquired (DBusConnection conn) {
 		"Please be sure bluetoothd is running.");
 		//exit(1);
 	} 
+
+}
+
+
+void on_bus_session_acquired (DBusConnection conn) {
+	/* Start obex_agent */
+	try {
+		conn.register_object (EMTOOTH_OBEX_AGENT_PATH, new ObexAgent ());
+		stderr.printf ("service org.emtooth on session bus created correctly\n");
+	} catch (IOError e) {
+		stderr.printf ("Could not create service org.emtooth on session bus: %s\n", e.message);
+	}
+	
+	
+	MANAGER = new ObexManager();
+	MANAGER.register_agent(EMTOOTH_OBEX_AGENT_PATH);
 
 }
 
@@ -64,10 +81,16 @@ int main(string[] args) {
 #endif
 
 	   /* Start bluez_agent */
-   Bus.own_name (BusType.SYSTEM, EMTOOTH_BLUEZ_AGENT_NAME, BusNameOwnerFlags.NONE,
-			  on_bus_acquired,
-			  () => stderr.printf ("Bus name acquired\n"),
-			  () => stderr.printf ("Could not acquire bus name\n"));
+   Bus.own_name (BusType.SYSTEM, EMTOOTH_SERVICE_NAME, BusNameOwnerFlags.NONE,
+			  on_bus_system_acquired,
+			  () => stderr.printf ("System Bus name acquired\n"),
+			  () => stderr.printf ("Could not acquire system bus name\n"));
+
+	   /* Start obex_agent */
+   Bus.own_name (BusType.SESSION, EMTOOTH_SERVICE_NAME, BusNameOwnerFlags.NONE,
+			  on_bus_session_acquired,
+			  () => stderr.printf ("Session Bus name acquired\n"),
+			  () => stderr.printf ("Could not acquire session bus name\n"));
     
 
 	/* Start ui */
