@@ -213,11 +213,6 @@ public class FileDialogUI : Object {
 	
 	Elm.Win inwin;
 	Elm.Box vbox;
-	Elm.Box vbox_in;
-	Elm.Anchorblock lb;
-	Elm.Entry entry;
-	Elm.Button bt_ok;
-	Elm.Scroller sc;
 	Elm.Fileselector fs;
 	
 	BluezRemoteDevice rdevice;
@@ -242,11 +237,12 @@ public class FileDialogUI : Object {
 		fs.show();
 		fs.smart_callback_add( "done", () => {
 							string selected = fs.selected_get();
-							stderr.printf("selected:  %s\n", (selected!=null ? selected : "NULL!"));
-							
-							//string[] file = { "/media/dades/musica/gravacions_guitarra/travellin.mp3" } ;
-							//MANAGER.send_files(rdevice, file);
-							//this.close();							
+							if(selected!=null) {
+								stderr.printf("selected:  %s\n", selected);
+								string[] file = { selected } ;
+								MANAGER.send_files(this.rdevice, file);
+							}
+							this.close();							
 												} );	
 	}
 	
