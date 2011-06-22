@@ -36,7 +36,7 @@ namespace org {
 
 			public abstract void cancel_device_creation(string param0) throws IOError;
 
-			public abstract void remove_device(GLib.ObjectPath param0) throws IOError;
+			public abstract async void remove_device(GLib.ObjectPath param0) throws IOError;
 
 			public abstract GLib.ObjectPath find_device(string param0) throws IOError;
 
@@ -148,9 +148,9 @@ namespace org {
 		[DBus (name = "org.bluez.Audio", timeout = 120000)]
 		public interface Audio : GLib.Object {
 
-			public abstract void connect() throws IOError;
+			public abstract async void connect() throws IOError;
 
-			public abstract void disconnect() throws IOError;
+			public abstract async void disconnect() throws IOError;
 
 			public abstract GLib.HashTable<string, GLib.Variant?> get_properties() throws IOError;
 
@@ -169,9 +169,9 @@ namespace org {
 		[DBus (name = "org.bluez.Input", timeout = 120000)]
 		public interface Input : GLib.Object {
 
-			public abstract void connect() throws IOError;
+			public abstract async void connect() throws IOError;
 
-			public abstract void disconnect() throws IOError;
+			public abstract async void disconnect() throws IOError;
 
 			public abstract GLib.HashTable<string, GLib.Variant?> get_properties() throws IOError;
 

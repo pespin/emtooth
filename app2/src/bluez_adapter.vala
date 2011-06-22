@@ -91,24 +91,21 @@ public class BluezAdapter : Object {
 		
 	}
 	
-	public bool remove_rdevice(GLib.ObjectPath device_path) {
+	public async void remove_rdevice(GLib.ObjectPath device_path) {
 		stdout.printf("Removing device with path "+ (string) device_path+"...\n");
 		try {
-			dbus_obj.remove_device(device_path);
+			yield dbus_obj.remove_device(device_path);
 		} catch (IOError err) {
 			stderr.printf("ERR: Could not remove device %s: %s\n", (string) device_path, err.message);
 			var dialog = new DialogUI();
 			dialog.create("Could not remove device "+(string)device_path+":<br>"+err.message);
-			return false;
+			return;
 		}
 		
 		bool found;
 		found = this.rdevice_hash.remove(device_path);
 		
 		if(found) this.num_devices_found--;
-		
-		
-		return true;
 		
 	}
 	
