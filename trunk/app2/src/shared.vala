@@ -5,6 +5,7 @@
  */
 public GLib.MainLoop gmain;
 public BluezAdapter ADAPTER;
+public ObexManager	MANAGER;
 public EmtoothUI ui;
 
 public Evas.Coord DISPLAY_WIDTH = 320;
@@ -22,9 +23,11 @@ public FSOusaged fso;
  *
  */
  
-const string EMTOOTH_BLUEZ_AGENT_NAME = "org.emtooth";
+const string EMTOOTH_SERVICE_NAME = "org.emtooth";
 const string EMTOOTH_BLUEZ_AGENT_PATH = "/org/emtooth/bluez/agent";
 const string EMTOOTH_BLUEZ_AGENT_IFACE = "org.bluez.Agent";
+const string EMTOOTH_OBEX_AGENT_PATH = "/org/emtooth/openobex/agent";
+const string EMTOOTH_OBEX_AGENT_IFACE = "org.openobex.Agent";
 
 extern const string IMAGESDIR;
 

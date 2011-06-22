@@ -100,7 +100,7 @@ namespace org {
 		 */ 
 
 		[DBus (name = "org.bluez.Manager", timeout = 120000)]
-		public interface Manager : GLib.Object {
+		public interface BluezDBusManager : GLib.Object {
 
 			public abstract GLib.HashTable<string, GLib.Variant?> get_properties() throws IOError;
 
