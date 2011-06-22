@@ -9,6 +9,7 @@ public class ObexClientAgent : Object {
 	uint64 size;
 	string name;
 	string filename;
+	TransferDialogUI dialog;
 // DBUS METHODS:
 
     public void release() {
@@ -35,6 +36,9 @@ public class ObexClientAgent : Object {
 		} catch(IOError e) {
 				stderr.printf ("ObexClientAgent: Error on get_properties: %s\n", e.message);
 		}
+		
+		dialog = new TransferDialogUI();
+		dialog.create(name, this.size);
 		t = new Timer();
 		t.reset();
 		t.start();
@@ -50,13 +54,13 @@ public class ObexClientAgent : Object {
 		if(seconds==0) seconds++; //avoid dividing by 0 ;)
 		uint64 speed = bytes / (seconds * 1000);
 		
-		stderr.printf( @"ObexClientAgent: progress ($bytes bytes transfered, $speed KB/s)\n");
-		
+		/* stderr.printf( @"ObexClientAgent: progress ($bytes bytes transfered, $speed KB/s)\n"); */
+		dialog.refresh(bytes/1000, speed);
 	}
 	
 	public void complete(ObjectPath transfer_path) {
 		stderr.printf("ObexClientAgent: complete\n");
-		
+		dialog.complete();
 	}
 	
 	public void error(ObjectPath transfer_path, string message) {
