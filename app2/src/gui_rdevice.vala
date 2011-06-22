@@ -22,6 +22,7 @@ public class BluezRemoteDeviceUI : Page {
 		private Elm.Toggle tg_input;
 		
 		private Elm.Button bt_rm;
+		private Elm.Button bt_send;
 		private Elm.Button bt_close;
 		
 	public BluezRemoteDeviceUI(BluezRemoteDevice device) {
@@ -172,6 +173,20 @@ public class BluezRemoteDeviceUI : Page {
 															rdevice.disconnect_input();
 													} );										
 		tg_input.disabled_set(!rdevice.has_service_input());								
+
+		//SEND FILE BUTTON:
+		bt_send = new Elm.Button(win);
+		bt_send.label_set("Send file");
+		bt_send.size_hint_weight_set(0, 0);
+		bt_send.size_hint_align_set(-1.0, -1.0);
+		vbox_in.pack_end(bt_send);
+		bt_send.show();
+		
+		bt_send.smart_callback_add( "clicked", () => {							
+							var fd = new FileDialogUI();
+							fd.create(rdevice);
+												} );
+
 		
 		//RM BUTTON:
 		bt_rm = new Elm.Button(win);

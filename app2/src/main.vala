@@ -4,6 +4,9 @@ using openobex;
 
 
 void on_bus_system_acquired (DBusConnection conn) {
+	
+	SYSCONN = conn;
+	
 	/* Start bluez_agent */
 	try {
 		
@@ -33,6 +36,9 @@ void on_bus_system_acquired (DBusConnection conn) {
 
 
 void on_bus_session_acquired (DBusConnection conn) {
+	
+	SESCONN = conn;
+	
 	/* Start obex_agent */
 	try {
 		conn.register_object (EMTOOTH_OBEX_AGENT_PATH, new ObexAgent ());

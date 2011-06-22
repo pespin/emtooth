@@ -25,11 +25,11 @@ function gen_binding {
 
 #-----------------------------------------------
 
-gen_binding "org.openobex" "/"
+gen_binding "org.openobex.client" "/org/openobex/transfer6"
 #gen_binding $DEFAULT_BLUEZ_ADAPTER
 #gen_binding "/org/bluez/5333/hci0/dev_00_19_2D_11_62_09"
 
-vala-dbus-binding-tool --directory=.
+vala-dbus-binding-tool --gdbus --directory=.
 #mv org-bluez.vala ../src/
 
 #rm *.xml org-freedesktop-dbus.vala

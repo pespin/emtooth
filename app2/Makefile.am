@@ -22,7 +22,8 @@ emtooth2_SOURCES = \
 	src/obex_client_agent.vala \
 	src/obex_manager.vala \
 	src/org-bluez.vala \
-	src/org-openobex.vala
+	src/org-openobex.vala \
+	src/org-openobex-client.vala
 	
 emtooth2_LDADD = @EMTOOTH2_LIBS@
 emtooth2_CFLAGS =

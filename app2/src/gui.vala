@@ -208,6 +208,56 @@ public class DialogUI : Object {
 	}
 }
 
+	/* FILE DIALOG */
+public class FileDialogUI : Object {	
+	
+	Elm.Win inwin;
+	Elm.Box vbox;
+	Elm.Box vbox_in;
+	Elm.Anchorblock lb;
+	Elm.Entry entry;
+	Elm.Button bt_ok;
+	Elm.Scroller sc;
+	Elm.Fileselector fs;
+	
+	BluezRemoteDevice rdevice;
+	
+	public void create(BluezRemoteDevice rdevice) {
+				
+		this.ref(); //let it be unless someone presses the kill button
+		
+		this.rdevice = rdevice;
+		
+		inwin = ui.win.inwin_add();
+		inwin.show();
+		
+		vbox = new Elm.Box(ui.win);
+		inwin.inwin_content_set(vbox);
+		vbox.show();
+		
+		fs = new Elm.Fileselector(ui.win);
+		fs.size_hint_align_set(-1.0, -1.0);
+		fs.size_hint_weight_set(1.0, 1.0);
+		vbox.pack_end(fs);
+		fs.show();
+		fs.smart_callback_add( "done", () => {
+							string selected = fs.selected_get();
+							stderr.printf("selected:  %s\n", (selected!=null ? selected : "NULL!"));
+							
+							//string[] file = { "/media/dades/musica/gravacions_guitarra/travellin.mp3" } ;
+							//MANAGER.send_files(rdevice, file);
+							//this.close();							
+												} );	
+	}
+	
+	public void close() {
+		stdout.printf("Closing fileDialog window\n");
+		//win.del();
+		this.unref();
+	}
+}
+
+
 
 
 
@@ -225,6 +275,7 @@ public class PinDialogUI {
 	BluezRemoteDevice rdevice;
 	
 	public void create(BluezRemoteDevice rdevice) {
+		
 		this.rdevice = rdevice;
 		
 		inwin = ui.win.inwin_add();
@@ -276,7 +327,6 @@ public class PinDialogUI {
 		//win.del();
 	}
 }
-
 
 public class LabelBox {
 	
