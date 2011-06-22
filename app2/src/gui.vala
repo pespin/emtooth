@@ -324,6 +324,103 @@ public class PinDialogUI {
 	}
 }
 
+
+	/* PIN DIALOG */
+public class TransferDialogUI {	
+	
+	Elm.Win inwin;
+	Elm.Box vbox;
+	Elm.Box vbox_in;
+	Elm.Anchorblock lb;
+	Elm.Label status;
+	Elm.Button bt_ok;
+	Elm.Scroller sc;
+	string name;
+	uint64 size;
+	bool closed;
+	
+	public void create(string name, uint64 size) {
+		
+		closed = false;
+		this.name=name;
+		this.size=size;
+		
+		inwin = ui.win.inwin_add();
+		inwin.show();
+		
+		vbox = new Elm.Box(ui.win);
+		inwin.inwin_content_set(vbox);
+		vbox.show();
+		
+		sc = new Elm.Scroller(ui.win);
+		sc.size_hint_weight_set(1.0, 1.0);
+		sc.size_hint_align_set(-1.0, -1.0);
+		sc.bounce_set(false, true);
+		vbox.pack_end(sc);
+		sc.show();
+		
+		vbox_in = new Elm.Box(ui.win);
+		vbox_in.size_hint_align_set(-1.0, -1.0);
+		vbox_in.size_hint_weight_set(1.0, 1.0);
+		sc.content_set(vbox_in);
+		vbox_in.show();
+
+		lb = new Elm.Anchorblock(ui.win);
+		if(size==0)
+			lb.text_set(@"Transferring file $name...");	
+		else
+			lb.text_set(@"Transferring file $name ($size KB)...");
+			
+		lb.size_hint_weight_set(1.0, 1.0);
+		lb.size_hint_align_set(-1.0, -1.0);
+		vbox_in.pack_end(lb);
+		lb.show();
+		
+		status = new Elm.Label(ui.win);
+		if(size==0)
+			status.label_set(@"Transferring file $name...");	
+		else {
+			uint64 sizekb = size/1000;
+			status.label_set(@"Transferring file $name ($sizekb KB)...");
+		}
+		status.size_hint_weight_set(1.0, 1.0);
+		status.size_hint_align_set(-1.0, -1.0);
+		vbox_in.pack_end(status);
+		status.show();
+		
+		
+		bt_ok = new Elm.Button(ui.win);
+		bt_ok.label_set("Ok");
+		bt_ok.size_hint_align_set(-1.0, -1.0);
+		bt_ok.size_hint_weight_set(1.0, 0.0);
+		vbox_in.pack_end(bt_ok);
+		bt_ok.show();
+		bt_ok.smart_callback_add("clicked", () => { this.close(); } );
+				
+	}
+	
+	public void refresh(uint64 kbytes, uint64 speed) {
+		if(closed) return;
+		if(size==0)
+			status.label_set(kbytes.to_string() + " KB transferred [ "+speed.to_string()+" KB/s ]");
+		else
+			status.label_set(kbytes.to_string() + "/ "+size.to_string()+" KB transferred [ "+speed.to_string()+" KB/s ]");
+			
+	}
+	
+	public void complete() {
+			if(closed) return;
+			lb.text_set("Transfer of file "+this.name+" completed!");
+	}
+	
+	public void close() {
+		stdout.printf("Closing pinDialog window\n");
+		closed=true;
+		inwin.del();
+	}
+}
+
+
 public class LabelBox {
 	
 	private Elm.Label lb;
