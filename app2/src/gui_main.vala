@@ -52,7 +52,7 @@ public class MainUI : Page {
 		
 		// add a label
 		header = new Elm.Label(win);
-		header.label_set("Discovering Devices...");
+		header.text_set("Discovering Devices...");
 		fr.content_set(header);
 		header.show();
 
@@ -75,14 +75,14 @@ public class MainUI : Page {
 
 		//add buttons to hbox1
 		bt_start = new Elm.Button(win);
-		bt_start.label_set("Start Discovery");
+		bt_start.text_set("Start Discovery");
 		bt_start.size_hint_weight_set( 1.0, 1.0 );
 		bt_start.size_hint_align_set( -1.0, -1.0 );
 		bt_start.smart_callback_add( "clicked", cb_bt_start_clicked );
 		
 		
 		bt_stop = new Elm.Button(win);
-		bt_stop.label_set("Stop Discovery");
+		bt_stop.text_set("Stop Discovery");
 		bt_stop.size_hint_weight_set( 1.0, 1.0 );
 		bt_stop.size_hint_align_set( -1.0, -1.0 );
 		bt_stop.smart_callback_add( "clicked", cb_bt_stop_clicked );
@@ -91,7 +91,7 @@ public class MainUI : Page {
 	
 	
 		bt = new Elm.Button(win);
-		bt.label_set("Settings");
+		bt.text_set("Settings");
 		bt.size_hint_weight_set( 1.0, 1.0 );
 		bt.size_hint_align_set( -1.0, -1.0 );
 		hbox1.pack_end(bt);
@@ -127,7 +127,7 @@ public class MainUI : Page {
 		hbox1.pack_start(bt_stop);
 		bt_stop.show();
 		
-		header.label_set("Discovering Devices...");
+		header.text_set("Discovering Devices...");
 		
 		ADAPTER.start_discovery();		
 	}
@@ -139,7 +139,7 @@ public class MainUI : Page {
 		hbox1.pack_start(bt_start);
 		bt_start.show();
 		
-		header.label_set(ADAPTER.num_devices_found.to_string()+" Devices Found:");
+		header.text_set(ADAPTER.num_devices_found.to_string()+" Devices Found:");
 		
 		ADAPTER.stop_discovery();		
 	}

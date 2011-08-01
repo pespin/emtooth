@@ -192,7 +192,7 @@ public class DialogUI : Object {
 		lb.show();
 		
 		bt_ok = new Elm.Button(ui.win);
-		bt_ok.label_set("Ok");
+		bt_ok.text_set("Ok");
 		bt_ok.size_hint_align_set(-1.0, -1.0);
 		bt_ok.size_hint_weight_set(1.0, 0.0);
 		vbox_in.pack_end(bt_ok);
@@ -310,7 +310,7 @@ public class PinDialogUI {
 		entry.show();
 		
 		bt_ok = new Elm.Button(ui.win);
-		bt_ok.label_set("Ok");
+		bt_ok.text_set("Ok");
 		bt_ok.size_hint_align_set(-1.0, -1.0);
 		bt_ok.size_hint_weight_set(1.0, 0.0);
 		vbox_in.pack_end(bt_ok);
@@ -379,10 +379,10 @@ public class TransferDialogUI {
 		
 		status = new Elm.Label(ui.win);
 		if(size==0)
-			status.label_set(@"Transferring file $name...");	
+			status.text_set(@"Transferring file $name...");	
 		else {
 			uint64 sizekb = size/1000;
-			status.label_set(@"Transferring file $name ($sizekb KB)...");
+			status.text_set(@"Transferring file $name ($sizekb KB)...");
 		}
 		status.size_hint_weight_set(1.0, 1.0);
 		status.size_hint_align_set(-1.0, -1.0);
@@ -391,7 +391,7 @@ public class TransferDialogUI {
 		
 		
 		bt_ok = new Elm.Button(ui.win);
-		bt_ok.label_set("Ok");
+		bt_ok.text_set("Ok");
 		bt_ok.size_hint_align_set(-1.0, -1.0);
 		bt_ok.size_hint_weight_set(1.0, 0.0);
 		vbox_in.pack_end(bt_ok);
@@ -403,9 +403,9 @@ public class TransferDialogUI {
 	public void refresh(uint64 kbytes, uint64 speed) {
 		if(closed) return;
 		if(size==0)
-			status.label_set(kbytes.to_string() + " KB transferred [ "+speed.to_string()+" KB/s ]");
+			status.text_set(kbytes.to_string() + " KB transferred [ "+speed.to_string()+" KB/s ]");
 		else
-			status.label_set(kbytes.to_string() + "/ "+size.to_string()+" KB transferred [ "+speed.to_string()+" KB/s ]");
+			status.text_set(kbytes.to_string() + "/ "+size.to_string()+" KB transferred [ "+speed.to_string()+" KB/s ]");
 			
 	}
 	
@@ -436,11 +436,11 @@ public class LabelBox {
 		parent.pack_end(box);
 		
 		lb = new Elm.Label(win);
-		lb.label_set("<b>"+label+":</b>");
+		lb.text_set("<b>"+label+":</b>");
 		box.pack_end(lb);
 		
 		val = new Elm.Label(win);
-		val.label_set(Value);
+		val.text_set(Value);
 		box.pack_end(val);
 		
 	}
@@ -452,10 +452,10 @@ public class LabelBox {
 	}
 	
 	public string val_get() {
-		return this.val.label_get();
+		return this.val.text_get();
 	}
 	public void val_set(string Value) {
-		this.val.label_set(Value);
+		this.val.text_set(Value);
 	}
 	
 }
@@ -476,7 +476,7 @@ public class EntryBox {
 		parent.pack_end(box);
 		
 		lb = new Elm.Label(win);
-		lb.label_set("<b>"+label+":</b>");
+		lb.text_set("<b>"+label+":</b>");
 		box.pack_end(lb);
 		
 		fr = new Elm.Frame(win);
@@ -520,7 +520,7 @@ public class FrameBox {
 	public FrameBox(Elm.Win win, Elm.Box parent, string label) {
 		
 		fr = new Elm.Frame(win);
-		fr.label_set(label);
+		fr.text_set(label);
         fr.size_hint_align_set(-1.0, 0.0);
         fr.size_hint_weight_set(1.0, 0.0);
         parent.pack_end(fr);
