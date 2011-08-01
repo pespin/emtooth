@@ -83,27 +83,28 @@ public class EmtoothUI {
 	
 	public void refresh_page_with_sid(string sid) {
 		
-		Page? p = get_page_by_sid(sid);
+		List<Page> l = get_page_by_sid(sid);
 		
-		if(p==null) return; //no action needed, we are finished
+		foreach(var p in l) {
 		
-		p.refresh_content();
+			p.refresh_content();
 		
+		}
 	}
 	
-	//TODO: this should return a list of pages, not only the first page.
-	private Page? get_page_by_sid(string sid) {
+	private List<Page> get_page_by_sid(string sid) {
 		
 		unowned List<Page> l = page_stack;
+		List<Page> ret = new List<Page>();
 		
 		while(l!=null) {
 			//stderr.printf("iterating over page: "+l.data.get_page_sid()+"\n");
 			if( sid == l.data.get_page_sid() )
-				return l.data;
+				ret.prepend(l.data);
 			l = l.next;
 		} 
 		
-		return null;
+		return ret;
 	}
 	
 	private string? get_last_title() {
