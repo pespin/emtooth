@@ -56,7 +56,7 @@ public class KnownUI : Page {
 		hbox1.show();
 	
 		bt = new Elm.Button(win);
-		bt.label_set("Close");
+		bt.text_set("Close");
 		bt.size_hint_weight_set( 1.0, 1.0 );
 		bt.size_hint_align_set( -1.0, -1.0 );
 		hbox1.pack_end(bt);

@@ -90,7 +90,7 @@ public class BluezRemoteDeviceUI : Page {
 		// CONNECTED TOGGLE:
 		
 		tg_con = new Elm.Toggle(win);
-		tg_con.label_set("Connected:");
+		tg_con.text_set("Connected:");
 		tg_con.states_labels_set("Yes", "No");
 		tg_con.state_set(rdevice.connected);
 		tg_con.size_hint_align_set(-1.0, 0.0);
@@ -105,7 +105,7 @@ public class BluezRemoteDeviceUI : Page {
 
 		
 		tg_pair = new Elm.Toggle(win);
-		tg_pair.label_set("Paired:");
+		tg_pair.text_set("Paired:");
 		tg_pair.states_labels_set("Yes", "No");
 		tg_pair.state_set(rdevice.paired);
 		tg_pair.disabled_set(rdevice.paired);
@@ -126,7 +126,7 @@ public class BluezRemoteDeviceUI : Page {
 
 		
 		tg_trust = new Elm.Toggle(win);
-		tg_trust.label_set("Trusted:");
+		tg_trust.text_set("Trusted:");
 		tg_trust.states_labels_set("Yes", "No");
 		tg_trust.state_set(rdevice.trusted);
 		tg_trust.size_hint_align_set(-1.0, 0.0);
@@ -143,7 +143,7 @@ public class BluezRemoteDeviceUI : Page {
 		fr_audio = new FrameBox(win, vbox_in, "Audio settings");
 		fr_audio.show();	
 		tg_audio = new Elm.Toggle(win);
-		tg_audio.label_set("Connect");
+		tg_audio.text_set("Connect");
 		tg_audio.states_labels_set("Yes", "No");
 		tg_audio.state_set(rdevice.connected_audio);
 		tg_audio.size_hint_align_set(-1.0, 0.0);
@@ -161,7 +161,7 @@ public class BluezRemoteDeviceUI : Page {
 			fr_input = new FrameBox(win, vbox_in, "Input settings");
 			fr_input.show();	
 			tg_input = new Elm.Toggle(win);
-			tg_input.label_set("Connect");
+			tg_input.text_set("Connect");
 			tg_input.states_labels_set("Yes", "No");
 			tg_input.state_set(rdevice.connected_input);
 			tg_input.size_hint_align_set(-1.0, 0.0);
@@ -176,7 +176,7 @@ public class BluezRemoteDeviceUI : Page {
 
 		//SEND FILE BUTTON:
 		bt_send = new Elm.Button(win);
-		bt_send.label_set("Send file");
+		bt_send.text_set("Send file");
 		bt_send.size_hint_weight_set(0, 0);
 		bt_send.size_hint_align_set(-1.0, -1.0);
 		vbox_in.pack_end(bt_send);
@@ -190,7 +190,7 @@ public class BluezRemoteDeviceUI : Page {
 		
 		//RM BUTTON:
 		bt_rm = new Elm.Button(win);
-		bt_rm.label_set("Reset/Remove Device");
+		bt_rm.text_set("Reset/Remove Device");
 		bt_rm.size_hint_weight_set(0, 0);
 		bt_rm.size_hint_align_set(-1.0, -1.0);
 		vbox_in.pack_end(bt_rm);
@@ -211,7 +211,7 @@ public class BluezRemoteDeviceUI : Page {
 		hbox.show();
 		
 		bt_close = new Elm.Button(win);
-		bt_close.label_set("Close");
+		bt_close.text_set("Close");
 		bt_close.size_hint_weight_set(1.0, 1.0);
 		bt_close.size_hint_align_set(-1.0, -1.0);
 		hbox.pack_end(bt_close);

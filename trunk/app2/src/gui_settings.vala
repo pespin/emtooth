@@ -83,7 +83,7 @@ public class SettingsUI : Page {
 		fr_disc.show();
 		
 		tg_disc = new Elm.Toggle(win);
-		tg_disc.label_set("Discoverable:");
+		tg_disc.text_set("Discoverable:");
 		tg_disc.states_labels_set("On", "Off");
 		tg_disc.state_set(ADAPTER.discoverable);
 		tg_disc.size_hint_align_set(-1.0, 0.0);
@@ -107,7 +107,7 @@ public class SettingsUI : Page {
 		fr_pair.show();
 		
 		tg_pair = new Elm.Toggle(win);
-		tg_pair.label_set("Pairable:");
+		tg_pair.text_set("Pairable:");
 		tg_pair.states_labels_set("On", "Off");
 		tg_pair.state_set(ADAPTER.pairable);
 		tg_pair.size_hint_align_set(-1.0, 0.0);
@@ -129,7 +129,7 @@ public class SettingsUI : Page {
 		
 		//DEVICES BUTTON:
 		bt_k = new Elm.Button(win);
-		bt_k.label_set("Show Devices");
+		bt_k.text_set("Show Devices");
 		bt_k.size_hint_weight_set(0, 0);
 		bt_k.size_hint_align_set(-1.0, -1.0);
 		vbox_in.pack_end(bt_k);
@@ -153,7 +153,7 @@ public class SettingsUI : Page {
 		hbox.show();
 		
 		bt_close = new Elm.Button(win);
-		bt_close.label_set("Close");
+		bt_close.text_set("Close");
 		bt_close.size_hint_weight_set(1.0, 1.0);
 		bt_close.size_hint_align_set(-1.0, -1.0);
 		hbox.pack_end(bt_close);
