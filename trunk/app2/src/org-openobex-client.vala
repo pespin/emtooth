@@ -25,7 +25,7 @@ namespace org {
 	}
 
 		[DBus (name = "org.openobex.Transfer", timeout = 120000)]
-		public interface ObexTransfer : GLib.Object {
+		public interface ObexClientTransfer : GLib.Object {
 
 				[DBus (name = "GetProperties")]
 				public abstract GLib.HashTable<string, GLib.Variant> get_properties_() throws IOError;

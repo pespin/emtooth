@@ -6,7 +6,11 @@ public class ObexManager : Object {
 	
 	private ObexDBusManager dbus_obj;
 	
+	private HashTable<string,ObexTransfer> transfers;
+	
 	public ObexManager() {
+		
+		transfers = new HashTable<string,ObexTransfer>(str_hash, str_equal);
 		
 				/* Start obex_agent */
 		try {
@@ -16,8 +20,20 @@ public class ObexManager : Object {
 			stderr.printf ("Could not create service org.emtooth on session bus: %s\n", e.message);
 		}
 		
-		dbus_obj.transfer_started.connect (() => { stderr.printf("Manager: transfer_started\n"); } );
-		dbus_obj.transfer_completed.connect (() => { stderr.printf("Manager: transfer_completed\n"); } );
+		dbus_obj.transfer_started.connect ((transfer) => { 
+						stderr.printf("Manager: transfer_started [%s]\n", transfer); 
+						transfers.insert(transfer, new ObexTransfer(transfer));
+					} );
+		dbus_obj.transfer_completed.connect ((transfer) => { 
+						stderr.printf("Manager: transfer_completed [%s]\n", transfer); 
+						unowned ObexTransfer t = transfers.lookup(transfer);
+						if(t!=null) {
+							t.complete();
+							transfers.remove(transfer);
+						}
+					} );
+        
+        
         dbus_obj.session_created.connect (() => { stderr.printf("Manager: session_created\n"); } );
         dbus_obj.session_removed.connect (() => { stderr.printf("Manager: session_removed\n"); } );
 		
@@ -63,4 +79,48 @@ public class ObexManager : Object {
 	
 	}
 	
+}
+
+
+public class ObexTransfer : Object {
+	
+	public string path {get; private set;}
+	private ObexDBusTransfer dbus_obj;
+	TransferDialogUI dialog;
+	Timer t;
+	
+	public ObexTransfer(string path) {
+		this.path = path;
+		
+		try {
+			dbus_obj = Bus.get_proxy_sync (BusType.SESSION, "org.openobex", path);
+			stderr.printf ("transfer %s created correctly\n", path);
+		} catch (Error e) {
+			stderr.printf ("Could not create transfer %s: %s\n", path, e.message);
+		}
+		
+		dialog = new TransferDialogUI();
+		
+		dialog.create("...", 0);
+		t = new Timer();
+		t.reset();
+		t.start();
+
+		dbus_obj.progress.connect ((total, bytes) => {
+				dialog.size = total/1000;
+
+				uint64 seconds = (uint64) t.elapsed();
+				if(seconds==0) seconds++; //avoid dividing by 0 ;)
+				uint64 speed = bytes / (seconds * 1000);
+	
+			/* stderr.printf( @"ObexTransfer [$path]: progress ($bytes bytes transfered, $speed KB/s)\n"); */
+			dialog.refresh(bytes/1000, speed);
+		} );
+
+	}
+	
+	public void complete() {
+		stderr.printf("ObexTransfer [%s]: complete\n", path);
+		dialog.complete();
+	}
 }
