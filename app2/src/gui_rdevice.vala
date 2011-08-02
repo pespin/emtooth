@@ -183,7 +183,7 @@ public class BluezRemoteDeviceUI : Page {
 		bt_send.show();
 		
 		bt_send.smart_callback_add( "clicked", () => {							
-							var fd = new FileDialogUI();
+							var fd = new FileDialogSendUI();
 							fd.create(rdevice);
 												} );
 

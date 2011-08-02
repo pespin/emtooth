@@ -209,8 +209,8 @@ public class DialogUI : Object {
 	}
 }
 
-	/* FILE DIALOG */
-public class FileDialogUI : Object {	
+	/* FILE DIALOG SEND */
+public class FileDialogSendUI : Object {	
 	
 	Elm.Win inwin;
 	Elm.Box vbox;
@@ -254,6 +254,39 @@ public class FileDialogUI : Object {
 	}
 }
 
+
+	/* FILE DIALOG SEND */
+public class FileDialogReceiveUI : Object {	
+	
+	Elm.Win inwin;
+	Elm.Box vbox;
+	Elm.Fileselector fs;
+	
+	public string path {public get; private set; default=null;}
+	
+	public void create() {
+		
+		inwin = ui.win.inwin_add();
+		inwin.show();
+		
+		vbox = new Elm.Box(ui.win);
+		inwin.inwin_content_set(vbox);
+		vbox.show();
+		
+		fs = new Elm.Fileselector(ui.win);
+		fs.size_hint_align_set(-1.0, -1.0);
+		fs.size_hint_weight_set(1.0, 1.0);
+		vbox.pack_end(fs);
+		fs.show();
+		//TODO: look for event_info in callback to see if Cancel or Ok button was pressed
+		fs.smart_callback_add( "done", () => {
+							this.path = fs.selected_get();			
+							if(this.path==null) this.path="";		
+							stderr.printf("CLICKED! %s\n", this.path);
+							inwin.del();
+												} );	
+	}
+}
 
 
 
@@ -336,9 +369,9 @@ public class TransferDialogUI {
 	Elm.Label status;
 	Elm.Button bt_ok;
 	Elm.Scroller sc;
-	string name;
-	uint64 size;
-	bool closed;
+	public string name;
+	public uint64 size;
+	private bool closed;
 	
 	public void create(string name, uint64 size) {
 		

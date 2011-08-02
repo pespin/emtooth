@@ -4,7 +4,7 @@ using openobex;
 [DBus (name = "org.openobex.Agent")]
 public class ObexClientAgent : Object {
 
-	ObexTransfer transfer;
+	ObexClientTransfer transfer;
 	Timer t;
 	uint64 size;
 	string name;
@@ -14,7 +14,7 @@ public class ObexClientAgent : Object {
 
     public void release() {
 		
-		stderr.printf("ObexAgent: release\n");
+		stderr.printf("ObexClientAgent: release\n");
 		
 	}
 	

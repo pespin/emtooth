@@ -23,5 +23,13 @@ namespace org {
 		}
 	
 	}
+	
+		[DBus (name = "org.openobex.Transfer", timeout = 120000)]
+		public interface ObexDBusTransfer : GLib.Object {
+
+			public abstract void cancel() throws IOError;
+
+			public signal void progress(int32 total, int32 transfered);
+		}
 
 }
