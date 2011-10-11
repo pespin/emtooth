@@ -42,14 +42,15 @@ void on_bus_session_acquired (DBusConnection conn) {
 	/* Start obex_agent */
 	try {
 		conn.register_object (EMTOOTH_OBEX_AGENT_PATH, new ObexAgent ());
-		stderr.printf ("service org.emtooth on session bus created correctly\n");
+		stderr.printf ("ObexAgent on session bus created correctly\n");
 	} catch (IOError e) {
-		stderr.printf ("Could not create service org.emtooth on session bus: %s\n", e.message);
+		stderr.printf ("Could not create ObexAgent on session bus: %s\n", e.message);
 	}
 	
 	
 	MANAGER = new ObexManager();
-	MANAGER.register_agent(EMTOOTH_OBEX_AGENT_PATH);
+	if(MANAGER.enabled)
+		MANAGER.register_agent(EMTOOTH_OBEX_AGENT_PATH);
 
 }
 

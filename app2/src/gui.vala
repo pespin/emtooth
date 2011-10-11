@@ -241,7 +241,8 @@ public class FileDialogSendUI : Object {
 							if(selected!=null) {
 								stderr.printf("selected:  %s\n", selected);
 								string[] file = { selected } ;
-								MANAGER.send_files(this.rdevice, file);
+								if(MANAGER.enabled)
+									MANAGER.send_files(this.rdevice, file);
 							}
 							this.close();							
 												} );	

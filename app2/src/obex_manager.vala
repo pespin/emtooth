@@ -6,6 +6,8 @@ public class ObexManager : Object {
 	
 	private ObexDBusManager dbus_obj;
 	
+	public bool enabled {get; private set; default=false;}
+	
 	private HashTable<string,ObexTransfer> transfers;
 	
 	public ObexManager() {
@@ -15,9 +17,10 @@ public class ObexManager : Object {
 				/* Start obex_agent */
 		try {
 			dbus_obj = Bus.get_proxy_sync (BusType.SESSION, "org.openobex", "/");
-			stderr.printf ("service org.emtooth on session bus created correctly\n");
+			stderr.printf ("ObexDBusManager on session bus created correctly\n");
 		} catch (Error e) {
-			stderr.printf ("Could not create service org.emtooth on session bus: %s\n", e.message);
+			stderr.printf ("ObexDBusManager creation error: %s\n", e.message);
+			return;
 		}
 		
 		dbus_obj.transfer_started.connect ((transfer) => { 
@@ -37,7 +40,7 @@ public class ObexManager : Object {
         dbus_obj.session_created.connect (() => { stderr.printf("Manager: session_created\n"); } );
         dbus_obj.session_removed.connect (() => { stderr.printf("Manager: session_removed\n"); } );
 		
-		
+		this.enabled=true;
 	}
 	
 	

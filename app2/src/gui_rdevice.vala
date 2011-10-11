@@ -179,6 +179,7 @@ public class BluezRemoteDeviceUI : Page {
 		bt_send.text_set("Send file");
 		bt_send.size_hint_weight_set(0, 0);
 		bt_send.size_hint_align_set(-1.0, -1.0);
+		bt_send.disabled_set(!(MANAGER.enabled));
 		vbox_in.pack_end(bt_send);
 		bt_send.show();
 		
