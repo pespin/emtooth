@@ -22,6 +22,8 @@ PKG_CHECK_MODULES(EMTOOTH2,	glib-2.0 >= 2.26.1
 							dbus-glib-1
 							elementary
 							eina
+							evas
+							ecore
 							dbus-1)
 
 AC_SUBST(EMTOOTH2_LIBS)
