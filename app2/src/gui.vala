@@ -591,7 +591,7 @@ public class ListItemHandler : Object {
 	
 	public void go () { 
 		stderr.printf ("PATH=" + this.rdevice.path + ";\n"); 
-		stderr.printf ("label=" + this.item.label_get() + ";\n");
+		//stderr.printf ("label=" + this.item.label_get() + ";\n");
 		this.item.selected_set(false);
 		open_rdevice_page(); 
 	}
