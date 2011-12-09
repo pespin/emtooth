@@ -4,14 +4,14 @@ using bluez;
 
 
 public class KnownUI : Page {
-		private Elm.Box hbox;
-		private Elm.Box hbox1;
-		private Elm.Button bt;
+		private unowned Elm.Box hbox;
+		private unowned Elm.Box hbox1;
+		private unowned Elm.Button bt;
 		
 		
 		private unowned Elm.Win win;
 		
-		public Elm.List li;	
+		public unowned Elm.List li;	
 
 		public HashTable<string,ListItemHandler> rdevices_ui_list; 
 		
@@ -26,12 +26,12 @@ public class KnownUI : Page {
 		this.win = win;
 		
 		//add vbox
-		vbox = new Elm.Box(win);
+		vbox = Elm.Box.add(win);
 		vbox.size_hint_weight_set( 1.0, 1.0 );
 		vbox.show();
 		
 		//add button hbox
-		hbox = new Elm.Box(win);
+		hbox = Elm.Box.add(win);
 		hbox.horizontal_set(true);	
 		hbox.size_hint_weight_set( 1.0, 0.0 );
 		hbox.size_hint_align_set( -1.0, 0.0 );
@@ -39,7 +39,7 @@ public class KnownUI : Page {
 		hbox.show();
 
 		//add list
-		li = new Elm.List(win);
+		li = Elm.List.add(win);
 		li.scale_set(1.0);
 		li.size_hint_weight_set(1.0, 1.0);
 		li.size_hint_align_set(-1.0, -1.0);
@@ -48,14 +48,14 @@ public class KnownUI : Page {
 		li.show();
 	
 		//add button hbox1
-		hbox1 = new Elm.Box(win);
+		hbox1 = Elm.Box.add(win);
 		hbox1.horizontal_set(true);	
 		hbox1.size_hint_weight_set( 1.0, 0.0 );
 		hbox1.size_hint_align_set( -1.0, 0.0 );
 		vbox.pack_end(hbox1);
 		hbox1.show();
 	
-		bt = new Elm.Button(win);
+		bt = Elm.Button.add(win);
 		bt.text_set("Close");
 		bt.size_hint_weight_set( 1.0, 1.0 );
 		bt.size_hint_align_set( -1.0, -1.0 );

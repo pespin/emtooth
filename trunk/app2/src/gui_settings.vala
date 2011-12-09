@@ -17,14 +17,14 @@ public class SettingsUI : Page {
 		private EntryBox discoverable_timeout;
 		private EntryBox pairable_timeout;
 			
-		private Elm.Scroller sc;
-		private Elm.Box vbox_in;
-		private Elm.Box hbox;
-		private Elm.Toggle tg_disc;
-		private Elm.Toggle tg_pair;
-		private Elm.Button bt_k;
+		private unowned Elm.Scroller sc;
+		private unowned Elm.Box vbox_in;
+		private unowned Elm.Box hbox;
+		private unowned Elm.Toggle tg_disc;
+		private unowned Elm.Toggle tg_pair;
+		private unowned Elm.Button bt_k;
 		
-		private Elm.Button bt_close;
+		private unowned Elm.Button bt_close;
 		
 		
 	public override string get_page_sid() {
@@ -43,18 +43,18 @@ public class SettingsUI : Page {
 	public unowned Elm.Object create(Elm.Win win) {
 		
 		//add vbox
-		vbox = new Elm.Box(win);
+		vbox = Elm.Box.add(win);
 		vbox.size_hint_weight_set(1.0, 1.0);
 		vbox.show();
 		
-		sc = new Elm.Scroller(win);
+		sc = Elm.Scroller.add(win);
 		sc.size_hint_weight_set(1.0, 1.0);
 		sc.size_hint_align_set(-1.0, -1.0);
 		sc.bounce_set(false, true);
 		vbox.pack_end(sc);
 		sc.show();
 		
-		vbox_in = new Elm.Box(win);
+		vbox_in = Elm.Box.add(win);
 		vbox_in.size_hint_align_set(-1.0, -1.0);
 		vbox_in.size_hint_weight_set(1.0, 1.0);
 		sc.content_set(vbox_in);
@@ -82,7 +82,7 @@ public class SettingsUI : Page {
 		fr_disc = new FrameBox(win, vbox_in, "Discovery settings");
 		fr_disc.show();
 		
-		tg_disc = new Elm.Toggle(win);
+		tg_disc = Elm.Toggle.add(win);
 		tg_disc.text_set("Discoverable:");
 		tg_disc.states_labels_set("On", "Off");
 		tg_disc.state_set(ADAPTER.discoverable);
@@ -106,7 +106,7 @@ public class SettingsUI : Page {
 		fr_pair = new FrameBox(win, vbox_in, "Pairing settings");
 		fr_pair.show();
 		
-		tg_pair = new Elm.Toggle(win);
+		tg_pair = Elm.Toggle.add(win);
 		tg_pair.text_set("Pairable:");
 		tg_pair.states_labels_set("On", "Off");
 		tg_pair.state_set(ADAPTER.pairable);
@@ -128,7 +128,7 @@ public class SettingsUI : Page {
 		
 		
 		//DEVICES BUTTON:
-		bt_k = new Elm.Button(win);
+		bt_k = Elm.Button.add(win);
 		bt_k.text_set("Show Devices");
 		bt_k.size_hint_weight_set(0, 0);
 		bt_k.size_hint_align_set(-1.0, -1.0);
@@ -144,15 +144,15 @@ public class SettingsUI : Page {
 		
 		//BOTTOM:
 		
-		gui_container += (owned) hbox;
-		hbox = new Elm.Box(win);
+
+		hbox = Elm.Box.add(win);
 		hbox.horizontal_set(true);
 		hbox.size_hint_weight_set(1.0, 0.0);
 		hbox.size_hint_align_set(-1.0, 0.0);
 		vbox.pack_end(hbox);
 		hbox.show();
 		
-		bt_close = new Elm.Button(win);
+		bt_close = Elm.Button.add(win);
 		bt_close.text_set("Close");
 		bt_close.size_hint_weight_set(1.0, 1.0);
 		bt_close.size_hint_align_set(-1.0, -1.0);
