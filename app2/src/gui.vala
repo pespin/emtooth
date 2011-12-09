@@ -7,9 +7,9 @@ public class EmtoothUI {
 	
 		public Elm.Win win;
 		
-		private Elm.Pager pager;
+		private unowned Elm.Pager pager;
 			
-		private Elm.Bg	bg;
+		private unowned Elm.Bg	bg;
 		public MainUI  mui;
 		
 		public List<Page> page_stack;
@@ -27,14 +27,14 @@ public class EmtoothUI {
 			win.title_set( "emtooth" );
 			win.smart_callback_add( "delete,request", Elm.exit );
 			
-			bg = new Elm.Bg(win);
+			bg = Elm.Bg.add(win);
 			bg.size_hint_weight_set( 1.0, 1.0 );
 			bg.show();
 			win.resize_object_add(bg);
 			
 			win.resize( DISPLAY_WIDTH, DISPLAY_HEIGHT );
 			
-			pager = new Elm.Pager( win );
+			pager = Elm.Pager.add( win );
 			win.resize_object_add( pager );
 			pager.size_hint_weight_set( 1.0, 1.0 );
 			pager.show();
@@ -127,7 +127,7 @@ public class EmtoothUI {
 /* PAGE: all UIs inherit from this, and is used by EmtoothUI */
 public abstract class Page : Object {
 	
-	protected Elm.Box vbox;
+	protected unowned Elm.Box vbox;
 	
 	public Page() {
 		vbox = null;
@@ -153,12 +153,12 @@ public abstract class Page : Object {
 	/* PIN DIALOG */
 public class DialogUI : Object {	
 	
-	Elm.Win inwin;
-	Elm.Box vbox;
-	Elm.Box vbox_in;
-	Elm.Anchorblock lb;
-	Elm.Button bt_ok;
-	Elm.Scroller sc;
+	unowned Elm.Win inwin;
+	unowned Elm.Box vbox;
+	unowned Elm.Box vbox_in;
+	unowned Elm.Anchorblock lb;
+	unowned Elm.Button bt_ok;
+	unowned Elm.Scroller sc;
 	
 	public void create(string text) {
 		this.ref(); //let it be unless someone presses the kill button
@@ -166,32 +166,32 @@ public class DialogUI : Object {
 		inwin = ui.win.inwin_add();
 		inwin.show();
 		
-		vbox = new Elm.Box(ui.win);
+		vbox = Elm.Box.add(ui.win);
 		inwin.inwin_content_set(vbox);
 		vbox.show();
 		
-		sc = new Elm.Scroller(ui.win);
+		sc = Elm.Scroller.add(ui.win);
 		sc.size_hint_weight_set(1.0, 1.0);
 		sc.size_hint_align_set(-1.0, -1.0);
 		sc.bounce_set(false, true);
 		vbox.pack_end(sc);
 		sc.show();
 		
-		vbox_in = new Elm.Box(ui.win);
+		vbox_in = Elm.Box.add(ui.win);
 		vbox_in.size_hint_align_set(-1.0, -1.0);
 		vbox_in.size_hint_weight_set(1.0, 1.0);
 		sc.content_set(vbox_in);
 		vbox_in.show();
 		
 		// add a label
-		lb = new Elm.Anchorblock(ui.win);
+		lb = Elm.Anchorblock.add(ui.win);
 		lb.text_set(text);
 		lb.size_hint_weight_set(1.0, 1.0);
 		lb.size_hint_align_set(-1.0, -1.0);
 		vbox_in.pack_end(lb);
 		lb.show();
 		
-		bt_ok = new Elm.Button(ui.win);
+		bt_ok = Elm.Button.add(ui.win);
 		bt_ok.text_set("Ok");
 		bt_ok.size_hint_align_set(-1.0, -1.0);
 		bt_ok.size_hint_weight_set(1.0, 0.0);
@@ -212,9 +212,9 @@ public class DialogUI : Object {
 	/* FILE DIALOG SEND */
 public class FileDialogSendUI : Object {	
 	
-	Elm.Win inwin;
-	Elm.Box vbox;
-	Elm.Fileselector fs;
+	unowned Elm.Win inwin;
+	unowned Elm.Box vbox;
+	unowned Elm.Fileselector fs;
 	
 	BluezRemoteDevice rdevice;
 	
@@ -227,11 +227,11 @@ public class FileDialogSendUI : Object {
 		inwin = ui.win.inwin_add();
 		inwin.show();
 		
-		vbox = new Elm.Box(ui.win);
+		vbox = Elm.Box.add(ui.win);
 		inwin.inwin_content_set(vbox);
 		vbox.show();
 		
-		fs = new Elm.Fileselector(ui.win);
+		fs = Elm.Fileselector.add(ui.win);
 		fs.size_hint_align_set(-1.0, -1.0);
 		fs.size_hint_weight_set(1.0, 1.0);
 		vbox.pack_end(fs);
@@ -259,9 +259,9 @@ public class FileDialogSendUI : Object {
 	/* FILE DIALOG SEND */
 public class FileDialogReceiveUI : Object {	
 	
-	Elm.Win inwin;
-	Elm.Box vbox;
-	Elm.Fileselector fs;
+	unowned Elm.Win inwin;
+	unowned Elm.Box vbox;
+	unowned Elm.Fileselector fs;
 	
 	public string path {public get; private set; default=null;}
 	
@@ -270,11 +270,11 @@ public class FileDialogReceiveUI : Object {
 		inwin = ui.win.inwin_add();
 		inwin.show();
 		
-		vbox = new Elm.Box(ui.win);
+		vbox = Elm.Box.add(ui.win);
 		inwin.inwin_content_set(vbox);
 		vbox.show();
 		
-		fs = new Elm.Fileselector(ui.win);
+		fs = Elm.Fileselector.add(ui.win);
 		fs.size_hint_align_set(-1.0, -1.0);
 		fs.size_hint_weight_set(1.0, 1.0);
 		vbox.pack_end(fs);
@@ -295,13 +295,13 @@ public class FileDialogReceiveUI : Object {
 	/* PIN DIALOG */
 public class PinDialogUI {	
 	
-	Elm.Win inwin;
-	Elm.Box vbox;
-	Elm.Box vbox_in;
-	Elm.Anchorblock lb;
-	Elm.Entry entry;
-	Elm.Button bt_ok;
-	Elm.Scroller sc;
+	unowned Elm.Win inwin;
+	unowned Elm.Box vbox;
+	unowned Elm.Box vbox_in;
+	unowned Elm.Anchorblock lb;
+	unowned Elm.Entry entry;
+	unowned Elm.Button bt_ok;
+	unowned Elm.Scroller sc;
 	
 	BluezRemoteDevice rdevice;
 	
@@ -312,38 +312,38 @@ public class PinDialogUI {
 		inwin = ui.win.inwin_add();
 		inwin.show();
 		
-		vbox = new Elm.Box(ui.win);
+		vbox = Elm.Box.add(ui.win);
 		inwin.inwin_content_set(vbox);
 		vbox.show();
 		
-		sc = new Elm.Scroller(ui.win);
+		sc = Elm.Scroller.add(ui.win);
 		sc.size_hint_weight_set(1.0, 1.0);
 		sc.size_hint_align_set(-1.0, -1.0);
 		sc.bounce_set(false, true);
 		vbox.pack_end(sc);
 		sc.show();
 		
-		vbox_in = new Elm.Box(ui.win);
+		vbox_in = Elm.Box.add(ui.win);
 		vbox_in.size_hint_align_set(-1.0, -1.0);
 		vbox_in.size_hint_weight_set(1.0, 1.0);
 		sc.content_set(vbox_in);
 		vbox_in.show();
 		
 		// add a label
-		lb = new Elm.Anchorblock(ui.win);
+		lb = Elm.Anchorblock.add(ui.win);
 		lb.text_set("Set the password for device "+rdevice.addr+"<br>and press the button below to proceed:");
 		lb.size_hint_weight_set(1.0, 1.0);
 		lb.size_hint_align_set(-1.0, -1.0);
 		vbox_in.pack_end(lb);
 		lb.show();
 		
-		entry = new Elm.Entry(ui.win);
+		entry = Elm.Entry.add(ui.win);
 		entry.single_line_set(true);
 		entry.entry_set("1234");
 		vbox_in.pack_end(entry);
 		entry.show();
 		
-		bt_ok = new Elm.Button(ui.win);
+		bt_ok = Elm.Button.add(ui.win);
 		bt_ok.text_set("Ok");
 		bt_ok.size_hint_align_set(-1.0, -1.0);
 		bt_ok.size_hint_weight_set(1.0, 0.0);
@@ -363,13 +363,14 @@ public class PinDialogUI {
 	/* PIN DIALOG */
 public class TransferDialogUI {	
 	
-	Elm.Win inwin;
-	Elm.Box vbox;
-	Elm.Box vbox_in;
-	Elm.Anchorblock lb;
-	Elm.Label status;
-	Elm.Button bt_ok;
-	Elm.Scroller sc;
+	unowned Elm.Win inwin;
+	unowned Elm.Box vbox;
+	unowned Elm.Box vbox_in;
+	unowned Elm.Anchorblock lb;
+	unowned Elm.Label status;
+	unowned Elm.Button bt_ok;
+	unowned Elm.Scroller sc;
+	
 	public string name;
 	public uint64 size;
 	private bool closed;
@@ -383,24 +384,24 @@ public class TransferDialogUI {
 		inwin = ui.win.inwin_add();
 		inwin.show();
 		
-		vbox = new Elm.Box(ui.win);
+		vbox = Elm.Box.add(ui.win);
 		inwin.inwin_content_set(vbox);
 		vbox.show();
 		
-		sc = new Elm.Scroller(ui.win);
+		sc = Elm.Scroller.add(ui.win);
 		sc.size_hint_weight_set(1.0, 1.0);
 		sc.size_hint_align_set(-1.0, -1.0);
 		sc.bounce_set(false, true);
 		vbox.pack_end(sc);
 		sc.show();
 		
-		vbox_in = new Elm.Box(ui.win);
+		vbox_in = Elm.Box.add(ui.win);
 		vbox_in.size_hint_align_set(-1.0, -1.0);
 		vbox_in.size_hint_weight_set(1.0, 1.0);
 		sc.content_set(vbox_in);
 		vbox_in.show();
 
-		lb = new Elm.Anchorblock(ui.win);
+		lb = Elm.Anchorblock.add(ui.win);
 		if(size==0)
 			lb.text_set(@"Transferring file $name...");	
 		else
@@ -411,7 +412,7 @@ public class TransferDialogUI {
 		vbox_in.pack_end(lb);
 		lb.show();
 		
-		status = new Elm.Label(ui.win);
+		status = Elm.Label.add(ui.win);
 		if(size==0)
 			status.text_set(@"Transferring file $name...");	
 		else {
@@ -424,7 +425,7 @@ public class TransferDialogUI {
 		status.show();
 		
 		
-		bt_ok = new Elm.Button(ui.win);
+		bt_ok = Elm.Button.add(ui.win);
 		bt_ok.text_set("Ok");
 		bt_ok.size_hint_align_set(-1.0, -1.0);
 		bt_ok.size_hint_weight_set(1.0, 0.0);
@@ -458,22 +459,22 @@ public class TransferDialogUI {
 
 public class LabelBox {
 	
-	private Elm.Label lb;
-	private Elm.Label val;
-	private Elm.Box box;
+	private unowned Elm.Label lb;
+	private unowned Elm.Label val;
+	private unowned Elm.Box box;
 	
 	public LabelBox(Elm.Win win, Elm.Box parent, string label, string Value) {
 		
-		box = new Elm.Box(win);
+		box = Elm.Box.add(win);
 		box.horizontal_set(true);
 		box.size_hint_align_set(0.0, 0.0);	
 		parent.pack_end(box);
 		
-		lb = new Elm.Label(win);
+		lb = Elm.Label.add(win);
 		lb.text_set("<b>"+label+":</b>");
 		box.pack_end(lb);
 		
-		val = new Elm.Label(win);
+		val = Elm.Label.add(win);
 		val.text_set(Value);
 		box.pack_end(val);
 		
@@ -496,30 +497,30 @@ public class LabelBox {
 
 public class EntryBox {
 	
-	private Elm.Label lb;
-	public Elm.Entry val;
-	private Elm.Frame fr;
-	private Elm.Box box;
+	private unowned Elm.Label lb;
+	public unowned Elm.Entry val;
+	private unowned Elm.Frame fr;
+	private unowned Elm.Box box;
 	
 	public EntryBox(Elm.Win win, Elm.Box parent, string label, string Value) {
 		
-		box = new Elm.Box(win);
+		box = Elm.Box.add(win);
 		box.horizontal_set(true);
 		box.size_hint_weight_set(1.0, 0.0);
         box.size_hint_align_set(-1.0, 0.0);
 		parent.pack_end(box);
 		
-		lb = new Elm.Label(win);
+		lb = Elm.Label.add(win);
 		lb.text_set("<b>"+label+":</b>");
 		box.pack_end(lb);
 		
-		fr = new Elm.Frame(win);
+		fr = Elm.Frame.add(win);
         fr.size_hint_align_set(-1.0, 0.0);
         fr.size_hint_weight_set(1.0, 0.0);
         fr.style_set("outdent_top");
         box.pack_end(fr);
 		
-		val = new Elm.Entry(win);
+		val = Elm.Entry.add(win);
 		val.size_hint_align_set(-1.0, 0.0);
         val.size_hint_weight_set(1.0, 0.0);
         val.single_line_set(true);
@@ -548,18 +549,18 @@ public class EntryBox {
 
 public class FrameBox {
 	
-	public Elm.Frame fr;
-	public Elm.Box box;
+	public unowned Elm.Frame fr;
+	public unowned Elm.Box box;
 	
 	public FrameBox(Elm.Win win, Elm.Box parent, string label) {
 		
-		fr = new Elm.Frame(win);
+		fr = Elm.Frame.add(win);
 		fr.text_set(label);
         fr.size_hint_align_set(-1.0, 0.0);
         fr.size_hint_weight_set(1.0, 0.0);
         parent.pack_end(fr);
 		
-		box = new Elm.Box(win);
+		box = Elm.Box.add(win);
 		box.size_hint_weight_set(1.0, 0.0);
         box.size_hint_align_set(-1.0, 0.0);
 		fr.content_set(box);
@@ -577,8 +578,8 @@ public class FrameBox {
 public class ListItemHandler : Object {
 	
 	public BluezRemoteDevice rdevice;
-	public Elm.ListItem item;
-	public Elm.Icon icon;
+	public unowned Elm.ListItem item;
+	public unowned Elm.Icon icon;
 	public static unowned Elm.Win win;
 	
 	
@@ -606,9 +607,9 @@ public class ListItemHandler : Object {
 		return device.alias;
 	}
 	
-	private static Elm.Icon gen_icon(string name) {
+	private static unowned Elm.Icon gen_icon(string name) {
 		
-		var ic = new Elm.Icon(win);
+		unowned Elm.Icon ic = Elm.Icon.add(win);
 		ic.file_set(Path.build_filename(IMAGESDIR,name+".png"));
 		ic.scale_set(true, true);
 		ic.fill_outside_set(true);

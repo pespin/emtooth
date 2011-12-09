@@ -11,19 +11,19 @@ public class BluezRemoteDeviceUI : Page {
 		private LabelBox name;
 		private EntryBox alias;
 
-		private Elm.Scroller sc;
-		private Elm.Box vbox_in;
-		private Elm.Box hbox;
-		private Elm.Toggle tg_con;
-		private Elm.Toggle tg_pair;
-		private Elm.Toggle tg_trust;
+		private unowned Elm.Scroller sc;
+		private unowned Elm.Box vbox_in;
+		private unowned Elm.Box hbox;
+		private unowned Elm.Toggle tg_con;
+		private unowned Elm.Toggle tg_pair;
+		private unowned Elm.Toggle tg_trust;
 		
-		private Elm.Toggle tg_audio;
-		private Elm.Toggle tg_input;
+		private unowned Elm.Toggle tg_audio;
+		private unowned Elm.Toggle tg_input;
 		
-		private Elm.Button bt_rm;
-		private Elm.Button bt_send;
-		private Elm.Button bt_close;
+		private unowned Elm.Button bt_rm;
+		private unowned Elm.Button bt_send;
+		private unowned Elm.Button bt_close;
 		
 	public BluezRemoteDeviceUI(BluezRemoteDevice device) {
 			this.rdevice = device;
@@ -40,19 +40,19 @@ public class BluezRemoteDeviceUI : Page {
 	public unowned Elm.Object create(Elm.Win win) {
 		
 		//add vbox (page)
-		vbox = new Elm.Box(win);
+		vbox = Elm.Box.add(win);
 		//pager.content_push(vbox);
 		vbox.size_hint_weight_set(1.0, 1.0);
 		vbox.show();
 		
-		sc = new Elm.Scroller(win);
+		sc = Elm.Scroller.add(win);
 		sc.size_hint_weight_set(1.0, 1.0);
 		sc.size_hint_align_set(-1.0, -1.0);
 		sc.bounce_set(false, true);
 		vbox.pack_end(sc);
 		sc.show();
 		
-		vbox_in = new Elm.Box(win);
+		vbox_in = Elm.Box.add(win);
 		vbox_in.size_hint_align_set(-1.0, -1.0);
 		vbox_in.size_hint_weight_set(1.0, 1.0);
 		sc.content_set(vbox_in);
@@ -89,7 +89,7 @@ public class BluezRemoteDeviceUI : Page {
 		
 		// CONNECTED TOGGLE:
 		
-		tg_con = new Elm.Toggle(win);
+		tg_con = Elm.Toggle.add(win);
 		tg_con.text_set("Connected:");
 		tg_con.states_labels_set("Yes", "No");
 		tg_con.state_set(rdevice.connected);
@@ -104,7 +104,7 @@ public class BluezRemoteDeviceUI : Page {
 		// PAIRED TOGGLE:
 
 		
-		tg_pair = new Elm.Toggle(win);
+		tg_pair = Elm.Toggle.add(win);
 		tg_pair.text_set("Paired:");
 		tg_pair.states_labels_set("Yes", "No");
 		tg_pair.state_set(rdevice.paired);
@@ -125,7 +125,7 @@ public class BluezRemoteDeviceUI : Page {
 		// TRUSTED TOGGLE:
 
 		
-		tg_trust = new Elm.Toggle(win);
+		tg_trust = Elm.Toggle.add(win);
 		tg_trust.text_set("Trusted:");
 		tg_trust.states_labels_set("Yes", "No");
 		tg_trust.state_set(rdevice.trusted);
@@ -142,7 +142,7 @@ public class BluezRemoteDeviceUI : Page {
 			
 		fr_audio = new FrameBox(win, vbox_in, "Audio settings");
 		fr_audio.show();	
-		tg_audio = new Elm.Toggle(win);
+		tg_audio = Elm.Toggle.add(win);
 		tg_audio.text_set("Connect");
 		tg_audio.states_labels_set("Yes", "No");
 		tg_audio.state_set(rdevice.connected_audio);
@@ -160,7 +160,7 @@ public class BluezRemoteDeviceUI : Page {
 			
 			fr_input = new FrameBox(win, vbox_in, "Input settings");
 			fr_input.show();	
-			tg_input = new Elm.Toggle(win);
+			tg_input = Elm.Toggle.add(win);
 			tg_input.text_set("Connect");
 			tg_input.states_labels_set("Yes", "No");
 			tg_input.state_set(rdevice.connected_input);
@@ -175,7 +175,7 @@ public class BluezRemoteDeviceUI : Page {
 		tg_input.disabled_set(!rdevice.has_service_input());								
 
 		//SEND FILE BUTTON:
-		bt_send = new Elm.Button(win);
+		bt_send = Elm.Button.add(win);
 		bt_send.text_set("Send file");
 		bt_send.size_hint_weight_set(0, 0);
 		bt_send.size_hint_align_set(-1.0, -1.0);
@@ -190,7 +190,7 @@ public class BluezRemoteDeviceUI : Page {
 
 		
 		//RM BUTTON:
-		bt_rm = new Elm.Button(win);
+		bt_rm = Elm.Button.add(win);
 		bt_rm.text_set("Reset/Remove Device");
 		bt_rm.size_hint_weight_set(0, 0);
 		bt_rm.size_hint_align_set(-1.0, -1.0);
@@ -204,14 +204,14 @@ public class BluezRemoteDeviceUI : Page {
 
 	
 		//BOTTOM:
-		hbox = new Elm.Box(win);
+		hbox = Elm.Box.add(win);
 		hbox.horizontal_set(true);
 		hbox.size_hint_weight_set(1.0, 0.0);
 		hbox.size_hint_align_set(-1.0, 0.0);
 		vbox.pack_end(hbox);
 		hbox.show();
 		
-		bt_close = new Elm.Button(win);
+		bt_close = Elm.Button.add(win);
 		bt_close.text_set("Close");
 		bt_close.size_hint_weight_set(1.0, 1.0);
 		bt_close.size_hint_align_set(-1.0, -1.0);

@@ -5,17 +5,17 @@ using bluez;
 
 public class MainUI : Page {
 	
-		public Elm.Label header;
-		public Elm.List li;
+		public unowned Elm.Label header;
+		public unowned Elm.List li;
 		
 		private unowned Elm.Win win;
 			
-		private Elm.Box hbox;
-		private Elm.Frame fr;
-		private Elm.Box hbox1;
-		private Elm.Button bt_start;
-		private Elm.Button bt_stop;
-		private Elm.Button bt;
+		private unowned Elm.Box hbox;
+		private unowned Elm.Frame fr;
+		private unowned Elm.Box hbox1;
+		private unowned Elm.Button bt_start;
+		private unowned Elm.Button bt_stop;
+		private unowned Elm.Button bt;
 
 		public HashTable<string,ListItemHandler> rdevices_ui_list; 
 		
@@ -30,12 +30,12 @@ public class MainUI : Page {
 		this.win = win;
 		
 		//add vbox
-		vbox = new Elm.Box(win);
+		vbox = Elm.Box.add(win);
 		vbox.size_hint_weight_set( 1.0, 1.0 );
 		vbox.show();
 		
 		//add button hbox
-		hbox = new Elm.Box(win);
+		hbox = Elm.Box.add(win);
 		hbox.horizontal_set(true);	
 		hbox.size_hint_weight_set( 1.0, 0.0 );
 		hbox.size_hint_align_set( -1.0, 0.0 );
@@ -43,7 +43,7 @@ public class MainUI : Page {
 		hbox.show();
 		
 		// add a frame
-		fr = new Elm.Frame(win);
+		fr = Elm.Frame.add(win);
 		fr.style_set("outdent_top");
 		fr.size_hint_weight_set(0.0, 0.0);
 		fr.size_hint_align_set(0.0, -1.0);
@@ -51,13 +51,13 @@ public class MainUI : Page {
 		fr.show();
 		
 		// add a label
-		header = new Elm.Label(win);
+		header = Elm.Label.add(win);
 		header.text_set("Discovering Devices...");
 		fr.content_set(header);
 		header.show();
 
 		//add list
-		li = new Elm.List(win);
+		li = Elm.List.add(win);
 		li.scale_set(1.0);
 		li.size_hint_weight_set(1.0, 1.0);
 		li.size_hint_align_set(-1.0, -1.0);
@@ -66,7 +66,7 @@ public class MainUI : Page {
 		li.show();
 	
 		//add button hbox1
-		hbox1 = new Elm.Box(win);
+		hbox1 = Elm.Box.add(win);
 		hbox1.horizontal_set(true);	
 		hbox1.size_hint_weight_set( 1.0, 0.0 );
 		hbox1.size_hint_align_set( -1.0, 0.0 );
@@ -74,14 +74,14 @@ public class MainUI : Page {
 		hbox1.show();
 
 		//add buttons to hbox1
-		bt_start = new Elm.Button(win);
+		bt_start = Elm.Button.add(win);
 		bt_start.text_set("Start Discovery");
 		bt_start.size_hint_weight_set( 1.0, 1.0 );
 		bt_start.size_hint_align_set( -1.0, -1.0 );
 		bt_start.smart_callback_add( "clicked", cb_bt_start_clicked );
 		
 		
-		bt_stop = new Elm.Button(win);
+		bt_stop = Elm.Button.add(win);
 		bt_stop.text_set("Stop Discovery");
 		bt_stop.size_hint_weight_set( 1.0, 1.0 );
 		bt_stop.size_hint_align_set( -1.0, -1.0 );
@@ -90,7 +90,7 @@ public class MainUI : Page {
 		bt_stop.show();
 	
 	
-		bt = new Elm.Button(win);
+		bt = Elm.Button.add(win);
 		bt.text_set("Settings");
 		bt.size_hint_weight_set( 1.0, 1.0 );
 		bt.size_hint_align_set( -1.0, -1.0 );
