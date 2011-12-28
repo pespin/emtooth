@@ -4,9 +4,6 @@ using bluez;
 
 
 public class SettingsUI : Page {
-	
-		Elm.Object[] gui_container;
-
 		
 		private FrameBox fr_general;
 		private FrameBox fr_disc;
@@ -20,8 +17,8 @@ public class SettingsUI : Page {
 		private unowned Elm.Scroller sc;
 		private unowned Elm.Box vbox_in;
 		private unowned Elm.Box hbox;
-		private unowned Elm.Toggle tg_disc;
-		private unowned Elm.Toggle tg_pair;
+		private unowned Elm.Check tg_disc;
+		private unowned Elm.Check tg_pair;
 		private unowned Elm.Button bt_k;
 		
 		private unowned Elm.Button bt_close;
@@ -82,9 +79,11 @@ public class SettingsUI : Page {
 		fr_disc = new FrameBox(win, vbox_in, "Discovery settings");
 		fr_disc.show();
 		
-		tg_disc = Elm.Toggle.add(win);
+		tg_disc = Elm.Check.add(win);
+		tg_disc.style_set("toggle");
 		tg_disc.text_set("Discoverable:");
-		tg_disc.states_labels_set("On", "Off");
+		tg_disc.part_text_set("on", "Yes");
+		tg_disc.part_text_set("off", "No");
 		tg_disc.state_set(ADAPTER.discoverable);
 		tg_disc.size_hint_align_set(-1.0, 0.0);
 		fr_disc.box.pack_end(tg_disc);
@@ -106,9 +105,11 @@ public class SettingsUI : Page {
 		fr_pair = new FrameBox(win, vbox_in, "Pairing settings");
 		fr_pair.show();
 		
-		tg_pair = Elm.Toggle.add(win);
+		tg_pair = Elm.Check.add(win);
+		tg_pair.style_set("toggle");
 		tg_pair.text_set("Pairable:");
-		tg_pair.states_labels_set("On", "Off");
+		tg_pair.part_text_set("on", "Yes");
+		tg_pair.part_text_set("off", "No");
 		tg_pair.state_set(ADAPTER.pairable);
 		tg_pair.size_hint_align_set(-1.0, 0.0);
 		fr_pair.box.pack_end(tg_pair);

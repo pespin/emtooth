@@ -14,12 +14,12 @@ public class BluezRemoteDeviceUI : Page {
 		private unowned Elm.Scroller sc;
 		private unowned Elm.Box vbox_in;
 		private unowned Elm.Box hbox;
-		private unowned Elm.Toggle tg_con;
-		private unowned Elm.Toggle tg_pair;
-		private unowned Elm.Toggle tg_trust;
+		private unowned Elm.Check tg_con;
+		private unowned Elm.Check tg_pair;
+		private unowned Elm.Check tg_trust;
 		
-		private unowned Elm.Toggle tg_audio;
-		private unowned Elm.Toggle tg_input;
+		private unowned Elm.Check tg_audio;
+		private unowned Elm.Check tg_input;
 		
 		private unowned Elm.Button bt_rm;
 		private unowned Elm.Button bt_send;
@@ -89,9 +89,11 @@ public class BluezRemoteDeviceUI : Page {
 		
 		// CONNECTED TOGGLE:
 		
-		tg_con = Elm.Toggle.add(win);
+		tg_con = Elm.Check.add(win);
+		tg_con.style_set("toggle");
 		tg_con.text_set("Connected:");
-		tg_con.states_labels_set("Yes", "No");
+		tg_con.part_text_set("on", "Yes");
+		tg_con.part_text_set("off", "No");
 		tg_con.state_set(rdevice.connected);
 		tg_con.size_hint_align_set(-1.0, 0.0);
 		tg_con.disabled_set(true);
@@ -104,9 +106,11 @@ public class BluezRemoteDeviceUI : Page {
 		// PAIRED TOGGLE:
 
 		
-		tg_pair = Elm.Toggle.add(win);
+		tg_pair = Elm.Check.add(win);
+		tg_pair.style_set("toggle");
 		tg_pair.text_set("Paired:");
-		tg_pair.states_labels_set("Yes", "No");
+		tg_pair.part_text_set("on", "Yes");
+		tg_pair.part_text_set("off", "No");
 		tg_pair.state_set(rdevice.paired);
 		tg_pair.disabled_set(rdevice.paired);
 		tg_pair.size_hint_align_set(-1.0, 0.0);
@@ -125,9 +129,11 @@ public class BluezRemoteDeviceUI : Page {
 		// TRUSTED TOGGLE:
 
 		
-		tg_trust = Elm.Toggle.add(win);
+		tg_trust = Elm.Check.add(win);
+		tg_trust.style_set("toggle");
 		tg_trust.text_set("Trusted:");
-		tg_trust.states_labels_set("Yes", "No");
+		tg_trust.part_text_set("on", "Yes");
+		tg_trust.part_text_set("off", "No");
 		tg_trust.state_set(rdevice.trusted);
 		tg_trust.size_hint_align_set(-1.0, 0.0);
 		fr_conn.box.pack_end(tg_trust);
@@ -142,9 +148,11 @@ public class BluezRemoteDeviceUI : Page {
 			
 		fr_audio = new FrameBox(win, vbox_in, "Audio settings");
 		fr_audio.show();	
-		tg_audio = Elm.Toggle.add(win);
+		tg_audio = Elm.Check.add(win);
+		tg_audio.style_set("toggle");
 		tg_audio.text_set("Connect");
-		tg_audio.states_labels_set("Yes", "No");
+		tg_audio.part_text_set("on", "Yes");
+		tg_audio.part_text_set("off", "No");
 		tg_audio.state_set(rdevice.connected_audio);
 		tg_audio.size_hint_align_set(-1.0, 0.0);
 		fr_audio.box.pack_end(tg_audio);
@@ -158,18 +166,20 @@ public class BluezRemoteDeviceUI : Page {
 		
 		//INPUT TOGGLE:
 			
-			fr_input = new FrameBox(win, vbox_in, "Input settings");
-			fr_input.show();	
-			tg_input = Elm.Toggle.add(win);
-			tg_input.text_set("Connect");
-			tg_input.states_labels_set("Yes", "No");
-			tg_input.state_set(rdevice.connected_input);
-			tg_input.size_hint_align_set(-1.0, 0.0);
-			fr_input.box.pack_end(tg_input);
-			tg_input.show();
-			tg_input.smart_callback_add("changed", () => { if(tg_input.state_get()==true)
+		fr_input = new FrameBox(win, vbox_in, "Input settings");
+		fr_input.show();	
+		tg_input = Elm.Check.add(win);
+		tg_input.style_set("toggle");
+		tg_input.text_set("Connect");
+		tg_pair.part_text_set("on", "Yes");
+		tg_pair.part_text_set("off", "No");
+		tg_input.state_set(rdevice.connected_input);
+		tg_input.size_hint_align_set(-1.0, 0.0);
+		fr_input.box.pack_end(tg_input);
+		tg_input.show();
+		tg_input.smart_callback_add("changed", () => { if(tg_input.state_get()==true)
 															rdevice.connect_input(); 
-														   else
+														else
 															rdevice.disconnect_input();
 													} );										
 		tg_input.disabled_set(!rdevice.has_service_input());								
