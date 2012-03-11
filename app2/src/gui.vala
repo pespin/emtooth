@@ -156,7 +156,7 @@ public class DialogUI : Object {
 	unowned Elm.Win inwin;
 	unowned Elm.Box vbox;
 	unowned Elm.Box vbox_in;
-	unowned Elm.Anchorblock lb;
+	unowned Elm.Label lb;
 	unowned Elm.Button bt_ok;
 	unowned Elm.Scroller sc;
 	
@@ -184,7 +184,7 @@ public class DialogUI : Object {
 		vbox_in.show();
 		
 		// add a label
-		lb = Elm.Anchorblock.add(ui.win);
+		lb = Elm.Label.add(ui.win);
 		lb.text_set(text);
 		lb.size_hint_weight_set(1.0, 1.0);
 		lb.size_hint_align_set(-1.0, -1.0);
@@ -298,7 +298,7 @@ public class PinDialogUI {
 	unowned Elm.Win inwin;
 	unowned Elm.Box vbox;
 	unowned Elm.Box vbox_in;
-	unowned Elm.Anchorblock lb;
+	unowned Elm.Label lb;
 	unowned Elm.Entry entry;
 	unowned Elm.Button bt_ok;
 	unowned Elm.Scroller sc;
@@ -330,7 +330,7 @@ public class PinDialogUI {
 		vbox_in.show();
 		
 		// add a label
-		lb = Elm.Anchorblock.add(ui.win);
+		lb = Elm.Label.add(ui.win);
 		lb.text_set("Set the password for device "+rdevice.addr+"<br>and press the button below to proceed:");
 		lb.size_hint_weight_set(1.0, 1.0);
 		lb.size_hint_align_set(-1.0, -1.0);
@@ -366,7 +366,7 @@ public class TransferDialogUI {
 	unowned Elm.Win inwin;
 	unowned Elm.Box vbox;
 	unowned Elm.Box vbox_in;
-	unowned Elm.Anchorblock lb;
+	unowned Elm.Label lb;
 	unowned Elm.Label status;
 	unowned Elm.Button bt_ok;
 	unowned Elm.Scroller sc;
@@ -401,7 +401,7 @@ public class TransferDialogUI {
 		sc.content_set(vbox_in);
 		vbox_in.show();
 
-		lb = Elm.Anchorblock.add(ui.win);
+		lb = Elm.Label.add(ui.win);
 		if(size==0)
 			lb.text_set(@"Transferring file $name...");	
 		else
@@ -598,9 +598,9 @@ public class ListItemHandler : Object {
 	}
 	
 	public void refresh_content() {
-		item.label_set(format_item_label(rdevice));
+		item.text_set(format_item_label(rdevice));
 		icon = gen_icon(rdevice.online ? "online" : "offline" );
-		item.icon_set(icon);
+		item.part_content_set("icon", icon);
 	}
 	
 	public static string format_item_label(BluezRemoteDevice device) {
@@ -611,7 +611,7 @@ public class ListItemHandler : Object {
 		
 		unowned Elm.Icon ic = Elm.Icon.add(win);
 		ic.file_set(Path.build_filename(IMAGESDIR,name+".png"));
-		ic.scale_set(true, true);
+		ic.scale_set(1.0);
 		ic.fill_outside_set(true);
 		ic.show();
 		return ic;

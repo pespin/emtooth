@@ -74,7 +74,7 @@ public class KnownUI : Page {
 		message("Adding rdevice " + rdevice.path + " to known ui-list");
 		
 		var opener = new ListItemHandler(win, rdevice);
-		opener.item = this.li.append(opener.format_item_label(rdevice), null, opener.icon, opener.go);
+		opener.item = this.li.item_append(opener.format_item_label(rdevice), null, opener.icon, opener.go);
 		rdevices_ui_list.insert(rdevice.path, (owned) opener);
 		this.li.go();
 	}
