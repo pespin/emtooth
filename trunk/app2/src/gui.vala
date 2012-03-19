@@ -204,7 +204,7 @@ public class DialogUI : Object {
 	
 	public void close() {
 		stdout.printf("Closing Dialog window\n");
-		//win.del();
+		inwin.del();
 		this.unref();
 	}
 }
@@ -250,7 +250,7 @@ public class FileDialogSendUI : Object {
 	
 	public void close() {
 		stdout.printf("Closing fileDialog window\n");
-		//win.del();
+		inwin.del();
 		this.unref();
 	}
 }
@@ -355,7 +355,7 @@ public class PinDialogUI {
 	
 	public void close() {
 		stdout.printf("Closing pinDialog window\n");
-		//win.del();
+		inwin.del();
 	}
 }
 
