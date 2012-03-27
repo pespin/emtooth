@@ -41,7 +41,11 @@ public class EmtoothUI {
 			
 			unowned Elm.Object page;
 			page = mui.create(win);
-			pager.item_push("", null, null, page, null);
+			unowned Elm.NaviframeItem it;
+			it = pager.item_push("", null, null, page, null);
+			//hide naviframe bar as we have our own widgets doing it right now.
+			//TODO: rewrite this app so we use naviframe bar.
+			it.title_visible_set(false);
 			
 			win.show();
 	
@@ -70,7 +74,9 @@ public class EmtoothUI {
 		unowned Elm.Object? page = obj.get_page();
 		if(page!=null) {
 			
-			pager.item_push("", null, null, page, null);
+			unowned Elm.NaviframeItem it;
+			it = pager.item_push("", null, null, page, null);
+			it.title_visible_set(false);
 			
 			string title = obj.get_page_title();
 			if(title!=null)
