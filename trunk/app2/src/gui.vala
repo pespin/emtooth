@@ -7,7 +7,7 @@ public class EmtoothUI {
 	
 		public Elm.Win win;
 		
-		private unowned Elm.Pager pager;
+		private unowned Elm.Naviframe pager;
 			
 		private unowned Elm.Bg	bg;
 		public MainUI  mui;
@@ -34,14 +34,14 @@ public class EmtoothUI {
 			
 			win.resize( DISPLAY_WIDTH, DISPLAY_HEIGHT );
 			
-			pager = Elm.Pager.add( win );
+			pager = Elm.Naviframe.add( win );
 			win.resize_object_add( pager );
 			pager.size_hint_weight_set( 1.0, 1.0 );
 			pager.show();
 			
 			unowned Elm.Object page;
 			page = mui.create(win);
-			pager.content_push(page);
+			pager.item_push("", null, null, page, null);
 			
 			win.show();
 	
@@ -50,7 +50,7 @@ public class EmtoothUI {
 	public void pop_page(Page page) {
 		//stderr.printf("pop_page() started!\n");
 		//if( obj == pager.content_top_get() ) { //this segfaults...
-			pager.content_pop();
+			pager.item_pop();
 			page_stack.remove(page);
 			
 			string? last_title = get_last_title();
@@ -70,7 +70,7 @@ public class EmtoothUI {
 		unowned Elm.Object? page = obj.get_page();
 		if(page!=null) {
 			
-			pager.content_push(page);
+			pager.item_push("", null, null, page, null);
 			
 			string title = obj.get_page_title();
 			if(title!=null)
